@@ -1,0 +1,23 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "HyperTalk Engine Auto-Test",
+      "trigger": "PostFileSave",
+      "matcher": "src/engine/.*\\.ts$",
+      "action": {
+        "type": "command",
+        "command": "npm run test:unit"
+      }
+    },
+    {
+      "name": "Verify Grammar Steering Sync",
+      "trigger": "PostFileSave",
+      "matcher": "src/engine/(lexer|parser|interpreter)\\.ts$",
+      "action": {
+        "type": "agent",
+        "prompt": "Check whether the changes in {{filePath}} introduced or altered any HyperTalk syntax or runtime behavior. If so, ensure .kiro/steering/hypertalk-grammar.md and tests/unit/ stay in sync."
+      }
+    }
+  ]
+}

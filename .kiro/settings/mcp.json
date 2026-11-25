@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "hypercrypt": {
+      "command": "node",
+      "args": ["dist-mcp/server.js"],
+      "disabled": false,
+      "autoApprove": [
+        "validate_hypertalk",
+        "validate_stack"
+      ]
+    }
+  }
+}

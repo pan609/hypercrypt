@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>HyperCrypt — Interactive UI Mockup (Warm 1987 × Kiroween Dusk)</title>
+<style>
+  :root {
+    --hc-desk-bg: #e7e1d4;
+    --hc-desk-dot: #c9c0ae;
+    --hc-surface: #fbf8f1;
+    --hc-surface-alt: #f2ece0;
+    --hc-ink: #24201b;
+    --hc-ink-muted: #6e6659;
+    --hc-accent: #d96b27;
+    --hc-accent-text: #fffdf9;
+    --hc-border: #2e2923;
+    --hc-shadow: 3px 3px 0 rgba(46, 41, 35, 0.85);
+    --hc-card-bg: #fbf8f1;
+    --hc-code-kw: #9a3412;
+    --hc-code-str: #1d4ed8;
+    --hc-code-num: #0f766e;
+    --hc-code-cmt: #7c7467;
+    --hc-stripe: repeating-linear-gradient(
+      to bottom,
+      #3a332b 0px, #3a332b 1px,
+      transparent 1px, transparent 3px
+    );
+  }
+
+  [data-hc-theme="kiroween"] {
+    --hc-desk-bg: #151026;
+    --hc-desk-dot: #2e2352;
+    --hc-surface: #21193a;
+    --hc-surface-alt: #2b2149;
+    --hc-ink: #f3eeff;
+    --hc-ink-muted: #ada0d4;
+    --hc-accent: #ff9e44;
+    --hc-accent-text: #1b122c;
+    --hc-border: #a78bfa;
+    --hc-shadow: 0 0 24px rgba(167, 139, 250, 0.24), 3px 3px 0 #0b0718;
+    --hc-card-bg: #1b1431;
+    --hc-code-kw: #ff9e44;
+    --hc-code-str: #7dd3fc;
+    --hc-code-num: #f472b6;
+    --hc-code-cmt: #8b7cb8;
+    --hc-stripe: repeating-linear-gradient(
+      to bottom,
+      #a78bfa 0px, #a78bfa 1px,
+      transparent 1px, transparent 3px
+    );
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    font-family: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+    color: var(--foreground, #222);
+  }
+
+  .hc-shell {
+    width: 100%;
+    border: 2px solid var(--hc-border);
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: var(--hc-desk-bg);
+    background-image: radial-gradient(var(--hc-desk-dot) 1.1px, transparent 0);
+    background-size: 8px 8px;
+    color: var(--hc-ink);
+    position: relative;
+    transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease;
+  }
+
+  [data-hc-theme="kiroween"] .hc-shell::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      repeating-linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0) 0px,
+        rgba(255, 255, 255, 0) 3px,
+        rgba(10, 6, 22, 0.12) 3px,
+        rgba(10, 6, 22, 0.12) 4px
+      ),
+      radial-gradient(ellipse at 50% 35%, rgba(167, 139, 250, 0.08), transparent 70%);
+    z-index: 40;
+  }
+
+  /* Classic Mac Menu Bar */
+  .hc-menubar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    padding: 5px 9px;
+    background: var(--hc-surface);
+    border-bottom: 2px solid var(--hc-border);
+    font-size: 10.5px;
+    font-weight: 700;
+    position: relative;
+    z-index: 10;
+    flex-wrap: nowrap;
+  }
+
+  .hc-brand {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    min-width: 0;
+  }
+
+  .hc-logo-box {
+    width: 18px;
+    height: 18px;
+    border: 1.5px solid var(--hc-border);
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    background: var(--hc-accent);
+    color: var(--hc-accent-text);
+    flex-shrink: 0;
+  }
+
+  .hc-controls {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-shrink: 0;
+  }
+
+  .hc-seg {
+    display: inline-flex;
+    border: 1.5px solid var(--hc-border);
+    border-radius: 5px;
+    overflow: hidden;
+    background: var(--hc-surface-alt);
+  }
+
+  .hc-seg button {
+    border: none;
+    background: transparent;
+    color: var(--hc-ink);
+    font-family: inherit;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 7px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 120ms, color 120ms;
+  }
+
+  .hc-seg button + button {
+    border-left: 1.5px solid var(--hc-border);
+  }
+
+  .hc-seg button.active {
+    background: var(--hc-accent);
+    color: var(--hc-accent-text);
+  }
+
+  .hc-pill-btn {
+    border: 1.5px solid var(--hc-border);
+    border-radius: 5px;
+    background: var(--hc-surface-alt);
+    color: var(--hc-ink);
+    font-family: inherit;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 7px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .hc-pill-btn:hover {
+    background: var(--hc-accent);
+    color: var(--hc-accent-text);
+  }
+
+  /* Main Workspace */
+  .hc-workspace {
+    display: flex;
+    align-items: stretch;
+    min-height: 405px;
+    position: relative;
+    z-index: 5;
+  }
+
+  /* Left Tool Palette (Author Mode) */
+  .hc-tools {
+    width: 64px;
+    background: var(--hc-surface);
+    border-right: 2px solid var(--hc-border);
+    padding: 8px 6px;
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .hc-shell[data-hc-mode="author"] .hc-tools {
+    display: flex;
+  }
+
+  .hc-tool-label {
+    font-size: 8.5px;
+    text-transform: uppercase;
+    color: var(--hc-ink-muted);
+    letter-spacing: 0.06em;
+    margin-top: 2px;
+  }
+
+  .hc-tool-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+    width: 100%;
+  }
+
+  .hc-tool {
+    height: 24px;
+    border: 1.5px solid var(--hc-border);
+    border-radius: 4px;
+    background: var(--hc-surface-alt);
+    color: var(--hc-ink);
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-family: inherit;
+    padding: 0;
+  }
+
+  .hc-tool.active {
+    background: var(--hc-accent);
+    color: var(--hc-accent-text);
+  }
+
+  .hc-tool-divider {
+    width: 100%;
+    height: 1.5px;
+    background: var(--hc-border);
+    margin: 3px 0;
+    opacity: 0.3;
+  }
+
+  /* Center Stage */
+  .hc-stage {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 12px;
+    gap: 10px;
+    min-width: 0;
+  }
+
+  /* Classic Mac Window */
+  .hc-window {
+    width: 100%;
+    max-width: 472px;
+    background: var(--hc-surface);
+    border: 2px solid var(--hc-border);
+    border-radius: 5px;
+    box-shadow: var(--hc-shadow);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hc-titlebar {
+    height: 24px;
+    border-bottom: 2px solid var(--hc-border);
+    display: flex;
+    align-items: center;
+    padding: 0 7px;
+    gap: 6px;
+    background: var(--hc-surface-alt);
+  }
+
+  .hc-close-box {
+    width: 11px;
+    height: 11px;
+    border: 1.5px solid var(--hc-border);
+    border-radius: 2px;
+    background: var(--hc-surface);
+    flex-shrink: 0;
+  }
+
+  .hc-stripes {
+    flex: 1;
+    height: 10px;
+    background-image: var(--hc-stripe);
+    opacity: 0.55;
+  }
+
+  .hc-window-title {
+    font-size: 10.5px;
+    font-weight: 700;
+    padding: 0 6px;
+    white-space: nowrap;
+  }
+
+  /* Card Viewport (512x342 aspect ratio 3:2) */
+  .hc-card-viewport {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 512 / 342;
+    background: var(--hc-card-bg);
+    overflow: hidden;
+  }
+
+  canvas#artCanvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    image-rendering: pixelated;
+    display: block;
+  }
+
+  /* Interactive Card Objects Overlay */
+  .hc-card-layer {
+    position: absolute;
+    inset: 0;
+  }
+
+  .hc-card-field {
+    position: absolute;
+    background: var(--hc-card-bg);
+    border: 1.5px solid var(--hc-border);
+    border-radius: 4px;
+    color: var(--hc-ink);
+    padding: 7px 9px;
+    font-size: 10px;
+    line-height: 1.48;
+    box-shadow: 2px 2px 0 var(--hc-border);
+  }
+
+  .hc-card-btn {
+    position: absolute;
+    background: var(--hc-surface);
+    border: 1.5px solid var(--hc-border);
+    border-radius: 6px;
+    color: var(--hc-ink);
+    font-family: inherit;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 5px 10px;
+    cursor: pointer;
+    box-shadow: 2px 2px 0 var(--hc-border);
+    transition: transform 80ms, background 120ms;
+  }
+
+  .hc-card-btn.primary {
+    background: var(--hc-accent);
+    color: var(--hc-accent-text);
+  }
+
+  .hc-card-btn:active {
+    transform: translate(1px, 1px);
+    box-shadow: 1px 1px 0 var(--hc-border);
+  }
+
+  .hc-hotspot {
+    position: absolute;
+    background: transparent;
+    border: 1.5px dashed transparent;
+    cursor: pointer;
+    border-radius: 6px;
+  }
+
+  .hc-shell[data-hc-mode="author"] .hc-hotspot {
+    border-color: var(--hc-accent);
+    background: rgba(217, 107, 39, 0.16);
+  }
+
+  .hc-hotspot-tag {
+    display: none;
+    position: absolute;
+    top: -16px;
+    left: 0;
+    font-size: 8.5px;
+    font-weight: 700;
+    padding: 1px 5px;
+    border-radius: 3px;
+    background: var(--hc-accent);
+    color: var(--hc-accent-text);
+    white-space: nowrap;
+  }
+
+  .hc-shell[data-hc-mode="author"] .hc-hotspot-tag {
+    display: inline-block;
+  }
+
+  .hc-shell[data-hc-mode="author"] .hc-selected {
+    outline: 2px solid var(--hc-accent);
+    outline-offset: 2px;
+  }
+
+  .hc-shell[data-hc-mode="author"] .hc-card-field {
+    font-size: 8.5px;
+    padding: 5px 6px;
+    line-height: 1.35;
+  }
+
+  .hc-shell[data-hc-mode="author"] .hc-card-btn {
+    font-size: 8.5px;
+    padding: 3px 7px;
+  }
+
+  /* Classic Mac Answer Modal */
+  .hc-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(20, 15, 30, 0.34);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+    padding: 16px;
+  }
+
+  .hc-modal-backdrop.open {
+    display: flex;
+  }
+
+  .hc-modal {
+    width: 82%;
+    background: var(--hc-surface);
+    border: 2px solid var(--hc-border);
+    border-radius: 6px;
+    outline: 1.5px solid var(--hc-border);
+    outline-offset: -5px;
+    padding: 14px 16px;
+    box-shadow: var(--hc-shadow);
+  }
+
+  .hc-modal p {
+    margin: 0 0 12px 0;
+    font-size: 10.5px;
+    line-height: 1.48;
+  }
+
+  .hc-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+
+  .hc-modal-default {
+    border: 2px solid var(--hc-border);
+    outline: 1.5px solid var(--hc-border);
+    outline-offset: 1px;
+    border-radius: 6px;
+    background: var(--hc-accent);
+    color: var(--hc-accent-text);
+    font-family: inherit;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 12px;
+    cursor: pointer;
+  }
+
+  /* Bottom Browse Pill */
+  .hc-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 472px;
+    font-size: 10px;
+    gap: 8px;
+    background: var(--hc-surface);
+    border: 1.5px solid var(--hc-border);
+    box-shadow: 2px 2px 0 var(--hc-border);
+    padding: 4px 8px;
+    border-radius: 5px;
+  }
+
+  .hc-nav-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+  }
+
+  /* Right Inspector / Script Drawer (Author Mode) */
+  .hc-inspector {
+    width: 222px;
+    background: var(--hc-surface);
+    border-left: 2px solid var(--hc-border);
+    display: none;
+    flex-direction: column;
+    flex-shrink: 0;
+    font-size: 10px;
+  }
+
+  .hc-shell[data-hc-mode="author"] .hc-inspector {
+    display: flex;
+  }
+
+  .hc-tabs {
+    display: flex;
+    border-bottom: 2px solid var(--hc-border);
+    background: var(--hc-surface-alt);
+  }
+
+  .hc-tab {
+    flex: 1;
+    border: none;
+    border-right: 1.5px solid var(--hc-border);
+    background: transparent;
+    color: var(--hc-ink-muted);
+    font-family: inherit;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 6px 4px;
+    cursor: pointer;
+  }
+
+  .hc-tab:last-child { border-right: none; }
+
+  .hc-tab.active {
+    background: var(--hc-surface);
+    color: var(--hc-ink);
+  }
+
+  .hc-inspector-body {
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+  }
+
+  .hc-code-box {
+    background: var(--hc-surface-alt);
+    border: 1.5px solid var(--hc-border);
+    padding: 7px;
+    font-size: 9.8px;
+    line-height: 1.5;
+    white-space: pre;
+    overflow-x: auto;
+    border-radius: 4px;
+  }
+
+  .kw { color: var(--hc-code-kw); font-weight: 700; }
+  .str { color: var(--hc-code-str); }
+  .num { color: var(--hc-code-num); }
+  .cmt { color: var(--hc-code-cmt); font-style: italic; }
+
+  .hc-watch {
+    border: 1.5px solid var(--hc-border);
+    border-radius: 4px;
+    padding: 6px;
+    font-size: 10px;
+    background: var(--hc-surface-alt);
+  }
+
+  .hc-watch-title {
+    font-size: 8.8px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--hc-ink-muted);
+    margin-bottom: 4px;
+  }
+
+  .hc-watch-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 2px 0;
+    border-bottom: 1px dashed rgba(128, 128, 128, 0.3);
+  }
+  .hc-watch-row:last-child { border-bottom: none; }
+
+  /* Card Filmstrip (Author Mode) */
+  .hc-filmstrip {
+    display: none;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 10px;
+    background: var(--hc-surface);
+    border-top: 2px solid var(--hc-border);
+    font-size: 10px;
+    overflow-x: auto;
+    position: relative;
+    z-index: 10;
+  }
+
+  .hc-shell[data-hc-mode="author"] .hc-filmstrip {
+    display: flex;
+  }
+
+  .hc-thumb {
+    width: 70px;
+    height: 42px;
+    border: 1.5px solid var(--hc-border);
+    border-radius: 4px;
+    background: var(--hc-surface-alt);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px;
+    text-align: center;
+  }
+
+  .hc-thumb.active {
+    background: var(--hc-accent);
+    color: var(--hc-accent-text);
+    box-shadow: 2px 2px 0 var(--hc-border);
+  }
+
+  /* Message Box */
+  .hc-msgbox {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    background: var(--hc-surface);
+    border-top: 2px solid var(--hc-border);
+    font-size: 11px;
+    position: relative;
+    z-index: 10;
+  }
+
+  .hc-msgbox.open {
+    display: flex;
+  }
+
+  .hc-msgbox input {
+    flex: 1;
+    border: 1.5px solid var(--hc-border);
+    border-radius: 4px;
+    background: var(--hc-card-bg);
+    color: var(--hc-ink);
+    font-family: inherit;
+    font-size: 11px;
+    padding: 4px 8px;
+    outline: none;
+  }
+
+  .hc-caption {
+    margin-top: 8px;
+    font-size: 11px;
+    color: var(--muted-foreground, #777);
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+</style>
+</head>
+<body>
+
+<div id="root" data-hc-theme="classic">
+  <div class="hc-shell" id="shell" data-hc-mode="browse">
+    <!-- Top Classic Menu Bar -->
+    <div class="hc-menubar">
+      <div class="hc-brand">
+        <span class="hc-logo-box">HC</span>
+        <span>HyperCrypt</span>
+        <span style="opacity:0.65; font-weight:400;">· The Attic Mac of 1987 ▾</span>
+      </div>
+      <div class="hc-controls">
+        <div class="hc-seg" role="group" aria-label="Mode">
+          <button id="btnBrowse" class="active" onclick="setMode('browse')">Browse</button>
+          <button id="btnAuthor" onclick="setMode('author')">Author</button>
+        </div>
+        <div class="hc-seg" role="group" aria-label="Skin">
+          <button id="btnClassic" class="active" onclick="setTheme('classic')">1987 Cream</button>
+          <button id="btnKiroween" onclick="setTheme('kiroween')">Kiroween Dusk</button>
+        </div>
+        <button class="hc-pill-btn" onclick="toggleMsgBox()">⌘M Msg</button>
+        <button class="hc-pill-btn" onclick="showExportDialog()">Export .html</button>
+      </div>
+    </div>
+
+    <!-- Main Workspace -->
+    <div class="hc-workspace">
+      <!-- Left Tool Palette (Author Mode) -->
+      <div class="hc-tools">
+        <div class="hc-tool-label">Objects</div>
+        <div class="hc-tool-grid">
+          <button class="hc-tool active" title="Select">↖</button>
+          <button class="hc-tool" title="Button">▢</button>
+          <button class="hc-tool" title="Field">T</button>
+          <button class="hc-tool" title="Hotspot">◎</button>
+        </div>
+        <div class="hc-tool-divider"></div>
+        <div class="hc-tool-label">1-Bit</div>
+        <div class="hc-tool-grid">
+          <button class="hc-tool" title="Pencil">✎</button>
+          <button class="hc-tool" title="Line">╱</button>
+          <button class="hc-tool" title="Rect">□</button>
+          <button class="hc-tool" title="Bucket">❖</button>
+          <button class="hc-tool" title="Eraser">⌫</button>
+          <button class="hc-tool" title="Atkinson Dither Import">▤</button>
+        </div>
+      </div>
+
+      <!-- Center Card Stage -->
+      <div class="hc-stage">
+        <div class="hc-window">
+          <div class="hc-titlebar">
+            <div class="hc-close-box"></div>
+            <div class="hc-stripes"></div>
+            <div class="hc-window-title" id="winTitle">The Attic Mac of 1987 — Card 1/6</div>
+            <div class="hc-stripes"></div>
+          </div>
+          <div class="hc-card-viewport">
+            <canvas id="artCanvas" width="256" height="171"></canvas>
+            <div class="hc-card-layer">
+              <!-- Playful Hotspot over Cute Ghost + Classic Mac -->
+              <button class="hc-hotspot" style="left: 9%; top: 14%; width: 34%; height: 60%;" onclick="wakeSpirit()">
+                <span class="hc-hotspot-tag">hotspot "MacSpirit"</span>
+              </button>
+
+              <!-- Narrative Field -->
+              <div class="hc-card-field" style="left: 47%; top: 13%; width: 47%; height: 52%;" id="cardStory">
+                <strong>OCT 31, 1987 · SUNLIT ATTIC</strong><br/>
+                You flip the switch on a cozy vintage Macintosh. A cheerful 1-bit pixel spirit waves hello from the screen!<br/><br/>
+                <span id="clueLine" style="opacity:0.82;">Tap the smiling Mac to insert the boot floppy...</span>
+              </div>
+
+              <!-- Classic Buttons -->
+              <button class="hc-card-btn primary hc-selected" style="left: 47%; top: 72%;" onclick="openNextCard()">
+                Wake HyperCard →
+              </button>
+              <button class="hc-card-btn" style="left: 11%; top: 79%; font-size:9.5px; padding:3px 8px;" onclick="setMode('author')">
+                Peek Script
+              </button>
+            </div>
+
+            <!-- Authentic Classic Mac Modal -->
+            <div class="hc-modal-backdrop" id="modalBackdrop">
+              <div class="hc-modal">
+                <p id="modalText">Hi from 1987! I'm powered by 10 lines of plain-English HyperTalk.</p>
+                <div class="hc-modal-actions">
+                  <button class="hc-modal-default" onclick="closeModal()">Awesome!</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Browse Bar -->
+        <div class="hc-card-footer">
+          <div class="hc-nav-group">
+            <button class="hc-pill-btn" onclick="switchCard(-1)">◀ Prev</button>
+            <span id="cardCounter" style="font-weight:700;">Card 1 of 6</span>
+            <button class="hc-pill-btn" onclick="switchCard(1)">Next ▶</button>
+          </div>
+          <div style="opacity:0.75; font-size:9.5px; white-space:nowrap;">
+            512×342 1-Bit · Atkinson · Offline
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Inspector / Script / Debugger (Author Mode) -->
+      <div class="hc-inspector">
+        <div class="hc-tabs">
+          <button class="hc-tab active" id="tabScript" onclick="setTab('script')">Script</button>
+          <button class="hc-tab" id="tabDebug" onclick="setTab('debug')">Debug</button>
+          <button class="hc-tab" id="tabProps" onclick="setTab('props')">Props</button>
+        </div>
+        <div class="hc-inspector-body" id="inspectorBody"></div>
+      </div>
+    </div>
+
+    <!-- Bottom Card Filmstrip (Author Mode) -->
+    <div class="hc-filmstrip">
+      <div class="hc-thumb active" onclick="goCard(1)">1. Attic</div>
+      <div class="hc-thumb" onclick="goCard(2)">2. Floppy</div>
+      <div class="hc-thumb" onclick="goCard(3)">3. Year</div>
+      <div class="hc-thumb" onclick="goCard(4)">4. Studio</div>
+      <div class="hc-thumb" onclick="goCard(5)">5. Portal</div>
+      <div class="hc-thumb" onclick="goCard(6)">6. 2026!</div>
+      <div class="hc-thumb" style="border-style:dashed;">+ Card</div>
+    </div>
+
+    <!-- Floating / Docked Message Box -->
+    <div class="hc-msgbox" id="msgBox">
+      <span style="font-weight:700;">Msg &gt;</span>
+      <input id="msgInput" value='play "chime" -- press Enter' onkeydown="if(event.key==='Enter') runMsg()" />
+      <button class="hc-pill-btn" onclick="runMsg()">Run</button>
+    </div>
+  </div>
+
+  <div class="hc-caption">
+    <span>Rev 2 Mockup (Direction A) — try switching <strong>1987 Cream ↔ Kiroween Dusk</strong>, <strong>Browse ↔ Author</strong>, and tapping the vintage Mac!</span>
+    <span>True Bill Atkinson 1-bit dithering</span>
+  </div>
+</div>
+
+<script>
+  let currentTheme = 'classic';
+  let currentMode = 'browse';
+  let currentTab = 'script';
+  let currentCard = 1;
+  let floppyLoaded = 0;
+
+  const cardNames = ['Attic', 'Floppy', 'Year', 'Studio', 'Portal', 'Resurrected'];
+
+  // Real Bill Atkinson 1-Bit Dithering: Cozy 1987 Macintosh + Cute Friendly Kiro-style Pixel Ghost + Sparkles
+  function renderAtkinsonArt() {
+    const canvas = document.getElementById('artCanvas');
+    const ctx = canvas.getContext('2d');
+    const w = canvas.width;
+    const h = canvas.height;
+
+    const gray = new Float32Array(w * h);
+
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w; x++) {
+        // Warm bright sunlit paper background with subtle cozy vignette at far corners
+        let val = 250;
+
+        // Soft warm sky/desk backdrop behind the Mac on left side
+        if (x < 118) {
+          const dx = (x - 58) / 56;
+          const dy = (y - 76) / 62;
+          const rad = Math.sqrt(dx * dx + dy * dy);
+          // Soft airy sunlit halo behind the computer
+          val = rad < 0.92 ? 236 - (1 - rad) * 26 : 248;
+
+          // Cozy wooden desk line near bottom
+          if (y >= 122 && y <= 125 && x > 10 && x < 110) val = 45;
+          if (y > 125 && y < 146 && x > 10 && x < 110) {
+            val = 212 + ((x + y) % 4 === 0 ? -18 : 10);
+          }
+
+          // Twinkling retro 4-point stars around the Mac
+          const stars = [[22, 34], [96, 28], [102, 54], [20, 62]];
+          for (const [sx, sy] of stars) {
+            const adx = Math.abs(x - sx);
+            const ady = Math.abs(y - sy);
+            if ((adx <= 3 && ady === 0) || (ady <= 3 && adx === 0)) val = 35;
+          }
+
+          // 1987 Compact Macintosh body (rounded tall classic Mac silhouette!)
+          const inMac = x >= 30 && x <= 88 && y >= 48 && y <= 122;
+          if (inMac) {
+            // Warm shaded plastic casing (gradient left-to-right for genuine Atkinson stipple shading)
+            val = 218 - (x - 30) * 0.7 - (y - 48) * 0.35;
+
+            // Crisp outer border of Mac casing
+            if (x <= 32 || x >= 86 || y <= 50 || y >= 120) val = 28;
+
+            // Classic CRT screen bezel inside the Mac
+            const inScreen = x >= 38 && x <= 80 && y >= 57 && y <= 92;
+            if (inScreen) {
+              // Bright happy screen interior with cute smiling face / ghost popping out
+              val = 246;
+              if (x <= 39 || x >= 79 || y <= 58 || y >= 91) val = 22;
+
+              // Cute friendly Happy-Mac / Pixel Ghost inside the screen!
+              const gx = (x - 59) / 13;
+              const gy = (y - 75) / 12;
+              const inGhostDome = gx * gx + gy * gy < 1.0 && y <= 76;
+              const inGhostBody = Math.abs(x - 59) <= 13 && y > 76 && y <= 87;
+              const wave = Math.sin((x - 46) * 0.72) * 2.2;
+              const inGhostHem = Math.abs(x - 59) <= 13 && y > 87 && y <= 88 + wave;
+
+              if (inGhostDome || inGhostBody || inGhostHem) {
+                val = 252; // bright cheerful white ghost
+                // Crisp ghost outline
+                const edgeDist = Math.abs(gx * gx + gy * gy - 1.0);
+                if ((y <= 76 && edgeDist < 0.22) || (y > 76 && Math.abs(Math.abs(x - 59) - 13) <= 1.2)) {
+                  val = 25;
+                }
+                // Cute big round eyes!
+                const le = ((x - 54) / 2.2) ** 2 + ((y - 73) / 2.6) ** 2;
+                const re = ((x - 64) / 2.2) ** 2 + ((y - 73) / 2.6) ** 2;
+                if (le < 1 || re < 1) val = 15;
+                // Cute happy smile curve (y grows downward, so center is lower than corners!)
+                const smx = x - 59;
+                const smy = y - 81;
+                if (Math.abs(smx) <= 4.5 && Math.abs(smy + (smx * smx) * 0.16) < 0.95) val = 18;
+              }
+            }
+
+            // Iconic 3.5" Floppy Disk Slot on lower right of Mac front
+            if (x >= 56 && x <= 80 && y >= 101 && y <= 103) val = 22;
+            if (x >= 64 && x <= 72 && y >= 99 && y <= 105) val = 22;
+            // Little rainbow/emblem badge on lower left
+            if (x >= 38 && x <= 44 && y >= 100 && y <= 106) val = 95;
+            // Chin vents line
+            if (y === 112 && x >= 33 && x <= 85) val = 120;
+          }
+
+          // Cute 3.5" floppy disk resting beside the Mac on the desk (right-bottom of Mac)
+          if (x >= 91 && x <= 107 && y >= 104 && y <= 121) {
+            val = 150;
+            if (x <= 92 || x >= 106 || y <= 105 || y >= 120) val = 25;
+            // White label on floppy
+            if (x >= 95 && x <= 103 && y >= 112 && y <= 119) val = 248;
+            // Metal shutter
+            if (x >= 96 && x <= 102 && y >= 105 && y <= 110) val = 70;
+          }
+        } else {
+          // Clean warm paper margin on the right side with very gentle retro border frame
+          const borderFrame = (x === 250 || y === 5 || y === 165);
+          val = borderFrame ? 175 : 252;
+        }
+
+        gray[y * w + x] = val;
+      }
+    }
+
+    // Apply Bill Atkinson 1-bit error diffusion (6/8 error spread -> airy, clean vintage Mac tone!)
+    const img = ctx.createImageData(w, h);
+    const isKiroween = currentTheme === 'kiroween';
+    const fg = isKiroween ? [237, 230, 255] : [36, 32, 27];
+    const bg = isKiroween ? [27, 20, 49] : [251, 248, 241];
+
+    const addErr = (x, y, err) => {
+      if (x >= 0 && x < w && y >= 0 && y < h) {
+        gray[y * w + x] += err;
+      }
+    };
+
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w; x++) {
+        const idx = y * w + x;
+        const oldVal = gray[idx];
+        const isLight = oldVal >= 128;
+        const newVal = isLight ? 255 : 0;
+        const err = (oldVal - newVal) / 8;
+
+        addErr(x + 1, y, err);
+        addErr(x + 2, y, err);
+        addErr(x - 1, y + 1, err);
+        addErr(x, y + 1, err);
+        addErr(x + 1, y + 1, err);
+        addErr(x, y + 2, err);
+
+        const p = idx * 4;
+        const col = isLight ? bg : fg;
+        img.data[p] = col[0];
+        img.data[p + 1] = col[1];
+        img.data[p + 2] = col[2];
+        img.data[p + 3] = 255;
+      }
+    }
+    ctx.putImageData(img, 0, 0);
+  }
+
+  function renderInspector() {
+    const body = document.getElementById('inspectorBody');
+    if (currentTab === 'script') {
+      body.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <strong>btn "Wake HyperCard"</strong>
+          <span style="font-size:9px;opacity:0.75;">✓ Valid AST</span>
+        </div>
+        <div class="hc-code-box"><span class="kw">on</span> mouseUp
+  <span class="kw">global</span> floppyLoaded
+  <span class="kw">play</span> <span class="str">"chime"</span>
+  <span class="kw">if</span> floppyLoaded <span class="kw">&gt;=</span> <span class="num">1</span> <span class="kw">then</span>
+    <span class="kw">visual effect</span> iris open
+    <span class="kw">go to next card</span>
+  <span class="kw">else</span>
+    <span class="kw">answer</span> <span class="str">"Tap the Mac first!"</span>
+  <span class="kw">end if</span>
+<span class="kw">end</span> mouseUp</div>
+        <div class="hc-watch">
+          <div class="hc-watch-title">Live Globals</div>
+          <div class="hc-watch-row"><span>floppyLoaded</span><strong>${floppyLoaded}</strong></div>
+          <div class="hc-watch-row"><span>it</span><span>"Awesome!"</span></div>
+        </div>
+      `;
+    } else if (currentTab === 'debug') {
+      body.innerHTML = `
+        <div style="display:flex;gap:4px;">
+          <button class="hc-pill-btn" style="flex:1;" onclick="openNextCard()">▶ Run</button>
+          <button class="hc-pill-btn" style="flex:1;">⏭ Step</button>
+        </div>
+        <div class="hc-watch">
+          <div class="hc-watch-title">Execution Trace</div>
+          <div class="hc-watch-row"><span>#1 on mouseUp</span><span>0.2ms</span></div>
+          <div class="hc-watch-row"><span>#2 play "chime"</span><span>Audio</span></div>
+          <div class="hc-watch-row"><span>#3 if floppyLoaded>=1</span><span>${floppyLoaded >= 1 ? 'true' : 'false'}</span></div>
+        </div>
+        <div class="hc-watch">
+          <div class="hc-watch-title">Sandbox Safety</div>
+          <div class="hc-watch-row"><span>AST Steps</span><span>4 / 10000</span></div>
+          <div class="hc-watch-row"><span>eval() used</span><span>NEVER</span></div>
+        </div>
+      `;
+    } else {
+      body.innerHTML = `
+        <div class="hc-watch">
+          <div class="hc-watch-title">Object Properties</div>
+          <div class="hc-watch-row"><span>Type</span><strong>Button</strong></div>
+          <div class="hc-watch-row"><span>Style</span><span>RoundRect</span></div>
+          <div class="hc-watch-row"><span>Position</span><span>242, 246</span></div>
+          <div class="hc-watch-row"><span>Size</span><span>148 × 30</span></div>
+          <div class="hc-watch-row"><span>Visible</span><span>true</span></div>
+        </div>
+        <div class="hc-watch">
+          <div class="hc-watch-title">Card Transition</div>
+          <div class="hc-watch-row"><span>Effect</span><strong>iris open</strong></div>
+        </div>
+      `;
+    }
+  }
+
+  function setMode(mode) {
+    currentMode = mode;
+    document.getElementById('shell').setAttribute('data-hc-mode', mode);
+    document.getElementById('btnBrowse').classList.toggle('active', mode === 'browse');
+    document.getElementById('btnAuthor').classList.toggle('active', mode === 'author');
+    renderInspector();
+  }
+
+  function setTheme(theme) {
+    currentTheme = theme;
+    document.getElementById('root').setAttribute('data-hc-theme', theme);
+    document.getElementById('btnClassic').classList.toggle('active', theme === 'classic');
+    document.getElementById('btnKiroween').classList.toggle('active', theme === 'kiroween');
+    renderAtkinsonArt();
+  }
+
+  function setTab(tab) {
+    currentTab = tab;
+    ['script', 'debug', 'props'].forEach(t => {
+      document.getElementById('tab' + t[0].toUpperCase() + t.slice(1)).classList.toggle('active', t === tab);
+    });
+    renderInspector();
+  }
+
+  function wakeSpirit() {
+    floppyLoaded = 1;
+    document.getElementById('clueLine').innerHTML = '<strong>★ Boot Floppy Inserted!</strong> (floppyLoaded = 1)';
+    openModal('Beep-boop! The friendly 1-bit spirit loads your 3.5" disk and runs <code>put 1 into floppyLoaded</code>. Ready to wake HyperCard!');
+    renderInspector();
+  }
+
+  function openNextCard() {
+    if (floppyLoaded >= 1) {
+      switchCard(1);
+    } else {
+      openModal('The Mac chimes softly! Tap the smiling 1987 Macintosh on the left to load the boot floppy first.');
+    }
+  }
+
+  function showExportDialog() {
+    openModal('Single-File Export Ready: downloads <strong>attic-mac-1987.html</strong> (~75 KB) with embedded HyperTalk engine & Web Audio—runs offline forever!');
+  }
+
+  function openModal(html) {
+    document.getElementById('modalText').innerHTML = html;
+    document.getElementById('modalBackdrop').classList.add('open');
+  }
+
+  function closeModal() {
+    document.getElementById('modalBackdrop').classList.remove('open');
+  }
+
+  function toggleMsgBox() {
+    document.getElementById('msgBox').classList.toggle('open');
+  }
+
+  function runMsg() {
+    const val = document.getElementById('msgInput').value.trim();
+    openModal('Message Box executed: <code>' + val.replace(/</g, '&lt;') + '</code>');
+  }
+
+  function switchCard(delta) {
+    const next = ((currentCard - 1 + delta + 6) % 6) + 1;
+    goCard(next);
+  }
+
+  function goCard(n) {
+    currentCard = n;
+    document.getElementById('winTitle').textContent = `The Attic Mac of 1987 — Card ${n}/6 (${cardNames[n - 1]})`;
+    document.getElementById('cardCounter').textContent = `Card ${n} of 6`;
+    document.querySelectorAll('.hc-thumb').forEach((el, idx) => {
+      el.classList.toggle('active', idx === n - 1);
+    });
+  }
+
+  renderAtkinsonArt();
+  renderInspector();
+</script>
+</body>
+</html>

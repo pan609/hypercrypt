@@ -1,0 +1,43 @@
+{
+  "name": "hypercrypt",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "HyperCrypt — 1987 Apple HyperCard & HyperTalk resurrected for the modern web with single-file offline HTML export and Kiro MCP.",
+  "scripts": {
+    "dev": "vite",
+    "build:player": "esbuild src/engine/standalonePlayer.ts --bundle --format=iife --minify --platform=browser --target=es2020 --outfile=src/engine/generated/standalonePlayer.bundle.txt",
+    "build:mcp": "esbuild mcp/server.ts --bundle --format=esm --platform=node --target=node20 --packages=external --outfile=dist-mcp/server.js",
+    "build": "npm run build:player && tsc --noEmit && vite build && npm run build:mcp",
+    "preview": "vite preview --port 4187",
+    "typecheck": "tsc --noEmit",
+    "test:unit": "vitest run tests/unit",
+    "test:integration": "vitest run tests/integration",
+    "test": "vitest run",
+    "test:e2e": "NO_PROXY=127.0.0.1,localhost playwright test",
+    "validate:presets": "npx tsx scripts/validate-presets.ts"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1",
+    "lucide-react": "^0.511.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.52.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/node": "^22.15.0",
+    "@types/react": "^19.1.2",
+    "@types/react-dom": "^19.1.2",
+    "@vitejs/plugin-react": "^4.4.1",
+    "esbuild": "^0.25.4",
+    "jsdom": "^26.1.0",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5",
+    "vitest": "^3.1.3"
+  }
+}

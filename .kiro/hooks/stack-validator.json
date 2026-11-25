@@ -1,0 +1,14 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Preset & Stack Static Validation",
+      "trigger": "PostFileSave",
+      "matcher": "src/presets/.*\\.ts$",
+      "action": {
+        "type": "command",
+        "command": "npm run validate:presets"
+      }
+    }
+  ]
+}
