@@ -9,6 +9,7 @@ export function InspectorDrawer() {
   const {
     stack,
     activeCard,
+    t,
     selectedObjectId,
     inspectorTab,
     globals,
@@ -68,7 +69,7 @@ export function InspectorDrawer() {
           className={`hc-tab ${inspectorTab === 'script' ? 'active' : ''}`}
           onClick={() => setInspectorTab('script')}
         >
-          Script
+          {t.tabScript}
         </button>
         <button
           type="button"
@@ -77,7 +78,7 @@ export function InspectorDrawer() {
           className={`hc-tab ${inspectorTab === 'debug' ? 'active' : ''}`}
           onClick={() => setInspectorTab('debug')}
         >
-          Debug
+          {t.tabDebug}
         </button>
         <button
           type="button"
@@ -86,7 +87,7 @@ export function InspectorDrawer() {
           className={`hc-tab ${inspectorTab === 'props' ? 'active' : ''}`}
           onClick={() => setInspectorTab('props')}
         >
-          Props
+          {t.tabProps}
         </button>
       </div>
 
@@ -105,7 +106,7 @@ export function InspectorDrawer() {
                   color: parseCheck.valid ? 'var(--hc-success)' : 'var(--hc-danger)',
                 }}
               >
-                {parseCheck.valid ? '✓ Valid AST' : `✗ ${parseCheck.diagnostics.length} Error(s)`}
+                {parseCheck.valid ? t.validAst : t.errorsCount(parseCheck.diagnostics.length)}
               </span>
             </div>
 
@@ -139,7 +140,7 @@ export function InspectorDrawer() {
                   else void runCardHandler('openCard');
                 }}
               >
-                <Play size={12} /> Run {selectedObj ? 'mouseUp' : 'openCard'}
+                <Play size={12} /> {t.runHandler(selectedObj ? 'mouseUp' : 'openCard')}
               </button>
               <button
                 type="button"
@@ -148,7 +149,7 @@ export function InspectorDrawer() {
                   insertSnippet('on mouseUp\n  play "click"\n  visual effect dissolve\n  go to next card\nend mouseUp')
                 }
               >
-                + Next Card
+                {t.snipNextCard}
               </button>
               <button
                 type="button"
@@ -157,14 +158,14 @@ export function InspectorDrawer() {
                   insertSnippet('on mouseUp\n  ask "Your name?" with "Traveler"\n  answer "Hello, " & it & "!"\nend mouseUp')
                 }
               >
-                + Ask
+                {t.snipAsk}
               </button>
             </div>
 
             <div className="hc-panel-box">
-              <div className="hc-section-label">Live Globals</div>
+              <div className="hc-section-label">{t.liveGlobals}</div>
               {Object.keys(globals).length === 0 ? (
-                <div style={{ color: 'var(--hc-ink-muted)', fontSize: 10.5 }}>No global variables set yet.</div>
+                <div style={{ color: 'var(--hc-ink-muted)', fontSize: 10.5 }}>{t.noGlobals}</div>
               ) : (
                 Object.entries(globals).map(([k, v]) => (
                   <div key={k} className="hc-prop-row">
@@ -175,7 +176,7 @@ export function InspectorDrawer() {
               )}
               <div className="hc-prop-row" style={{ borderTop: '1px dashed var(--hc-border)', paddingTop: 4 }}>
                 <span>it</span>
-                <span>{lastIt ? `"${lastIt}"` : 'empty'}</span>
+                <span>{lastIt ? `"${lastIt}"` : t.emptyVal}</span>
               </div>
             </div>
           </>
@@ -186,12 +187,8 @@ export function InspectorDrawer() {
             <div className="hc-panel-box">
               <div className="hc-prop-row">
                 <label style={{ display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer', fontWeight: 700 }}>
-                  <input
-                    type="checkbox"
-                    checked={stepMode}
-                    onChange={(e) => setStepMode(e.target.checked)}
-                  />
-                  Step Mode (Pause Each AST Line)
+                  <input type="checkbox" checked={stepMode} onChange={(e) => setStepMode(e.target.checked)} />
+                  {t.stepModeLabel}
                 </label>
               </div>
               <div style={{ display: 'flex', gap: 6 }}>
@@ -202,7 +199,7 @@ export function InspectorDrawer() {
                   disabled={pausedLine === null}
                   onClick={stepNext}
                 >
-                  <SkipForward size={12} /> Next Step
+                  <SkipForward size={12} /> {t.nextStep}
                 </button>
                 <button
                   type="button"
@@ -211,46 +208,46 @@ export function InspectorDrawer() {
                   disabled={pausedLine === null}
                   onClick={continueRun}
                 >
-                  <Play size={12} /> Continue
+                  <Play size={12} /> {t.continueRun}
                 </button>
               </div>
               {pausedLine !== null && (
                 <div style={{ fontSize: 10.5, fontWeight: 700, color: 'var(--hc-accent)' }}>
-                  Paused at Line {pausedLine}: {pausedSummary}
+                  {t.pausedAt(pausedLine, pausedSummary ?? '')}
                 </div>
               )}
               {runtimeError && (
-                <div style={{ fontSize: 10.5, color: 'var(--hc-danger)' }}>Runtime Error: {runtimeError}</div>
+                <div style={{ fontSize: 10.5, color: 'var(--hc-danger)' }}>
+                  {t.runtimeErrorPrefix} {runtimeError}
+                </div>
               )}
             </div>
 
             <div className="hc-panel-box">
-              <div className="hc-section-label">Sandbox Safety</div>
+              <div className="hc-section-label">{t.sandboxSafety}</div>
               <div className="hc-prop-row">
-                <span>AST Steps Used</span>
+                <span>{t.astStepsUsed}</span>
                 <strong>
                   {stepsExecuted} / {MAX_SANDBOX_STEPS}
                 </strong>
               </div>
               <div className="hc-prop-row">
                 <span>eval() / new Function</span>
-                <strong style={{ color: 'var(--hc-success)' }}>DISABLED</strong>
+                <strong style={{ color: 'var(--hc-success)' }}>{t.evalDisabled}</strong>
               </div>
             </div>
 
             <div className="hc-panel-box" style={{ maxHeight: 240, overflowY: 'auto' }}>
-              <div className="hc-section-label">Execution Trace ({trace.length})</div>
+              <div className="hc-section-label">{t.execTrace(trace.length)}</div>
               {trace.length === 0 ? (
-                <div style={{ color: 'var(--hc-ink-muted)', fontSize: 10.5 }}>
-                  Click any scripted button or run a handler to inspect trace events.
-                </div>
+                <div style={{ color: 'var(--hc-ink-muted)', fontSize: 10.5 }}>{t.noTraceYet}</div>
               ) : (
-                trace.map((t) => (
-                  <div key={`${t.step}-${t.line}`} className="hc-prop-row">
+                trace.map((tr) => (
+                  <div key={`${tr.step}-${tr.line}`} className="hc-prop-row">
                     <span>
-                      #{t.step} L{t.line}: {t.summary}
+                      #{tr.step} L{tr.line}: {tr.summary}
                     </span>
-                    <span style={{ color: 'var(--hc-ink-muted)' }}>{t.handler}</span>
+                    <span style={{ color: 'var(--hc-ink-muted)' }}>{tr.handler}</span>
                   </div>
                 ))
               )}
@@ -262,9 +259,9 @@ export function InspectorDrawer() {
           <>
             {selectedObj ? (
               <div className="hc-panel-box">
-                <div className="hc-section-label">Selected {selectedObj.type}</div>
+                <div className="hc-section-label">{t.selectedObj(selectedObj.type)}</div>
                 <label className="hc-prop-row">
-                  <span>Name</span>
+                  <span>{t.propName}</span>
                   <input
                     className="hc-input"
                     style={{ width: 155 }}
@@ -276,7 +273,7 @@ export function InspectorDrawer() {
                 {selectedObj.type === 'button' ? (
                   <>
                     <label className="hc-prop-row">
-                      <span>Label</span>
+                      <span>{t.propLabel}</span>
                       <input
                         className="hc-input"
                         style={{ width: 155 }}
@@ -289,7 +286,7 @@ export function InspectorDrawer() {
                       />
                     </label>
                     <label className="hc-prop-row">
-                      <span>Style</span>
+                      <span>{t.propStyle}</span>
                       <select
                         className="hc-input"
                         style={{ width: 155 }}
@@ -307,7 +304,7 @@ export function InspectorDrawer() {
                       </select>
                     </label>
                     <label className="hc-prop-row">
-                      <span>Primary Accent</span>
+                      <span>{t.propAccent}</span>
                       <input
                         type="checkbox"
                         checked={Boolean(selectedObj.accent)}
@@ -322,7 +319,7 @@ export function InspectorDrawer() {
                 ) : (
                   <>
                     <label className="hc-prop-row">
-                      <span>Style</span>
+                      <span>{t.propStyle}</span>
                       <select
                         className="hc-input"
                         style={{ width: 155 }}
@@ -339,7 +336,7 @@ export function InspectorDrawer() {
                       </select>
                     </label>
                     <label className="hc-prop-row">
-                      <span>Locked (Read-Only)</span>
+                      <span>{t.propLocked}</span>
                       <input
                         type="checkbox"
                         checked={selectedObj.locked}
@@ -351,7 +348,7 @@ export function InspectorDrawer() {
                       />
                     </label>
                     <label style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                      <span>Text Content</span>
+                      <span>{t.propText}</span>
                       <textarea
                         className="hc-input"
                         rows={4}
@@ -367,7 +364,7 @@ export function InspectorDrawer() {
                 )}
 
                 <label className="hc-prop-row">
-                  <span>Visible</span>
+                  <span>{t.propVisible}</span>
                   <input
                     type="checkbox"
                     checked={selectedObj.visible}
@@ -376,7 +373,7 @@ export function InspectorDrawer() {
                 </label>
 
                 <div className="hc-prop-row">
-                  <span>Bounds</span>
+                  <span>{t.propBounds}</span>
                   <span style={{ color: 'var(--hc-ink-muted)' }}>
                     {selectedObj.x},{selectedObj.y} · {selectedObj.width}×{selectedObj.height}
                   </span>
@@ -389,7 +386,7 @@ export function InspectorDrawer() {
                     style={{ flex: 1, justifyContent: 'center' }}
                     onClick={() => duplicateObject(selectedObj.id)}
                   >
-                    <Copy size={12} /> Duplicate
+                    <Copy size={12} /> {t.duplicate}
                   </button>
                   <button
                     type="button"
@@ -397,15 +394,15 @@ export function InspectorDrawer() {
                     style={{ flex: 1, justifyContent: 'center' }}
                     onClick={() => deleteObject(selectedObj.id)}
                   >
-                    <Trash2 size={12} /> Delete
+                    <Trash2 size={12} /> {t.delete}
                   </button>
                 </div>
               </div>
             ) : (
               <div className="hc-panel-box">
-                <div className="hc-section-label">Card & Stack Properties</div>
+                <div className="hc-section-label">{t.cardStackProps}</div>
                 <label className="hc-prop-row">
-                  <span>Stack Title</span>
+                  <span>{t.propStackTitle}</span>
                   <input
                     className="hc-input"
                     style={{ width: 155 }}
@@ -414,7 +411,7 @@ export function InspectorDrawer() {
                   />
                 </label>
                 <label className="hc-prop-row">
-                  <span>Card Name</span>
+                  <span>{t.propCardName}</span>
                   <input
                     className="hc-input"
                     style={{ width: 155 }}
@@ -422,9 +419,7 @@ export function InspectorDrawer() {
                     onChange={(e) => updateActiveCard((c) => ({ ...c, name: e.target.value }), false)}
                   />
                 </label>
-                <div style={{ color: 'var(--hc-ink-muted)', fontSize: 10.5, marginTop: 4 }}>
-                  Click any button or field on the card to edit its position, style, or HyperTalk script.
-                </div>
+                <div style={{ color: 'var(--hc-ink-muted)', fontSize: 10.5, marginTop: 4 }}>{t.propsHint}</div>
               </div>
             )}
           </>

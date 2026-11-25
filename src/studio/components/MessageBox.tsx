@@ -5,7 +5,7 @@ import { useStudio } from '../store/useStudioStore';
 const QUICK_COMMANDS = ['play "chime"', 'go to next card', 'answer "Hello from 1987!" with "Nice!"'];
 
 export function MessageBox() {
-  const { messageBoxOpen, setMessageBoxOpen, runMessageBoxCommand } = useStudio();
+  const { t, messageBoxOpen, setMessageBoxOpen, runMessageBoxCommand } = useStudio();
   const [command, setCommand] = useState('play "chime"');
 
   if (!messageBoxOpen) return null;
@@ -24,7 +24,7 @@ export function MessageBox() {
         className="hc-input"
         style={{ flex: 1, fontSize: 12 }}
         value={command}
-        placeholder='Type any HyperTalk command, e.g. go to card 2 or play "chime"'
+        placeholder={t.msgPlaceholder}
         onChange={(e) => setCommand(e.target.value)}
         onKeyDown={(e) => {
           if (e.key === 'Enter') submit();
@@ -32,7 +32,7 @@ export function MessageBox() {
         }}
       />
       <button type="button" className="hc-btn primary" onClick={submit}>
-        <Play size={12} /> Run
+        <Play size={12} /> {t.run}
       </button>
 
       {QUICK_COMMANDS.map((cmd) => (

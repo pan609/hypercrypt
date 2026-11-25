@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { Download, FileJson, FolderOpen, Link2, Plus, RotateCcw, Terminal, Volume2, VolumeX } from 'lucide-react';
+import { Download, FileJson, FolderOpen, Languages, Link2, Plus, RotateCcw, Terminal, Volume2, VolumeX } from 'lucide-react';
 import { BUILTIN_PRESETS } from '../../presets';
 import { useStudio } from '../store/useStudioStore';
 
@@ -8,10 +8,13 @@ export function MenuBar() {
     stack,
     mode,
     theme,
+    locale,
+    t,
     muted,
     messageBoxOpen,
     setMode,
     setTheme,
+    setLocale,
     toggleMute,
     setMessageBoxOpen,
     loadPreset,
@@ -60,7 +63,7 @@ export function MenuBar() {
               setExportMenuOpen(false);
             }}
           >
-            Stack: {stack.title} ▾
+            {t.stackPrefix}: {stack.title} ▾
           </button>
 
           {stacksMenuOpen && (
@@ -76,8 +79,8 @@ export function MenuBar() {
                     setStacksMenuOpen(false);
                   }}
                 >
-                  <strong>{preset.label}</strong>
-                  <small>{preset.tagline}</small>
+                  <strong>{preset.label[locale]}</strong>
+                  <small>{preset.tagline[locale]}</small>
                 </button>
               ))}
               <div className="hc-dropdown-divider" />
@@ -91,7 +94,7 @@ export function MenuBar() {
                 }}
               >
                 <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                  <Plus size={13} /> New Blank Stack
+                  <Plus size={13} /> {t.newBlankStack}
                 </span>
               </button>
               <button
@@ -104,7 +107,7 @@ export function MenuBar() {
                 }}
               >
                 <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                  <RotateCcw size={13} /> Reset Current Demo
+                  <RotateCcw size={13} /> {t.resetDemo}
                 </span>
               </button>
               <button
@@ -114,7 +117,7 @@ export function MenuBar() {
                 onClick={() => fileInputRef.current?.click()}
               >
                 <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                  <FolderOpen size={13} /> Open .hcstack.json...
+                  <FolderOpen size={13} /> {t.openJson}
                 </span>
               </button>
             </div>
@@ -133,22 +136,33 @@ export function MenuBar() {
         {/* Mode Switcher */}
         <div className="hc-seg" role="group" aria-label="Studio mode">
           <button type="button" className={mode === 'browse' ? 'active' : ''} onClick={() => setMode('browse')}>
-            Browse
+            {t.browse}
           </button>
           <button type="button" className={mode === 'author' ? 'active' : ''} onClick={() => setMode('author')}>
-            Author
+            {t.author}
           </button>
         </div>
 
         {/* Dual Skin Switcher */}
         <div className="hc-seg" role="group" aria-label="Visual skin">
           <button type="button" className={theme === 'classic' ? 'active' : ''} onClick={() => setTheme('classic')}>
-            1987 Cream
+            {t.skinClassic}
           </button>
           <button type="button" className={theme === 'kiroween' ? 'active' : ''} onClick={() => setTheme('kiroween')}>
-            Kiroween Dusk
+            {t.skinKiroween}
           </button>
         </div>
+
+        {/* Bilingual EN / 中文 Toggle */}
+        <button
+          type="button"
+          className="hc-btn"
+          aria-label="Switch language"
+          title={locale === 'en' ? '切换为中文' : 'Switch to English'}
+          onClick={() => setLocale(locale === 'en' ? 'zh' : 'en')}
+        >
+          <Languages size={13} /> {locale === 'en' ? '中文' : 'EN'}
+        </button>
 
         <button
           type="button"
@@ -156,14 +170,14 @@ export function MenuBar() {
           title="Toggle Message Box (Cmd/Ctrl+M)"
           onClick={() => setMessageBoxOpen(!messageBoxOpen)}
         >
-          <Terminal size={13} /> ⌘M Msg
+          <Terminal size={13} /> {t.msgBtn}
         </button>
 
         <button
           type="button"
           className="hc-btn"
-          aria-label={muted ? 'Unmute audio' : 'Mute audio'}
-          title={muted ? 'Unmute Web Audio' : 'Mute Web Audio'}
+          aria-label={muted ? t.unmuteAudio : t.muteAudio}
+          title={muted ? t.unmuteAudio : t.muteAudio}
           onClick={toggleMute}
         >
           {muted ? <VolumeX size={13} /> : <Volume2 size={13} />}
@@ -180,7 +194,7 @@ export function MenuBar() {
               setStacksMenuOpen(false);
             }}
           >
-            <Download size={13} /> Export ▾
+            <Download size={13} /> {t.exportBtn} ▾
           </button>
 
           {exportMenuOpen && (
@@ -195,9 +209,9 @@ export function MenuBar() {
                 }}
               >
                 <strong style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                  <Download size={13} /> Export Single-File .html
+                  <Download size={13} /> {t.exportHtmlTitle}
                 </strong>
-                <small>Offline playable file with embedded HyperTalk engine</small>
+                <small>{t.exportHtmlDesc}</small>
               </button>
               <button
                 type="button"
@@ -209,9 +223,9 @@ export function MenuBar() {
                 }}
               >
                 <strong style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                  <Link2 size={13} /> Copy Share Link
+                  <Link2 size={13} /> {t.shareLinkTitle}
                 </strong>
-                <small>Encodes stack into #stack= URL hash</small>
+                <small>{t.shareLinkDesc}</small>
               </button>
               <button
                 type="button"
@@ -223,9 +237,9 @@ export function MenuBar() {
                 }}
               >
                 <strong style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                  <FileJson size={13} /> Download .hcstack.json
+                  <FileJson size={13} /> {t.exportJsonTitle}
                 </strong>
-                <small>Clean JSON format compatible with hypercrypt-mcp</small>
+                <small>{t.exportJsonDesc}</small>
               </button>
             </div>
           )}

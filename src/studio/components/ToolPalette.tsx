@@ -30,15 +30,9 @@ const PAINT_TOOLS: Array<{ id: AuthorTool; title: string; icon: React.ReactNode 
   { id: 'eraser', title: '1-Bit Eraser', icon: <Eraser size={14} /> },
 ];
 
-const PATTERNS: Array<{ id: PaintPattern; label: string }> = [
-  { id: 'solid', label: 'Solid' },
-  { id: 'stipple50', label: '50%' },
-  { id: 'diagonal', label: 'Hatch' },
-  { id: 'checker', label: 'Check' },
-];
-
 export function ToolPalette() {
   const {
+    t,
     activeTool,
     activePattern,
     canUndo,
@@ -51,38 +45,45 @@ export function ToolPalette() {
     redo,
   } = useStudio();
 
+  const patterns: Array<{ id: PaintPattern; label: string }> = [
+    { id: 'solid', label: t.patSolid },
+    { id: 'stipple50', label: t.patStipple },
+    { id: 'diagonal', label: t.patHatch },
+    { id: 'checker', label: t.patCheck },
+  ];
+
   return (
     <aside className="hc-tools" aria-label="Author tools">
-      <div className="hc-section-label">Objects</div>
+      <div className="hc-section-label">{t.objectsLabel}</div>
       <div className="hc-tool-grid">
-        {OBJECT_TOOLS.map((t) => (
+        {OBJECT_TOOLS.map((tool) => (
           <button
-            key={t.id}
+            key={tool.id}
             type="button"
-            title={t.title}
-            aria-label={t.title}
-            className={`hc-tool-btn ${activeTool === t.id ? 'active' : ''}`}
-            onClick={() => setActiveTool(t.id)}
+            title={tool.title}
+            aria-label={tool.title}
+            className={`hc-tool-btn ${activeTool === tool.id ? 'active' : ''}`}
+            onClick={() => setActiveTool(tool.id)}
           >
-            {t.icon}
+            {tool.icon}
           </button>
         ))}
       </div>
 
       <div className="hc-dropdown-divider" />
 
-      <div className="hc-section-label">1-Bit Paint</div>
+      <div className="hc-section-label">{t.paintLabel}</div>
       <div className="hc-tool-grid">
-        {PAINT_TOOLS.map((t) => (
+        {PAINT_TOOLS.map((tool) => (
           <button
-            key={t.id}
+            key={tool.id}
             type="button"
-            title={t.title}
-            aria-label={t.title}
-            className={`hc-tool-btn ${activeTool === t.id ? 'active' : ''}`}
-            onClick={() => setActiveTool(t.id)}
+            title={tool.title}
+            aria-label={tool.title}
+            className={`hc-tool-btn ${activeTool === tool.id ? 'active' : ''}`}
+            onClick={() => setActiveTool(tool.id)}
           >
-            {t.icon}
+            {tool.icon}
           </button>
         ))}
       </div>
@@ -90,19 +91,19 @@ export function ToolPalette() {
       <button
         type="button"
         className="hc-tool-wide"
-        title="Import any photo using Bill Atkinson 1-bit dithering"
+        title={t.ditherTitle}
         onClick={() => setDitherModalOpen(true)}
       >
         <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
-          <ImagePlus size={12} /> Dither Img
+          <ImagePlus size={12} /> {t.ditherImg}
         </span>
       </button>
 
       <div className="hc-section-label" style={{ marginTop: 4 }}>
-        Pattern
+        {t.patternLabel}
       </div>
       <div className="hc-tool-grid">
-        {PATTERNS.map((p) => (
+        {patterns.map((p) => (
           <button
             key={p.id}
             type="button"
@@ -129,11 +130,11 @@ export function ToolPalette() {
       <button
         type="button"
         className="hc-tool-wide"
-        title="Clear card 1-bit paint layer"
+        title={t.clearArt}
         onClick={() => updateActiveCard((c) => ({ ...c, bitmapRle: '' }), true)}
       >
         <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
-          <Trash2 size={11} /> Clear Art
+          <Trash2 size={11} /> {t.clearArt}
         </span>
       </button>
     </aside>

@@ -38,7 +38,7 @@ function buildSampleGradientScene(variant: 'sphere' | 'mountains'): Float32Array
 }
 
 export function DitherModal() {
-  const { ditherModalOpen, setDitherModalOpen, theme, updateActiveCard, showToast } = useStudio();
+  const { t, ditherModalOpen, setDitherModalOpen, theme, updateActiveCard, showToast } = useStudio();
   const [brightness, setBrightness] = useState(0);
   const [contrast, setContrast] = useState(12);
   const [ditherMode, setDitherMode] = useState<'atkinson' | 'threshold'>('atkinson');
@@ -108,14 +108,14 @@ export function DitherModal() {
     const rle = encodeBitmapRle(lastBitsRef.current);
     updateActiveCard((c) => ({ ...c, bitmapRle: rle }), true);
     setDitherModalOpen(false);
-    showToast('Stamped 1-bit Atkinson dither artwork onto card!');
+    showToast(t.toastStamped);
   };
 
   return (
     <div className="hc-modal-backdrop fixed" role="dialog" aria-modal="true" aria-label="Atkinson 1-Bit Dither Importer">
       <div className="hc-modal wide">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-          <strong>Bill Atkinson 1-Bit Dither Importer (512×342)</strong>
+          <strong>{t.ditherTitle}</strong>
           <button type="button" className="hc-btn" onClick={() => setDitherModalOpen(false)}>
             <X size={13} />
           </button>
@@ -133,12 +133,12 @@ export function DitherModal() {
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10, fontSize: 11.5 }}>
             <label className="hc-btn primary" style={{ justifyContent: 'center', cursor: 'pointer' }}>
-              <Upload size={13} /> Upload Photo (PNG/JPG)
+              <Upload size={13} /> {t.uploadPhoto}
               <input type="file" accept="image/*" style={{ display: 'none' }} onChange={handleImageUpload} />
             </label>
 
             <div className="hc-panel-box">
-              <div className="hc-section-label">Or Try Built-In Sample</div>
+              <div className="hc-section-label">{t.sampleTitle}</div>
               <div style={{ display: 'flex', gap: 6 }}>
                 <button
                   type="button"
@@ -149,7 +149,7 @@ export function DitherModal() {
                     setSampleVariant('mountains');
                   }}
                 >
-                  Mountains
+                  {t.sampleMountains}
                 </button>
                 <button
                   type="button"
@@ -160,13 +160,13 @@ export function DitherModal() {
                     setSampleVariant('sphere');
                   }}
                 >
-                  3D Sphere
+                  {t.sampleSphere}
                 </button>
               </div>
             </div>
 
             <div className="hc-panel-box">
-              <div className="hc-section-label">Algorithm</div>
+              <div className="hc-section-label">{t.algorithmLabel}</div>
               <div className="hc-seg" style={{ width: '100%' }}>
                 <button
                   type="button"
@@ -174,7 +174,7 @@ export function DitherModal() {
                   className={ditherMode === 'atkinson' ? 'active' : ''}
                   onClick={() => setDitherMode('atkinson')}
                 >
-                  Atkinson 1987
+                  {t.atkinson1987}
                 </button>
                 <button
                   type="button"
@@ -182,12 +182,14 @@ export function DitherModal() {
                   className={ditherMode === 'threshold' ? 'active' : ''}
                   onClick={() => setDitherMode('threshold')}
                 >
-                  Threshold
+                  {t.threshold}
                 </button>
               </div>
 
               <label style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                <span>Brightness: {brightness}</span>
+                <span>
+                  {t.brightness}: {brightness}
+                </span>
                 <input
                   type="range"
                   min={-80}
@@ -198,7 +200,9 @@ export function DitherModal() {
               </label>
 
               <label style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                <span>Contrast: {contrast}</span>
+                <span>
+                  {t.contrast}: {contrast}
+                </span>
                 <input
                   type="range"
                   min={-80}
@@ -210,7 +214,7 @@ export function DitherModal() {
             </div>
 
             <button type="button" className="hc-btn primary" style={{ justifyContent: 'center' }} onClick={applyToCard}>
-              Stamp onto Active Card
+              {t.stampCard}
             </button>
           </div>
         </div>

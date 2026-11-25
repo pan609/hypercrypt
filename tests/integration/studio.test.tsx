@@ -62,4 +62,19 @@ describe('HyperCrypt Studio Integration Flows', () => {
       expect(screen.getByTestId('window-title')).toHaveTextContent('Time Dial (3/6)');
     });
   });
+
+  it('switches UI and built-in stacks smoothly between English and Chinese (EN / 中文)', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    expect(screen.getByTestId('window-title')).toHaveTextContent('The Attic Mac of 1987 — Attic (1/6)');
+    await user.click(screen.getByRole('button', { name: 'Switch language' }));
+    expect(screen.getByTestId('window-title')).toHaveTextContent('1987 阁楼老苹果 — 阁楼 (1/6)');
+    expect(screen.getByRole('button', { name: '游玩' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '创作' })).toBeInTheDocument();
+
+    // Switch back to English cleanly
+    await user.click(screen.getByRole('button', { name: 'Switch language' }));
+    expect(screen.getByTestId('window-title')).toHaveTextContent('The Attic Mac of 1987 — Attic (1/6)');
+  });
 });

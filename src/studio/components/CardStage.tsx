@@ -12,6 +12,7 @@ export function CardStage() {
     activeCard,
     activeCardIndex,
     mode,
+    t,
     activeTool,
     selectedObjectId,
     activeModal,
@@ -277,10 +278,10 @@ export function CardStage() {
                   ) : (
                     <>
                       <button type="button" className="hc-btn" onClick={() => activeModal.resolve(null)}>
-                        Cancel
+                        {t.cancel}
                       </button>
                       <button type="button" className="hc-btn primary" onClick={() => activeModal.resolve(askDraft)}>
-                        OK
+                        {t.ok}
                       </button>
                     </>
                   )}
@@ -295,13 +296,13 @@ export function CardStage() {
       <div className="hc-stage-footer">
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <button type="button" className="hc-btn" onClick={() => goToCard(activeCardIndex - 1, 'wipe right')}>
-            ◀ Prev
+            {t.prev}
           </button>
           <strong data-testid="card-counter">
-            Card {activeCardIndex + 1} of {stack.cards.length}
+            {t.cardOf(activeCardIndex + 1, stack.cards.length)}
           </strong>
           <button type="button" className="hc-btn" onClick={() => goToCard(activeCardIndex + 1, 'wipe left')}>
-            Next ▶
+            {t.next}
           </button>
         </div>
 
@@ -316,9 +317,9 @@ export function CardStage() {
               if (firstScripted) setSelectedObjectId(firstScripted.id);
             }}
           >
-            <Code2 size={13} /> Peek Script
+            <Code2 size={13} /> {t.peekScript}
           </button>
-          <span style={{ color: 'var(--hc-ink-muted)', fontSize: 10.5 }}>512×342 1-Bit · Zero Backend</span>
+          <span style={{ color: 'var(--hc-ink-muted)', fontSize: 10.5 }}>{t.stageTagline}</span>
         </div>
       </div>
     </main>

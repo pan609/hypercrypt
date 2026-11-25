@@ -4,6 +4,7 @@ import { useStudio } from '../store/useStudioStore';
 export function CardFilmstrip() {
   const {
     stack,
+    t,
     activeCardIndex,
     goToCard,
     addCard,
@@ -21,16 +22,18 @@ export function CardFilmstrip() {
           className={`hc-thumb ${idx === activeCardIndex ? 'active' : ''}`}
           onClick={() => goToCard(idx)}
         >
-          <span>{idx + 1}. {card.name}</span>
-          <span style={{ fontSize: 9, opacity: 0.75 }}>{card.objects.length} obj</span>
+          <span>
+            {idx + 1}. {card.name}
+          </span>
+          <span style={{ fontSize: 9, opacity: 0.75 }}>{t.objCount(card.objects.length)}</span>
         </button>
       ))}
 
       <button type="button" className="hc-btn primary" onClick={addCard}>
-        <Plus size={12} /> Card
+        <Plus size={12} /> {t.addCard}
       </button>
       <button type="button" className="hc-btn" title="Duplicate active card" onClick={duplicateCard}>
-        <Copy size={12} /> Dup
+        <Copy size={12} /> {t.dupCard}
       </button>
       <button
         type="button"
