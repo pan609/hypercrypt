@@ -1,7 +1,53 @@
 import fs from 'node:fs/promises';
 import { expect, test } from '@playwright/test';
+import { compileMarkdownToStack } from '../../src/engine/markdownCompiler';
+import { encodeStackToHash } from '../../src/engine/urlShare';
 
 test.describe('HyperCrypt E2E & Standalone Offline Export Verification', () => {
+  test('initializes edited Markdown immediately and preserves first-card initialization offline', async ({ page, context }) => {
+    await page.goto('/');
+    await page.getByRole('button', { name: 'MD → Stack', exact: true }).click();
+    const markdown = '# First Card\n## Card: Start\nuninitialized\n```hypertalk\non openCard\n  put "INITIALIZED" into field "Body"\nend openCard\n```';
+    await page.getByTestId('md-source-input').fill(markdown);
+    await expect(page.getByText('INITIALIZED', { exact: true })).toBeVisible();
+    await page.getByTestId('md-source-input').fill(markdown.replace('INITIALIZED', 'EDITED INITIALIZATION'));
+    await expect(page.getByText('EDITED INITIALIZATION', { exact: true })).toBeVisible();
+    const [download] = await Promise.all([
+      page.waitForEvent('download'),
+      page.getByRole('button', { name: 'Export .html', exact: true }).click(),
+    ]);
+    const offline = await context.newPage();
+    await offline.route('**/*', (route) => route.abort());
+    await offline.setContent(await fs.readFile((await download.path())!, 'utf8'));
+    await expect(offline.locator('#hc-objects')).toContainText('EDITED INITIALIZATION');
+    await offline.close();
+  });
+
+  test('reports a controlled budget error in Studio and actual offline export for an empty counted loop', async ({ page, context }) => {
+    // Finite 20001 iterations are safe even if the guard regresses. Unbounded
+    // precision-boundary cases run only in disposable OS processes, never here.
+    const stack = compileMarkdownToStack('# Budget\n## Card: Start\nBudget check');
+    stack.cards[0].objects.push({
+      id: 'probe', name: 'Budget Probe', type: 'button', label: 'Budget Probe', style: 'roundrect',
+      x: 24, y: 270, width: 180, height: 32, visible: true,
+      script: 'on mouseUp\nrepeat 20001 times\nend repeat\nend mouseUp',
+    });
+    await page.goto('/' + encodeStackToHash(stack));
+    await page.getByRole('button', { name: 'Budget Probe', exact: true }).click();
+    await expect(page.getByText(/Execution limit reached/).first()).toBeVisible();
+    await page.getByRole('button', { name: /Export/i }).click();
+    const [download] = await Promise.all([
+      page.waitForEvent('download'),
+      page.getByRole('menuitem', { name: /Export Single-File .html/i }).click(),
+    ]);
+    const offline = await context.newPage();
+    await offline.route('**/*', (route) => route.abort());
+    await offline.setContent(await fs.readFile((await download.path())!, 'utf8'));
+    await offline.getByRole('button', { name: 'Budget Probe', exact: true }).click();
+    await expect(offline.locator('#hc-modal-text')).toContainText('Execution limit reached');
+    await offline.close();
+  });
+
   test('keeps RPG ending and respawn globals live in Studio and the exported offline player', async ({ page, context }) => {
     const errors: string[] = [];
     page.on('pageerror', (err) => errors.push(err.message));

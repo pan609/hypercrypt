@@ -1,16 +1,18 @@
 {
   "schemaVersion": 1,
   "project": "hypercrypt",
-  "updatedAt": "2026-11-26T14:38:04+08:00",
-  "stage": "kiro-live-verified-awaiting-final-video-and-submission",
-  "judgeGate": "PASS (R2 automatic upgrade conditions satisfied; no R3)",
+  "updatedAt": "2026-11-26T14:58:47+08:00",
+  "stage": "final-check-fixes-verified-awaiting-release-and-judge-acceptance",
+  "judgeGate": "CONDITIONAL per final check; lightweight acceptance pending",
   "verification": {
     "build": "passed",
     "typecheck": "passed within npm run build",
     "presets": "10 passed",
-    "vitest": "26 passed",
-    "playwright": "2 passed",
-    "evidence": "docs/R2_VALIDATION.md"
+    "vitest": "36 passed",
+    "playwright": "4 passed",
+    "evidence": "docs/FINAL_FIXES_VALIDATION.md",
+    "isolatedBudgetProbes": "12 passed",
+    "independentReview": "round 2 no findings"
   },
   "pending": [
     "Record and edit the final <=3 minute demo, including actual Kiro footage",

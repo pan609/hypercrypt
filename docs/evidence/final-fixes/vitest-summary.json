@@ -1,0 +1,38 @@
+{
+  "numTotalTests": 36,
+  "numPassedTests": 36,
+  "numFailedTests": 0,
+  "success": true,
+  "testFiles": [
+    {
+      "file": "markdown-lifecycle.test.tsx",
+      "status": "passed",
+      "tests": 3
+    },
+    {
+      "file": "studio.test.tsx",
+      "status": "passed",
+      "tests": 5
+    },
+    {
+      "file": "bitmap-atkinson.test.ts",
+      "status": "passed",
+      "tests": 4
+    },
+    {
+      "file": "engine.test.ts",
+      "status": "passed",
+      "tests": 12
+    },
+    {
+      "file": "export-and-mcp.test.ts",
+      "status": "passed",
+      "tests": 5
+    },
+    {
+      "file": "sandbox-budget.test.ts",
+      "status": "passed",
+      "tests": 7
+    }
+  ]
+}

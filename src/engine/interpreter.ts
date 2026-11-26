@@ -218,12 +218,7 @@ export class HyperTalkInterpreter {
     activeHandler: string,
   ): Promise<ControlSignal> {
     for (const stmt of stmts) {
-      this.steps++;
-      if (this.steps > this.maxSteps) {
-        throw new SandboxLimitError(
-          `Execution limit reached (${this.maxSteps} AST steps). Possible infinite loop prevented.`,
-        );
-      }
+      this.consumeStep();
 
       const summary = this.summarizeStatement(stmt);
       const snapshot = this.getGlobalsRecord();
@@ -245,6 +240,15 @@ export class HyperTalkInterpreter {
       if (sig.kind !== 'none') return sig;
     }
     return { kind: 'none' };
+  }
+
+  private consumeStep(): void {
+    this.steps++;
+    if (this.steps > this.maxSteps) {
+      throw new SandboxLimitError(
+        `Execution limit reached (${this.maxSteps} AST steps). Possible infinite loop prevented.`,
+      );
+    }
   }
 
   private async execStatement(
@@ -395,6 +399,7 @@ export class HyperTalkInterpreter {
       case 'repeatTimes': {
         const count = Math.max(0, Math.floor(toNumberVal(this.evalExpr(stmt.count, locals, declaredGlobals))));
         for (let i = 0; i < count; i++) {
+          this.consumeStep();
           const sig = await this.execStatements(stmt.body, locals, declaredGlobals, handlerMap, activeHandler);
           if (sig.kind === 'exitRepeat') break;
           if (sig.kind !== 'none') return sig;
@@ -407,6 +412,8 @@ export class HyperTalkInterpreter {
         const end = Math.floor(toNumberVal(this.evalExpr(stmt.end, locals, declaredGlobals)));
         const step = start <= end ? 1 : -1;
         for (let v = start; step > 0 ? v <= end : v >= end; v += step) {
+          // Charge even an empty body or a floating-point counter that cannot advance.
+          this.consumeStep();
           this.writeVar(stmt.varName, v, locals, declaredGlobals);
           const sig = await this.execStatements(stmt.body, locals, declaredGlobals, handlerMap, activeHandler);
           if (sig.kind === 'exitRepeat') break;
@@ -417,16 +424,10 @@ export class HyperTalkInterpreter {
 
       case 'repeatWhile': {
         while (toBoolVal(this.evalExpr(stmt.condition, locals, declaredGlobals))) {
+          this.consumeStep();
           const sig = await this.execStatements(stmt.body, locals, declaredGlobals, handlerMap, activeHandler);
           if (sig.kind === 'exitRepeat') break;
           if (sig.kind !== 'none') return sig;
-          // Ensure empty while loops still trip sandbox step budget
-          this.steps++;
-          if (this.steps > this.maxSteps) {
-            throw new SandboxLimitError(
-              `Execution limit reached (${this.maxSteps} AST steps). Possible infinite loop prevented.`,
-            );
-          }
         }
         return { kind: 'none' };
       }

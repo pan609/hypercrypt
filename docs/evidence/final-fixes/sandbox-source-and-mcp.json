@@ -1,0 +1,242 @@
+[
+  {
+    "runtime": "source",
+    "case": "times-empty",
+    "timeoutSeconds": 5,
+    "exitCode": 0,
+    "output": {
+      "finalCardIndex": 0,
+      "finalCardName": "Start",
+      "globals": {},
+      "it": "",
+      "fieldTexts": {},
+      "buttonLabels": {},
+      "audioPlayed": [],
+      "dialogs": [],
+      "trace": [],
+      "stepsExecuted": 0,
+      "error": "Execution limit reached (10000 AST steps). Possible infinite loop prevented."
+    },
+    "passed": true
+  },
+  {
+    "runtime": "source",
+    "case": "with-empty",
+    "timeoutSeconds": 5,
+    "exitCode": 0,
+    "output": {
+      "finalCardIndex": 0,
+      "finalCardName": "Start",
+      "globals": {},
+      "it": "",
+      "fieldTexts": {},
+      "buttonLabels": {},
+      "audioPlayed": [],
+      "dialogs": [],
+      "trace": [],
+      "stepsExecuted": 0,
+      "error": "Execution limit reached (10000 AST steps). Possible infinite loop prevented."
+    },
+    "passed": true
+  },
+  {
+    "runtime": "source",
+    "case": "with-descending",
+    "timeoutSeconds": 5,
+    "exitCode": 0,
+    "output": {
+      "finalCardIndex": 0,
+      "finalCardName": "Start",
+      "globals": {},
+      "it": "",
+      "fieldTexts": {},
+      "buttonLabels": {},
+      "audioPlayed": [],
+      "dialogs": [],
+      "trace": [],
+      "stepsExecuted": 0,
+      "error": "Execution limit reached (10000 AST steps). Possible infinite loop prevented."
+    },
+    "passed": true
+  },
+  {
+    "runtime": "source",
+    "case": "while-empty",
+    "timeoutSeconds": 5,
+    "exitCode": 0,
+    "output": {
+      "finalCardIndex": 0,
+      "finalCardName": "Start",
+      "globals": {},
+      "it": "",
+      "fieldTexts": {},
+      "buttonLabels": {},
+      "audioPlayed": [],
+      "dialogs": [],
+      "trace": [],
+      "stepsExecuted": 0,
+      "error": "Execution limit reached (10000 AST steps). Possible infinite loop prevented."
+    },
+    "passed": true
+  },
+  {
+    "runtime": "source",
+    "case": "positive-2pow53",
+    "timeoutSeconds": 5,
+    "exitCode": 0,
+    "output": {
+      "finalCardIndex": 0,
+      "finalCardName": "Start",
+      "globals": {},
+      "it": "",
+      "fieldTexts": {},
+      "buttonLabels": {},
+      "audioPlayed": [],
+      "dialogs": [],
+      "trace": [],
+      "stepsExecuted": 0,
+      "error": "Execution limit reached (10000 AST steps). Possible infinite loop prevented."
+    },
+    "passed": true
+  },
+  {
+    "runtime": "source",
+    "case": "negative-2pow53",
+    "timeoutSeconds": 5,
+    "exitCode": 0,
+    "output": {
+      "finalCardIndex": 0,
+      "finalCardName": "Start",
+      "globals": {},
+      "it": "",
+      "fieldTexts": {},
+      "buttonLabels": {},
+      "audioPlayed": [],
+      "dialogs": [],
+      "trace": [],
+      "stepsExecuted": 0,
+      "error": "Execution limit reached (10000 AST steps). Possible infinite loop prevented."
+    },
+    "passed": true
+  },
+  {
+    "runtime": "mcp",
+    "case": "times-empty",
+    "timeoutSeconds": 5,
+    "exitCode": 0,
+    "output": {
+      "finalCardIndex": 0,
+      "finalCardName": "Start",
+      "globals": {},
+      "it": "",
+      "fieldTexts": {},
+      "buttonLabels": {},
+      "audioPlayed": [],
+      "dialogs": [],
+      "trace": [],
+      "stepsExecuted": 0,
+      "error": "Execution limit reached (10000 AST steps). Possible infinite loop prevented."
+    },
+    "passed": true
+  },
+  {
+    "runtime": "mcp",
+    "case": "with-empty",
+    "timeoutSeconds": 5,
+    "exitCode": 0,
+    "output": {
+      "finalCardIndex": 0,
+      "finalCardName": "Start",
+      "globals": {},
+      "it": "",
+      "fieldTexts": {},
+      "buttonLabels": {},
+      "audioPlayed": [],
+      "dialogs": [],
+      "trace": [],
+      "stepsExecuted": 0,
+      "error": "Execution limit reached (10000 AST steps). Possible infinite loop prevented."
+    },
+    "passed": true
+  },
+  {
+    "runtime": "mcp",
+    "case": "with-descending",
+    "timeoutSeconds": 5,
+    "exitCode": 0,
+    "output": {
+      "finalCardIndex": 0,
+      "finalCardName": "Start",
+      "globals": {},
+      "it": "",
+      "fieldTexts": {},
+      "buttonLabels": {},
+      "audioPlayed": [],
+      "dialogs": [],
+      "trace": [],
+      "stepsExecuted": 0,
+      "error": "Execution limit reached (10000 AST steps). Possible infinite loop prevented."
+    },
+    "passed": true
+  },
+  {
+    "runtime": "mcp",
+    "case": "while-empty",
+    "timeoutSeconds": 5,
+    "exitCode": 0,
+    "output": {
+      "finalCardIndex": 0,
+      "finalCardName": "Start",
+      "globals": {},
+      "it": "",
+      "fieldTexts": {},
+      "buttonLabels": {},
+      "audioPlayed": [],
+      "dialogs": [],
+      "trace": [],
+      "stepsExecuted": 0,
+      "error": "Execution limit reached (10000 AST steps). Possible infinite loop prevented."
+    },
+    "passed": true
+  },
+  {
+    "runtime": "mcp",
+    "case": "positive-2pow53",
+    "timeoutSeconds": 5,
+    "exitCode": 0,
+    "output": {
+      "finalCardIndex": 0,
+      "finalCardName": "Start",
+      "globals": {},
+      "it": "",
+      "fieldTexts": {},
+      "buttonLabels": {},
+      "audioPlayed": [],
+      "dialogs": [],
+      "trace": [],
+      "stepsExecuted": 0,
+      "error": "Execution limit reached (10000 AST steps). Possible infinite loop prevented."
+    },
+    "passed": true
+  },
+  {
+    "runtime": "mcp",
+    "case": "negative-2pow53",
+    "timeoutSeconds": 5,
+    "exitCode": 0,
+    "output": {
+      "finalCardIndex": 0,
+      "finalCardName": "Start",
+      "globals": {},
+      "it": "",
+      "fieldTexts": {},
+      "buttonLabels": {},
+      "audioPlayed": [],
+      "dialogs": [],
+      "trace": [],
+      "stepsExecuted": 0,
+      "error": "Execution limit reached (10000 AST steps). Possible infinite loop prevented."
+    },
+    "passed": true
+  }
+]

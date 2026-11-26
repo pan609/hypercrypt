@@ -169,6 +169,9 @@ export function MarkdownStudioView() {
   idxRef.current = previewCardIdx;
   const globalsRef = useRef<Record<string, string>>({});
   const lifecycleDepthRef = useRef(0);
+  const initializedCompiledRef = useRef<Stack | null>(null);
+  const previewRevisionRef = useRef(0);
+  const cancelPendingRef = useRef(new Set<() => void>());
 
   // Sync template when locale changes (only if user hasn't manually edited source)
   useEffect(() => {
@@ -179,6 +182,13 @@ export function MarkdownStudioView() {
 
   // Reset live preview runtime whenever compiled stack changes
   useEffect(() => {
+    // React StrictMode replays effects; initialize each compilation only once.
+    if (initializedCompiledRef.current === compiled) return;
+    initializedCompiledRef.current = compiled;
+    previewRevisionRef.current++;
+    for (const cancel of cancelPendingRef.current) cancel();
+    cancelPendingRef.current.clear();
+    lifecycleDepthRef.current = 0;
     const fresh: Stack = JSON.parse(JSON.stringify(compiled));
     stackRef.current = fresh;
     idxRef.current = 0;
@@ -187,6 +197,7 @@ export function MarkdownStudioView() {
     setPreviewCardIdx(0);
     setPreviewModal(null);
     setPreviewLastRun(null);
+    void runPreviewLifecycleRef.current('openCard');
   }, [compiled]);
 
   useEffect(() => {
@@ -203,17 +214,46 @@ export function MarkdownStudioView() {
   const runPreviewLifecycleRef = useRef<(h: 'openCard' | 'closeCard') => Promise<void>>(async () => {});
 
   const createPreviewHost = useCallback((): RuntimeHost => {
+    const revision = previewRevisionRef.current;
+    const ensureCurrent = () => {
+      if (revision !== previewRevisionRef.current) throw new Error('Preview compilation replaced');
+    };
+    const mutateCurrent = (fn: (s: Stack) => void) => {
+      ensureCurrent();
+      mutatePreview(fn);
+    };
+    const pending = <T,>(start: (finish: (value: T) => void) => () => void): Promise<T> =>
+      new Promise((resolve, reject) => {
+        ensureCurrent();
+        let cleanup = () => {};
+        const cancel = () => {
+          cancelPendingRef.current.delete(cancel);
+          cleanup();
+          reject(new Error('Preview compilation replaced'));
+        };
+        const finish = (value: T) => {
+          cancelPendingRef.current.delete(cancel);
+          cleanup();
+          if (revision === previewRevisionRef.current) resolve(value);
+          else reject(new Error('Preview compilation replaced'));
+        };
+        cancelPendingRef.current.add(cancel);
+        cleanup = start(finish);
+      });
     return {
+      onBeforeStep: async () => ensureCurrent(),
       getCurrentCardIndex: () => idxRef.current,
       getCardCount: () => stackRef.current.cards.length,
       getCurrentCardName: () => stackRef.current.cards[idxRef.current]?.name ?? '',
       findCardIndexByName: (name) =>
         stackRef.current.cards.findIndex((c) => c.name.trim().toLowerCase() === name.trim().toLowerCase()),
       goToCard: async (nextIdx, effect) => {
+        ensureCurrent();
         const clamped = Math.max(0, Math.min(stackRef.current.cards.length - 1, nextIdx));
         if (clamped !== idxRef.current) {
           await runPreviewLifecycleRef.current('closeCard');
         }
+        ensureCurrent();
         idxRef.current = clamped;
         setPreviewCardIdx(clamped);
         setPreviewFx(effect);
@@ -227,7 +267,7 @@ export function MarkdownStudioView() {
         return f && f.type === 'field' ? f.text : '';
       },
       setFieldText: (name, text) => {
-        mutatePreview((s) => {
+        mutateCurrent((s) => {
           const f = s.cards[idxRef.current]?.objects.find(
             (o) => o.type === 'field' && o.name.trim().toLowerCase() === name.trim().toLowerCase(),
           );
@@ -241,7 +281,7 @@ export function MarkdownStudioView() {
         return b && b.type === 'button' ? b.label : '';
       },
       setButtonLabel: (name, label) => {
-        mutatePreview((s) => {
+        mutateCurrent((s) => {
           const b = s.cards[idxRef.current]?.objects.find(
             (o) => o.type === 'button' && o.name.trim().toLowerCase() === name.trim().toLowerCase(),
           );
@@ -255,7 +295,7 @@ export function MarkdownStudioView() {
         return b && b.type === 'button' ? Boolean(b.checked) : false;
       },
       setButtonChecked: (name, checked) => {
-        mutatePreview((s) => {
+        mutateCurrent((s) => {
           const b = s.cards[idxRef.current]?.objects.find(
             (o) => o.type === 'button' && o.name.trim().toLowerCase() === name.trim().toLowerCase(),
           );
@@ -263,7 +303,7 @@ export function MarkdownStudioView() {
         });
       },
       setObjectVisible: (kind, name, visible) => {
-        mutatePreview((s) => {
+        mutateCurrent((s) => {
           const o = s.cards[idxRef.current]?.objects.find(
             (obj) => obj.type === kind && obj.name.trim().toLowerCase() === name.trim().toLowerCase(),
           );
@@ -271,7 +311,7 @@ export function MarkdownStudioView() {
         });
       },
       answer: (prompt, buttons) =>
-        new Promise((resolve) => {
+        pending<string>((resolve) => {
           setPreviewModal({
             kind: 'answer',
             prompt,
@@ -281,9 +321,10 @@ export function MarkdownStudioView() {
               resolve(choice);
             },
           });
+          return () => {};
         }),
       ask: (prompt, defaultValue) =>
-        new Promise((resolve) => {
+        pending<string | null>((resolve) => {
           setPreviewModal({
             kind: 'ask',
             prompt,
@@ -293,14 +334,19 @@ export function MarkdownStudioView() {
               resolve(val);
             },
           });
+          return () => {};
         }),
       play: (sound) => playRetroSound(sound, theme, muted),
-      wait: (ms) => new Promise((r) => window.setTimeout(r, ms)),
+      wait: (ms) => pending<void>((resolve) => {
+        const timer = window.setTimeout(() => resolve(), ms);
+        return () => window.clearTimeout(timer);
+      }),
     };
   }, [mutatePreview, muted, theme]);
 
   const runPreviewLifecycle = useCallback(
     async (handler: 'openCard' | 'closeCard') => {
+      const revision = previewRevisionRef.current;
       const card = stackRef.current.cards[idxRef.current];
       if (!card || (!card.script.trim() && !stackRef.current.script.trim())) return;
       if (lifecycleDepthRef.current >= 6) return;
@@ -309,9 +355,13 @@ export function MarkdownStudioView() {
         const interp = new HyperTalkInterpreter(createPreviewHost(), globalsRef.current);
         await interp.runHandler([card.script, stackRef.current.script], handler);
       } catch (err) {
-        setPreviewLastRun(`Error: ${err instanceof Error ? err.message : String(err)}`);
+        if (revision === previewRevisionRef.current) {
+          setPreviewLastRun(`Error: ${err instanceof Error ? err.message : String(err)}`);
+        }
       } finally {
-        lifecycleDepthRef.current = Math.max(0, lifecycleDepthRef.current - 1);
+        if (revision === previewRevisionRef.current) {
+          lifecycleDepthRef.current = Math.max(0, lifecycleDepthRef.current - 1);
+        }
       }
     },
     [createPreviewHost],
@@ -319,15 +369,16 @@ export function MarkdownStudioView() {
   runPreviewLifecycleRef.current = runPreviewLifecycle;
 
   const handlePreviewButtonClick = async (objId: string) => {
+    const revision = previewRevisionRef.current;
     const card = stackRef.current.cards[idxRef.current];
     const obj = card?.objects.find((o) => o.id === objId);
     if (!card || !obj) return;
     try {
       const interp = new HyperTalkInterpreter(createPreviewHost(), globalsRef.current);
       const res = await interp.runHandler([obj.script, card.script, stackRef.current.script], 'mouseUp');
-      setPreviewLastRun(`${obj.name} · ${res.stepsExecuted} AST ops`);
+      if (revision === previewRevisionRef.current) setPreviewLastRun(`${obj.name} · ${res.stepsExecuted} AST ops`);
     } catch (err) {
-      setPreviewLastRun(`Error: ${err instanceof Error ? err.message : String(err)}`);
+      if (revision === previewRevisionRef.current) setPreviewLastRun(`Error: ${err instanceof Error ? err.message : String(err)}`);
     }
   };
 
