@@ -27,6 +27,7 @@
     onBeforeStep?: (line: number, summary: string, globals: Record<string, string>) => Promise<void>;
   }
   ```
+- Runtime hosts pass one mutable `Record<string, string>` of globals to every interpreter in the same session. Nested `closeCard` / `openCard` handlers read and write that same object immediately; hosts must not replace it with a returned snapshot. `RunResult.globals` and debugger snapshots are copies for display. Global identifiers are case-insensitive own properties, including names such as `constructor` and `__proto__`.
 - `validator.ts`: Walks `Stack` and parsed ASTs to collect `ValidationIssue[]` (`severity: 'error' | 'warning'`, `location`, `message`).
 - `bitmap.ts`: Compact RLE format (`"W120B4W8..."` or hex-length encoded runs) + Bresenham line, rectangle, and iterative stack-based flood fill (no recursion stack overflow).
 - `atkinson.ts`: Pure math luminance (`0.299R + 0.587G + 0.114B`) + brightness/contrast curve + Bill Atkinson 6-neighbor error diffusion (and optional `threshold` comparison mode).

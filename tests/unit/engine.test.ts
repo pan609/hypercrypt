@@ -105,6 +105,20 @@ describe('HyperTalk Parser & Lexer', () => {
 });
 
 describe('HyperTalk Sandboxed Interpreter', () => {
+  it('treats object prototype names as ordinary globals in the shared state', async () => {
+    const mock = makeMockHost();
+    const globals: Record<string, string> = {};
+    const interp = new HyperTalkInterpreter(mock.host, globals);
+    await interp.runHandler([`on mouseUp
+      global constructor, __proto__
+      put constructor into field "output"
+      put "safe" into __proto__
+    end mouseUp`], 'mouseUp');
+    expect(mock.fields.output).toBe('');
+    expect(globals.__proto__).toBe('safe');
+    expect(Object.getPrototypeOf(globals)).toBe(Object.prototype);
+  });
+
   it('executes loops, globals, string concatenation, visual effects, and dialogs', async () => {
     const mock = makeMockHost();
     const interp = new HyperTalkInterpreter(mock.host, {}, { fastWait: true });
@@ -262,7 +276,7 @@ describe('Static Stack Validator', () => {
               width: 80,
               height: 30,
               visible: true,
-              script: 'on mouseUp\n  go to card "Two"\nend mouseUp',
+              script: 'on mouseUp\n  global log\n  put "before;" into log\n  go to card "Two"\n  put ";after" after log\nend mouseUp',
             },
           ],
         },
@@ -279,6 +293,35 @@ describe('Static Stack Validator', () => {
     const res = await runStackHeadless({ stack: lifecycleStack, cardIndex: 0, targetName: 'Next' });
     expect(res.error).toBeUndefined();
     expect(res.finalCardName).toBe('Two');
-    expect(res.globals.log).toBe('closed1;opened2');
+    expect(res.globals.log).toBe('before;closed1;opened2;after');
+  });
+
+  it('propagates live globals into nested openCard on RPG Ending Open Source and Respawn', async () => {
+    const rpg = createStarlightRpgStack('en');
+
+    // 1. Card 4 (Golden Vault) -> click Ending Open Source -> Card 5 openCard must render live endingTitle!
+    const endingRun = await runStackHeadless({
+      stack: rpg,
+      cardIndex: 3,
+      targetName: 'Ending Open Source',
+      initialGlobals: { hp: '8', gold: '9', relic: 'Star Charm' },
+    });
+    expect(endingRun.error).toBeUndefined();
+    expect(endingRun.finalCardName).toBe('Quest Finale');
+    expect(endingRun.fieldTexts.EndingCard).toContain('Ending A · Open-Source Resurrector');
+    expect(endingRun.fieldTexts.EndingCard).toContain('HP Left: 8');
+
+    // 2. Card 6 (Campfire Rest) -> click Respawn -> Card 1 openCard must show reset HP: 10 (never HP: 0!)
+    const respawnRun = await runStackHeadless({
+      stack: rpg,
+      cardIndex: 5,
+      targetName: 'Respawn',
+      initialGlobals: { hp: '0', gold: '2', relic: 'None', alcoveopened: 'yes' },
+    });
+    expect(respawnRun.error).toBeUndefined();
+    expect(respawnRun.finalCardName).toBe('Cavern Gate');
+    expect(respawnRun.globals.hp).toBe('10');
+    expect(respawnRun.fieldTexts.HudStats).toContain('HP: 10');
+    expect(respawnRun.fieldTexts.HudStats).toContain('Gold: 5');
   });
 });

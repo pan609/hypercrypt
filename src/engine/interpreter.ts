@@ -82,7 +82,7 @@ function isNumericLike(v: HTValue): boolean {
 
 export class HyperTalkInterpreter {
   private readonly host: RuntimeHost;
-  private readonly globals: Map<string, HTValue>;
+  private readonly sharedGlobals: Record<string, string>;
   private pendingEffect: VisualEffect = 'none';
   private steps = 0;
   private maxSteps: number;
@@ -93,24 +93,28 @@ export class HyperTalkInterpreter {
 
   constructor(
     host: RuntimeHost,
-    initialGlobals: Record<string, string> = {},
+    sharedGlobals: Record<string, string> = {},
     options: RunOptions = {},
   ) {
     this.host = host;
-    this.globals = new Map<string, HTValue>();
-    for (const [k, v] of Object.entries(initialGlobals)) {
-      this.globals.set(k.toLowerCase(), v);
+    // Normalize any mixed-case initial keys in-place while preserving object identity
+    // so nested closeCard/openCard handlers share live bidirectional global state.
+    for (const key of Object.keys(sharedGlobals)) {
+      const lower = key.toLowerCase();
+      if (lower !== key) {
+        Object.defineProperty(sharedGlobals, lower, {
+          value: sharedGlobals[key], writable: true, enumerable: true, configurable: true,
+        });
+        delete sharedGlobals[key];
+      }
     }
+    this.sharedGlobals = sharedGlobals;
     this.maxSteps = options.maxSteps ?? MAX_SANDBOX_STEPS;
     this.fastWait = options.fastWait ?? false;
   }
 
   public getGlobalsRecord(): Record<string, string> {
-    const out: Record<string, string> = {};
-    for (const [k, v] of this.globals.entries()) {
-      out[k] = toStringVal(v);
-    }
-    return out;
+    return { ...this.sharedGlobals };
   }
 
   public async runHandler(
@@ -171,7 +175,7 @@ export class HyperTalkInterpreter {
     }
 
     const locals = new Map<string, HTValue>();
-    const declaredGlobals = new Set<string>(this.globals.keys());
+    const declaredGlobals = new Set<string>(Object.keys(this.sharedGlobals));
     await this.execStatements(program.topLevelStatements, locals, declaredGlobals, handlerMap, 'messageBox');
 
     return {
@@ -254,8 +258,8 @@ export class HyperTalkInterpreter {
       case 'global':
         for (const name of stmt.names) {
           declaredGlobals.add(name);
-          if (!this.globals.has(name)) {
-            this.globals.set(name, '');
+          if (!Object.prototype.hasOwnProperty.call(this.sharedGlobals, name)) {
+            this.writeSharedGlobal(name, '');
           }
         }
         return { kind: 'none' };
@@ -457,7 +461,7 @@ export class HyperTalkInterpreter {
       return locals.has('it') ? locals.get('it')! : this.lastIt;
     }
     if (declaredGlobals.has(name)) {
-      return this.globals.get(name) ?? '';
+      return Object.prototype.hasOwnProperty.call(this.sharedGlobals, name) ? this.sharedGlobals[name] : '';
     }
     if (locals.has(name)) {
       return locals.get(name)!;
@@ -472,10 +476,17 @@ export class HyperTalkInterpreter {
       return;
     }
     if (declaredGlobals.has(name)) {
-      this.globals.set(name, value);
+      this.writeSharedGlobal(name, toStringVal(value));
     } else {
       locals.set(name, value);
     }
+  }
+
+  private writeSharedGlobal(name: string, value: string): void {
+    // Script identifiers (including __proto__) are data, never object setters.
+    Object.defineProperty(this.sharedGlobals, name, {
+      value, writable: true, enumerable: true, configurable: true,
+    });
   }
 
   private readContainer(

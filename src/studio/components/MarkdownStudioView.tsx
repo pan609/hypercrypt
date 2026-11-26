@@ -168,6 +168,7 @@ export function MarkdownStudioView() {
   const idxRef = useRef(previewCardIdx);
   idxRef.current = previewCardIdx;
   const globalsRef = useRef<Record<string, string>>({});
+  const lifecycleDepthRef = useRef(0);
 
   // Sync template when locale changes (only if user hasn't manually edited source)
   useEffect(() => {
@@ -302,12 +303,15 @@ export function MarkdownStudioView() {
     async (handler: 'openCard' | 'closeCard') => {
       const card = stackRef.current.cards[idxRef.current];
       if (!card || (!card.script.trim() && !stackRef.current.script.trim())) return;
+      if (lifecycleDepthRef.current >= 6) return;
+      lifecycleDepthRef.current++;
       try {
         const interp = new HyperTalkInterpreter(createPreviewHost(), globalsRef.current);
-        const res = await interp.runHandler([card.script, stackRef.current.script], handler);
-        globalsRef.current = { ...globalsRef.current, ...res.globals };
+        await interp.runHandler([card.script, stackRef.current.script], handler);
       } catch (err) {
         setPreviewLastRun(`Error: ${err instanceof Error ? err.message : String(err)}`);
+      } finally {
+        lifecycleDepthRef.current = Math.max(0, lifecycleDepthRef.current - 1);
       }
     },
     [createPreviewHost],
@@ -321,7 +325,6 @@ export function MarkdownStudioView() {
     try {
       const interp = new HyperTalkInterpreter(createPreviewHost(), globalsRef.current);
       const res = await interp.runHandler([obj.script, card.script, stackRef.current.script], 'mouseUp');
-      globalsRef.current = { ...globalsRef.current, ...res.globals };
       setPreviewLastRun(`${obj.name} · ${res.stepsExecuted} AST ops`);
     } catch (err) {
       setPreviewLastRun(`Error: ${err instanceof Error ? err.message : String(err)}`);

@@ -2,6 +2,68 @@ import fs from 'node:fs/promises';
 import { expect, test } from '@playwright/test';
 
 test.describe('HyperCrypt E2E & Standalone Offline Export Verification', () => {
+  test('keeps RPG ending and respawn globals live in Studio and the exported offline player', async ({ page, context }) => {
+    const errors: string[] = [];
+    page.on('pageerror', (err) => errors.push(err.message));
+    await page.goto('/');
+    await page.getByTestId('showcase-dock').getByRole('button', { name: /1-Bit RPG/i }).click();
+    await expect(page.locator('[data-field-name="HudStats"]')).toContainText('HP: 10');
+    await page.getByRole('button', { name: /Msg/i }).click();
+    const command = page.getByTestId('msgbox-input');
+    await command.fill('go to card 4');
+    await command.press('Enter');
+    await expect(page.getByTestId('window-title')).toContainText('Golden Vault (4/6)');
+    await page.getByRole('button', { name: 'Ending Open Source', exact: true }).click();
+    await expect(page.locator('[data-field-name="EndingCard"]')).toContainText('Ending A · Open-Source Resurrector');
+
+    // Deterministic losing rolls exercise the real death -> respawn path.
+    await page.evaluate(() => { Math.random = () => 0; });
+    await command.fill('go to card 3');
+    await command.press('Enter');
+    await expect(page.getByTestId('window-title')).toContainText('Crystal Bridge (3/6)');
+    for (const hp of [7, 4, 1, -2]) {
+      await page.getByRole('button', { name: 'Dice Duel', exact: true }).click();
+      await expect(page.getByTestId('engine-hud')).toContainText(`hp=${hp}`);
+    }
+    await expect(page.getByTestId('window-title')).toContainText('Campfire Rest (6/6)');
+    await page.getByRole('button', { name: 'Respawn', exact: true }).click();
+    await expect(page.locator('[data-field-name="HudStats"]')).toContainText('HP: 10 | Gold: 5 | Relic: None');
+    await expect(page.getByTestId('engine-hud')).toContainText('hp=10');
+
+    await page.getByRole('button', { name: /Export/i }).click();
+    const [download] = await Promise.all([
+      page.waitForEvent('download'),
+      page.getByRole('menuitem', { name: /Export Single-File .html/i }).click(),
+    ]);
+    const exportedHtml = await fs.readFile((await download.path())!, 'utf-8');
+    const offline = await context.newPage();
+    offline.on('pageerror', (err) => errors.push(err.message));
+    await offline.route('**/*', (route) => route.abort());
+    await offline.setContent(exportedHtml, { waitUntil: 'domcontentloaded' });
+    await expect(offline.locator('#hc-objects')).toContainText('HP: 10 | Gold: 5 | Relic: None');
+    for (const card of ['Stardust Alcove (2/6)', 'Crystal Bridge (3/6)', 'Golden Vault (4/6)']) {
+      await offline.locator('#hc-next').click();
+      await expect(offline.locator('#hc-title')).toContainText(card);
+    }
+    await offline.getByRole('button', { name: 'Ending Open Source', exact: true }).click();
+    await expect(offline.locator('#hc-objects')).toContainText('Ending A · Open-Source Resurrector');
+    for (const card of ['Golden Vault (4/6)', 'Crystal Bridge (3/6)']) {
+      await offline.locator('#hc-prev').click();
+      await expect(offline.locator('#hc-title')).toContainText(card);
+    }
+    await offline.evaluate(() => { Math.random = () => 0; });
+    for (const hp of [7, 4, 1, -2]) {
+      await offline.getByRole('button', { name: 'Dice Duel', exact: true }).click();
+      if (hp > 0) await expect(offline.locator('#hc-objects')).toContainText(`HP: ${hp}`);
+    }
+    await expect(offline.locator('#hc-title')).toContainText('Campfire Rest (6/6)');
+    await offline.getByRole('button', { name: 'Respawn', exact: true }).click();
+    await expect(offline.locator('#hc-title')).toContainText('Cavern Gate (1/6)');
+    await expect(offline.locator('#hc-objects')).toContainText('HP: 10 | Gold: 5 | Relic: None');
+    await offline.close();
+    expect(errors).toEqual([]);
+  });
+
   test('full Browse play, Author edit + Atkinson Dither, Skin toggle, and offline standalone .html verification', async ({
     page,
     context,

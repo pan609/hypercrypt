@@ -76,7 +76,7 @@ function bootStandalonePlayer(): void {
   let theme: ThemeId =
     (document.documentElement.getAttribute('data-hc-theme') as ThemeId) || stack.defaultTheme || 'classic';
   let currentCardIndex = 0;
-  let globals: Record<string, string> = {};
+  const globals: Record<string, string> = {};
   let busy = false;
   let lifecycleDepth = 0;
 
@@ -180,8 +180,7 @@ function bootStandalonePlayer(): void {
     lifecycleDepth++;
     try {
       const interp = new HyperTalkInterpreter(createHost(), globals);
-      const res = await interp.runHandler([card.script, stack.script], handlerName);
-      globals = res.globals;
+      await interp.runHandler([card.script, stack.script], handlerName);
     } finally {
       lifecycleDepth--;
     }
@@ -304,8 +303,7 @@ function bootStandalonePlayer(): void {
               renderCard();
             }
             const interp = new HyperTalkInterpreter(createHost(), globals);
-            const res = await interp.runHandler([obj.script, card.script, stack.script], 'mouseUp');
-            globals = res.globals;
+            await interp.runHandler([obj.script, card.script, stack.script], 'mouseUp');
           } catch (err) {
             await openAnswerModal(err instanceof Error ? err.message : String(err), ['OK']);
           } finally {

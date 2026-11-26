@@ -32,7 +32,7 @@ export function createStarlightRpgStack(locale: Locale = 'en'): Stack {
             '  if hp = "" then put 10 into hp',
             '  if gold = "" then put 5 into gold',
             '  if relic = "" then put "无" into relic',
-            '  put "体力 HP: " & hp & "  |  金币: " & gold & "  |  圣物: " & relic into field "HudStats"',
+            '  put "体力 HP: " & hp & " | 金币: " & gold & " | 圣物: " & relic into field "HudStats"',
             'end openCard',
           ].join('\n'),
           objects: [
@@ -48,7 +48,7 @@ export function createStarlightRpgStack(locale: Locale = 'en'): Stack {
               visible: true,
               locked: true,
               fontSize: 11,
-              text: '体力 HP: 10  |  金币: 5  |  圣物: 无',
+              text: '体力 HP: 10 | 金币: 5 | 圣物: 无',
               script: '',
             },
             {
@@ -118,7 +118,7 @@ export function createStarlightRpgStack(locale: Locale = 'en'): Stack {
             '  if hp = "" then put 10 into hp',
             '  if gold = "" then put 5 into gold',
             '  if relic = "" then put "无" into relic',
-            '  put "体力 HP: " & hp & "  |  金币: " & gold & "  |  圣物: " & relic into field "HudStats"',
+            '  put "体力 HP: " & hp & " | 金币: " & gold & " | 圣物: " & relic into field "HudStats"',
             'end openCard',
           ].join('\n'),
           objects: [
@@ -134,7 +134,7 @@ export function createStarlightRpgStack(locale: Locale = 'en'): Stack {
               visible: true,
               locked: true,
               fontSize: 11.5,
-              text: '体力 HP: 10  |  金币: 5  |  圣物: 无',
+              text: '体力 HP: 10 | 金币: 5 | 圣物: 无',
               script: '',
             },
             {
@@ -188,7 +188,7 @@ export function createStarlightRpgStack(locale: Locale = 'en'): Stack {
                 '    play "error"',
                 '    put "🎲 你掷出了 " & roll & " 点（静电陷阱）！" & return & "体力 -2，但在角落捡到了 2 枚金币。" into field "AlcoveLog"',
                 '  end if',
-                '  put "体力 HP: " & hp & "  |  金币: " & gold & "  |  圣物: " & relic into field "HudStats"',
+                '  put "体力 HP: " & hp & " | 金币: " & gold & " | 圣物: " & relic into field "HudStats"',
                 'end mouseUp',
               ].join('\n'),
             },
@@ -217,7 +217,7 @@ export function createStarlightRpgStack(locale: Locale = 'en'): Stack {
             '  if hp = "" then put 10 into hp',
             '  if gold = "" then put 5 into gold',
             '  if relic = "" then put "无" into relic',
-            '  put "体力 HP: " & hp & "  |  金币: " & gold & "  |  圣物: " & relic into field "HudStats"',
+            '  put "体力 HP: " & hp & " | 金币: " & gold & " | 圣物: " & relic into field "HudStats"',
             'end openCard',
           ].join('\n'),
           objects: [
@@ -233,7 +233,7 @@ export function createStarlightRpgStack(locale: Locale = 'en'): Stack {
               visible: true,
               locked: true,
               fontSize: 11,
-              text: '体力 HP: 10  |  金币: 5  |  圣物: 无',
+              text: '体力 HP: 10 | 金币: 5 | 圣物: 无',
               script: '',
             },
             {
@@ -303,7 +303,7 @@ export function createStarlightRpgStack(locale: Locale = 'en'): Stack {
                 '  else',
                 '    subtract 3 from hp',
                 '    play "error"',
-                '    put "体力 HP: " & hp & "  |  金币: " & gold & "  |  圣物: " & relic into field "HudStats"',
+                '    put "体力 HP: " & hp & " | 金币: " & gold & " | 圣物: " & relic into field "HudStats"',
                 '    if hp <= 0 then',
                 '      go to card "冒险休整"',
                 '    else',
@@ -522,7 +522,7 @@ export function createStarlightRpgStack(locale: Locale = 'en'): Stack {
           '  if hp = "" then put 10 into hp',
           '  if gold = "" then put 5 into gold',
           '  if relic = "" then put "None" into relic',
-          '  put "HP: " & hp & "  |  Gold: " & gold & "  |  Relic: " & relic into field "HudStats"',
+          '  put "HP: " & hp & " | Gold: " & gold & " | Relic: " & relic into field "HudStats"',
           'end openCard',
         ].join('\n'),
         objects: [
@@ -538,7 +538,7 @@ export function createStarlightRpgStack(locale: Locale = 'en'): Stack {
             visible: true,
             locked: true,
             fontSize: 11,
-            text: 'HP: 10  |  Gold: 5  |  Relic: None',
+            text: 'HP: 10 | Gold: 5 | Relic: None',
             script: '',
           },
           {
@@ -608,7 +608,7 @@ export function createStarlightRpgStack(locale: Locale = 'en'): Stack {
           '  if hp = "" then put 10 into hp',
           '  if gold = "" then put 5 into gold',
           '  if relic = "" then put "None" into relic',
-          '  put "HP: " & hp & "  |  Gold: " & gold & "  |  Relic: " & relic into field "HudStats"',
+          '  put "HP: " & hp & " | Gold: " & gold & " | Relic: " & relic into field "HudStats"',
           'end openCard',
         ].join('\n'),
         objects: [
@@ -624,7 +624,7 @@ export function createStarlightRpgStack(locale: Locale = 'en'): Stack {
             visible: true,
             locked: true,
             fontSize: 11.5,
-            text: 'HP: 10  |  Gold: 5  |  Relic: None',
+            text: 'HP: 10 | Gold: 5 | Relic: None',
             script: '',
           },
           {
@@ -678,7 +678,7 @@ export function createStarlightRpgStack(locale: Locale = 'en'): Stack {
               '    play "error"',
               '    put "🎲 Rolled " & roll & " (Static Zap!)" & return & "-2 HP, but you grabbed +2 Gold." into field "AlcoveLog"',
               '  end if',
-              '  put "HP: " & hp & "  |  Gold: " & gold & "  |  Relic: " & relic into field "HudStats"',
+              '  put "HP: " & hp & " | Gold: " & gold & " | Relic: " & relic into field "HudStats"',
               'end mouseUp',
             ].join('\n'),
           },
@@ -707,7 +707,7 @@ export function createStarlightRpgStack(locale: Locale = 'en'): Stack {
           '  if hp = "" then put 10 into hp',
           '  if gold = "" then put 5 into gold',
           '  if relic = "" then put "None" into relic',
-          '  put "HP: " & hp & "  |  Gold: " & gold & "  |  Relic: " & relic into field "HudStats"',
+          '  put "HP: " & hp & " | Gold: " & gold & " | Relic: " & relic into field "HudStats"',
           'end openCard',
         ].join('\n'),
         objects: [
@@ -723,7 +723,7 @@ export function createStarlightRpgStack(locale: Locale = 'en'): Stack {
             visible: true,
             locked: true,
             fontSize: 11,
-            text: 'HP: 10  |  Gold: 5  |  Relic: None',
+            text: 'HP: 10 | Gold: 5 | Relic: None',
             script: '',
           },
           {
@@ -793,7 +793,7 @@ export function createStarlightRpgStack(locale: Locale = 'en'): Stack {
               '  else',
               '    subtract 3 from hp',
               '    play "error"',
-              '    put "HP: " & hp & "  |  Gold: " & gold & "  |  Relic: " & relic into field "HudStats"',
+              '    put "HP: " & hp & " | Gold: " & gold & " | Relic: " & relic into field "HudStats"',
               '    if hp <= 0 then',
               '      go to card "Campfire Rest"',
               '    else',

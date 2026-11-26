@@ -44,7 +44,7 @@
 
 ## How Kiro Was Used (`.kiro/` Spec-Driven Architecture)
 
-HyperCrypt was designed and built strictly using **Kiro Spec-Driven Development**:
+The repository contains these **Kiro spec-driven workflow artifacts**. Real Kiro IDE hook/MCP execution is still awaiting sign-in and capture; see [verification status](docs/R2_VALIDATION.md).
 - **`.kiro/steering/`**: 4 steering docs (`product.md`, `tech.md`, `structure.md` with `inclusion: always`, plus `hypertalk-grammar.md` with `fileMatch: "src/engine/**"`).
 - **`.kiro/specs/`**: 3 complete EARS specification suites (`hypertalk-engine`, `stack-studio`, `export-and-mcp`), each with `requirements.md`, `design.md`, and `tasks.md`.
 - **`.kiro/hooks/`**: Kiro v1 event hooks (`engine-guard.json`, `stack-validator.json`) running unit tests and preset static validation on save.

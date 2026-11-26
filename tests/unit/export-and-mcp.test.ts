@@ -7,6 +7,7 @@ import { compileMarkdownToStack } from '../../src/engine/markdownCompiler';
 import { decodeStackFromHash, encodeStackToHash } from '../../src/engine/urlShare';
 import { validateStack } from '../../src/engine/validator';
 import { createProdRunbookStack, PROD_502_RUNBOOK_MD } from '../../src/presets/prodRunbook502';
+import { createStarlightRpgStack } from '../../src/presets/starlightRpg';
 
 describe('Markdown Compiler, URL Share & Single-File HTML Export', () => {
   it('compiles Prod 502 Markdown runbook into exact 5 valid cards with zero issues', () => {
@@ -117,6 +118,21 @@ describe('hypercrypt-mcp Live Stdio Server (4 Tools)', () => {
       const runJson = JSON.parse((runRes.content as Array<{ text: string }>)[0].text);
       expect(runJson.finalCardName).toBe('Check Rollback');
       expect(runJson.audioPlayed).toContain('click');
+
+      // Check the committed MCP bundle, not just the source interpreter.
+      for (const scenario of [
+        { cardIndex: 3, targetName: 'Ending Open Source', initialGlobals: { hp: '8' }, field: 'EndingCard', text: 'Ending A · Open-Source Resurrector' },
+        { cardIndex: 5, targetName: 'Respawn', initialGlobals: { hp: '0' }, field: 'HudStats', text: 'HP: 10' },
+      ]) {
+        const { field, text, ...args } = scenario;
+        const result = await client.callTool({
+          name: 'run_hypertalk_script',
+          arguments: { stackJson: JSON.stringify(createStarlightRpgStack('en')), ...args },
+        });
+        const output = JSON.parse((result.content as Array<{ text: string }>)[0].text);
+        expect(output.error).toBeUndefined();
+        expect(output.fieldTexts[field]).toContain(text);
+      }
     } finally {
       await client.close();
     }

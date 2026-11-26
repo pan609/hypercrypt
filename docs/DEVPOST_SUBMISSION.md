@@ -1,6 +1,6 @@
 # HyperCrypt — Devpost Submission Copy (Kiroween 2026 · v2.0)
 
-> Ready for `https://kiroween.devpost.com` submission form. Insert your final YouTube Demo URL once uploaded.
+> Draft for `https://kiroween.devpost.com`. Before publication, capture actual Kiro IDE usage and reconcile the Kiro-use claims below with that evidence; insert the final YouTube URL. See [verification status](R2_VALIDATION.md).
 
 ---
 

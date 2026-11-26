@@ -216,8 +216,7 @@ export function StudioProvider({ children }: { children: ReactNode }) {
   stackRef.current = stack;
   const cardIdxRef = useRef(activeCardIndex);
   cardIdxRef.current = activeCardIndex;
-  const globalsRef = useRef(globals);
-  globalsRef.current = globals;
+  const globalsRef = useRef<Record<string, string>>(globals);
   const themeRef = useRef(theme);
   themeRef.current = theme;
   const localeRef = useRef(locale);
@@ -477,8 +476,7 @@ export function StudioProvider({ children }: { children: ReactNode }) {
       try {
         const interp = new HyperTalkInterpreter(createHost(), globalsRef.current);
         const res = await interp.runHandler([card.script, stackRef.current.script], handler);
-        globalsRef.current = { ...globalsRef.current, ...res.globals };
-        setGlobals(globalsRef.current);
+        setGlobals({ ...globalsRef.current });
         setLastIt(res.it);
         setStepsExecuted(res.stepsExecuted);
       } catch (err) {
@@ -526,8 +524,7 @@ export function StudioProvider({ children }: { children: ReactNode }) {
         const started = performance.now();
         const interp = new HyperTalkInterpreter(createHost(), globalsRef.current);
         const res = await interp.runHandler([obj.script, card.script, stackRef.current.script], handler);
-        globalsRef.current = { ...globalsRef.current, ...res.globals };
-        setGlobals(globalsRef.current);
+        setGlobals({ ...globalsRef.current });
         setLastIt(res.it);
         setStepsExecuted(res.stepsExecuted);
         setLastRunDurationMs(Math.max(0.1, Number((performance.now() - started).toFixed(1))));
@@ -553,8 +550,7 @@ export function StudioProvider({ children }: { children: ReactNode }) {
         const card = stackRef.current.cards[cardIdxRef.current];
         const interp = new HyperTalkInterpreter(createHost(), globalsRef.current);
         const res = await interp.runMessageBox(command, [card?.script ?? '', stackRef.current.script]);
-        globalsRef.current = { ...globalsRef.current, ...res.globals };
-        setGlobals(globalsRef.current);
+        setGlobals({ ...globalsRef.current });
         setLastIt(res.it);
         setStepsExecuted(res.stepsExecuted);
         showToast(`Executed: ${command}`);

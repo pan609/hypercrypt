@@ -33,7 +33,7 @@ export async function runStackHeadless(input: HeadlessRunInput): Promise<Headles
   const dialogs: Array<{ type: 'ask' | 'answer'; prompt: string; response: string }> = [];
   const askQueue = [...(input.askResponses ?? [])];
   const answerQueue = [...(input.answerResponses ?? [])];
-  let liveGlobals: Record<string, string> = { ...(input.initialGlobals ?? {}) };
+  const liveGlobals: Record<string, string> = { ...(input.initialGlobals ?? {}) };
   let lifecycleDepth = 0;
 
   const getCurrentCard = () => stack.cards[currentCardIndex];
@@ -45,8 +45,7 @@ export async function runStackHeadless(input: HeadlessRunInput): Promise<Headles
     lifecycleDepth++;
     try {
       const sub = new HyperTalkInterpreter(host, liveGlobals, { fastWait: true });
-      const res = await sub.runHandler([c.script, stack.script], handlerName);
-      liveGlobals = { ...liveGlobals, ...res.globals };
+      await sub.runHandler([c.script, stack.script], handlerName);
     } finally {
       lifecycleDepth--;
     }
@@ -148,13 +147,11 @@ export async function runStackHeadless(input: HeadlessRunInput): Promise<Headles
 
   try {
     const res = await interpreter.runHandler(scripts, handler);
-    liveGlobals = { ...liveGlobals, ...res.globals };
     it = res.it;
     trace = res.trace;
     stepsExecuted = res.stepsExecuted;
   } catch (err) {
     error = err instanceof Error ? err.message : String(err);
-    liveGlobals = { ...liveGlobals, ...interpreter.getGlobalsRecord() };
   }
 
   const finalCard = getCurrentCard();

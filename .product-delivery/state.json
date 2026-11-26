@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "project": "hypercrypt",
+  "updatedAt": "2026-11-26T14:32:00+08:00",
+  "stage": "r2-hotfix-verified-awaiting-deployment",
+  "judgeGate": "CONDITIONAL_PASS",
+  "verification": {
+    "build": "passed",
+    "typecheck": "passed within npm run build",
+    "presets": "10 passed",
+    "vitest": "26 passed",
+    "playwright": "2 passed",
+    "evidence": "docs/R2_VALIDATION.md"
+  },
+  "pending": [
+    "Push the R2 fix and redeploy Vercel, then verify the public asset matches the build",
+    "User completes Kiro sign-in and the agreement shown on that screen",
+    "Capture real Kiro hooks and MCP execution; reconcile submission claims with evidence",
+    "Record and upload the final <=3 minute YouTube demo",
+    "Publish bonus article and submit Devpost"
+  ]
+}
