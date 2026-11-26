@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Code2 } from 'lucide-react';
 import { CARD_HEIGHT, CARD_WIDTH, type CardObject } from '../../engine/types';
+import { BUILTIN_PRESETS } from '../../presets';
 import { useStudio } from '../store/useStudioStore';
 import { BitmapCanvas } from './BitmapCanvas';
 import { EngineHud } from './EngineHud';
@@ -13,6 +14,7 @@ export function CardStage() {
     activeCard,
     activeCardIndex,
     mode,
+    locale,
     t,
     activeTool,
     selectedObjectId,
@@ -23,6 +25,7 @@ export function CardStage() {
     setSelectedObjectId,
     setInspectorTab,
     goToCard,
+    loadPreset,
     addObject,
     updateObject,
     runObjectHandler,
@@ -133,6 +136,27 @@ export function CardStage() {
 
   return (
     <main className="hc-stage-column">
+      {/* Quick Multi-Scenario Showcase Dock (visible in Browse Mode so judges see breadth in 1 second) */}
+      {mode === 'browse' && (
+        <nav className="hc-showcase-dock" aria-label="Built-in showcase stacks" data-testid="showcase-dock">
+          {BUILTIN_PRESETS.map((preset) => {
+            const active = stack.id === preset.id;
+            return (
+              <button
+                key={preset.id}
+                type="button"
+                className={`hc-showcase-pill ${active ? 'active' : ''}`}
+                title={preset.tagline[locale]}
+                onClick={() => loadPreset(preset.id)}
+              >
+                <span aria-hidden="true">{preset.badge}</span>
+                <span>{preset.shortLabel[locale]}</span>
+              </button>
+            );
+          })}
+        </nav>
+      )}
+
       <div className="hc-window" data-testid="card-window">
         <div className="hc-titlebar">
           <div className="hc-close-box" aria-hidden="true" />

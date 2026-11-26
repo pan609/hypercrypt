@@ -27,7 +27,7 @@ test.describe('HyperCrypt E2E & Standalone Offline Export Verification', () => {
     await expect(page.getByTestId('window-title')).toContainText('Time Dial (3/6)');
     await page.getByRole('button', { name: 'Enter Year' }).click();
     await expect(page.getByTestId('ht-modal')).toContainText('What year did Apple launch HyperCard?');
-    await page.getByRole('button', { name: 'OK' }).click();
+    await page.getByTestId('ht-modal').getByRole('button', { name: 'OK', exact: true }).click();
     await expect(page.getByRole('button', { name: 'Continue to Circuit' })).toBeVisible();
 
     // 3. Toggle Kiroween Dusk skin
@@ -54,15 +54,13 @@ test.describe('HyperCrypt E2E & Standalone Offline Export Verification', () => {
     await page.getByTestId('md-open-studio').click();
     await expect(page.getByTestId('window-title')).toContainText('502 Alert Received (1/5)');
 
-    // 5. Switch to Starlight Cavern RPG and verify Engine HUD + dice roll
-    await page.getByRole('button', { name: /Stack:/i }).click();
-    await page.getByRole('menuitem', { name: /Starlight Cavern 1987/i }).click();
+    // 5. Switch to Starlight Cavern RPG via the top Showcase Dock and verify Engine HUD
+    await page.getByTestId('showcase-dock').getByRole('button', { name: /1-Bit RPG/i }).click();
     await expect(page.getByTestId('window-title')).toContainText('Cavern Gate (1/6)');
     await expect(page.getByTestId('engine-hud')).toBeVisible();
 
-    // Switch back to Prod 502 Triage Runbook for offline single-file HTML export verification
-    await page.getByRole('button', { name: /Stack:/i }).click();
-    await page.getByRole('menuitem', { name: /Prod 502 Triage Runbook/i }).click();
+    // Switch back to Prod 502 Triage Runbook via Showcase Dock for offline single-file HTML export verification
+    await page.getByTestId('showcase-dock').getByRole('button', { name: /SRE Runbook/i }).click();
     await expect(page.getByTestId('window-title')).toContainText('502 Alert Received (1/5)');
 
     // 6. Export Single-File .html and verify it runs 100% OFFLINE in a fresh browser page!

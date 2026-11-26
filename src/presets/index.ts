@@ -7,6 +7,8 @@ import { createStarlightRpgStack } from './starlightRpg';
 
 export interface PresetEntry {
   id: string;
+  badge: string;
+  shortLabel: Record<Locale, string>;
   label: Record<Locale, string>;
   tagline: Record<Locale, string>;
   create: (locale?: Locale) => Stack;
@@ -15,6 +17,11 @@ export interface PresetEntry {
 export const BUILTIN_PRESETS: PresetEntry[] = [
   {
     id: 'attic-mac-1987',
+    badge: '🖥',
+    shortLabel: {
+      en: '1987 Tour',
+      zh: '1987 导览',
+    },
     label: {
       en: 'The Attic Mac of 1987',
       zh: '1987 阁楼老苹果',
@@ -27,6 +34,11 @@ export const BUILTIN_PRESETS: PresetEntry[] = [
   },
   {
     id: 'starlight-cavern-rpg',
+    badge: '⚔️',
+    shortLabel: {
+      en: '1-Bit RPG',
+      zh: '1-Bit RPG',
+    },
     label: {
       en: 'Starlight Cavern 1987 (1-Bit RPG)',
       zh: '星光洞窟 1987（1-Bit 迷你 RPG）',
@@ -39,6 +51,11 @@ export const BUILTIN_PRESETS: PresetEntry[] = [
   },
   {
     id: 'prod-502-runbook',
+    badge: '🛠',
+    shortLabel: {
+      en: 'SRE Runbook',
+      zh: 'SRE 排障',
+    },
     label: {
       en: 'Prod 502 Triage Runbook',
       zh: '线上 502 故障排查手册',
@@ -51,6 +68,11 @@ export const BUILTIN_PRESETS: PresetEntry[] = [
   },
   {
     id: 'atkinson-script-lab',
+    badge: '🎨',
+    shortLabel: {
+      en: 'Dither & Synth',
+      zh: '暗房 / 音效',
+    },
     label: {
       en: 'Atkinson Darkroom & Script Lab',
       zh: 'Atkinson 暗房与脚本实验室',

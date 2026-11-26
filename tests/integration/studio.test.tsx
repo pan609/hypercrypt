@@ -96,5 +96,11 @@ describe('HyperCrypt Studio Integration Flows', () => {
     // Open AST Tree tab from Engine HUD
     await user.click(screen.getByRole('button', { name: /AST Tree/i }));
     expect(screen.getByText(/HandlerNode\(mouseup\)/i)).toBeInTheDocument();
+
+    // Return to Browse and switch scenarios via the top Showcase Dock
+    await user.click(screen.getByRole('button', { name: 'Browse' }));
+    expect(screen.getByTestId('showcase-dock')).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: /1-Bit RPG/i }));
+    expect(screen.getByTestId('window-title')).toHaveTextContent('Starlight Cavern 1987');
   });
 });
