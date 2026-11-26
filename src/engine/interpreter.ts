@@ -524,6 +524,10 @@ export class HyperTalkInterpreter {
       }
       case 'systemProp':
         return expr.prop === 'cardCount' ? this.host.getCardCount() : this.host.getCurrentCardName();
+      case 'random': {
+        const max = Math.max(1, Math.floor(toNumberVal(this.evalExpr(expr.maxExpr, locals, declaredGlobals))));
+        return Math.floor(Math.random() * max) + 1;
+      }
       case 'unary': {
         const v = this.evalExpr(expr.operand, locals, declaredGlobals);
         return expr.op === '-' ? -toNumberVal(v) : !toBoolVal(v);

@@ -46,6 +46,7 @@ When modifying any file in `src/engine/`, strictly preserve compatibility with t
   - `exit repeat` / `exit <handlerName>` / `return <expr>`
 - Built-in Expressions & Constants:
   - `empty` (`""`), `space` (`" "`), `return` (`"\n"`), `quote` (`"\""`), `true`, `false`, `it`
+  - `random(<expr>)` (returns random integer `1..N`, authentic 1987 HyperTalk function)
   - `the number of cards`, `the name of this card`, `the text of field <expr>`, `the label of button <expr>`, `the checked of button <expr>`
   - Operators (lowest to highest): `or` → `and` → `not` → `= <> != is "is not" < <= > >= contains` → `& &&` → `+ -` → `* / mod` → unary `-`
 

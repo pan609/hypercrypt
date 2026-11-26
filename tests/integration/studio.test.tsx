@@ -77,4 +77,24 @@ describe('HyperCrypt Studio Integration Flows', () => {
     await user.click(screen.getByRole('button', { name: 'Switch language' }));
     expect(screen.getByTestId('window-title')).toHaveTextContent('The Attic Mac of 1987 — Attic (1/6)');
   });
+
+  it('navigates Stack Flow Map, Live Markdown Compiler, and AST Tree Inspector', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    // Open Map view
+    await user.click(screen.getByRole('button', { name: 'Map' }));
+    expect(screen.getByTestId('stack-map-view')).toBeInTheDocument();
+    expect(screen.getByTestId('map-node-0')).toHaveTextContent('1. Attic');
+
+    // Open Live Markdown Compiler and load compiled stack into Studio
+    await user.click(screen.getByRole('button', { name: 'MD → Stack' }));
+    expect(screen.getByTestId('md-studio-view')).toBeInTheDocument();
+    await user.click(screen.getByTestId('md-open-studio'));
+    expect(screen.getByTestId('window-title')).toHaveTextContent('Prod 502 Triage Runbook');
+
+    // Open AST Tree tab from Engine HUD
+    await user.click(screen.getByRole('button', { name: /AST Tree/i }));
+    expect(screen.getByText(/HandlerNode\(mouseup\)/i)).toBeInTheDocument();
+  });
 });

@@ -146,6 +146,7 @@ export type ExprNode =
   | { kind: 'fieldValue'; nameExpr: ExprNode }
   | { kind: 'buttonProp'; prop: 'label' | 'checked'; nameExpr: ExprNode }
   | { kind: 'systemProp'; prop: 'cardCount' | 'cardName' }
+  | { kind: 'random'; maxExpr: ExprNode }
   | { kind: 'unary'; op: '-' | 'not'; operand: ExprNode }
   | {
       kind: 'binary';

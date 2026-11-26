@@ -273,3 +273,132 @@ export function buildLighthouseArt(): string {
     return Math.max(0, Math.min(255, val));
   });
 }
+
+/**
+ * Starlight RPG Card 1: Lantern-lit crystal cavern arch with twinkling constellations
+ */
+export function buildCavernGateArt(): string {
+  return renderAtkinsonScene((x, y) => {
+    const ux = x / 2;
+    const uy = y / 2;
+    if (ux > 124) return 252;
+
+    // Rocky cavern wall around an arched starlit opening
+    const cx = 62;
+    const inArch =
+      (ux > 24 && ux < 100 && uy >= 76 && uy < 146) ||
+      (Math.hypot((ux - cx) / 38, (uy - 76) / 42) < 1 && uy <= 76);
+
+    let val = 92 + Math.sin(ux * 0.14) * 24 + Math.cos(uy * 0.18) * 18;
+    if (inArch) {
+      // Glowing starlit interior tunnel
+      const d = Math.hypot((ux - cx) / 36, (uy - 82) / 56);
+      val = 232 - d * 95;
+      // Glowing floating lantern crystal in upper arch
+      const crystal = Math.abs(ux - cx) * 1.4 + Math.abs(uy - 66);
+      if (crystal < 11) val = 252;
+      else if (crystal < 13) val = 28;
+      // Winding cobblestone path
+      if (uy > 112) {
+        const pathHalf = 10 + (uy - 112) * 0.55;
+        if (Math.abs(ux - (cx + Math.sin(uy * 0.12) * 6)) < pathHalf) {
+          val = 212 + ((Math.floor(ux / 6) + Math.floor(uy / 5)) % 2 === 0 ? 18 : -16);
+        }
+      }
+      // Twinkling stars inside cavern sky
+      const stars = [
+        [40, 52],
+        [84, 54],
+        [46, 86],
+        [78, 82],
+      ];
+      for (const [sx, sy] of stars) {
+        if (Math.hypot(ux - sx, uy - sy) < 1.8) val = 252;
+      }
+    } else if (uy > 144) {
+      val = 58 + (ux % 8) * 3;
+    }
+
+    return Math.max(0, Math.min(255, val));
+  });
+}
+
+/**
+ * Starlight RPG Card 3: Floating crystal bridge + cute guardian pixel golem
+ */
+export function buildCrystalBridgeArt(): string {
+  return renderAtkinsonScene((x, y) => {
+    const ux = x / 2;
+    const uy = y / 2;
+    if (ux > 124) return 252;
+
+    // Airy subterranean glow
+    let val = 232 - Math.abs(uy - 84) * 0.9;
+
+    // Hanging stalactites at top
+    const stal = 18 + Math.abs(Math.sin(ux * 0.16)) * 22;
+    if (uy < stal) val = 84 + (ux % 7) * 5;
+
+    // Arched stone bridge at bottom
+    const bridgeTop = 114 + ((ux - 62) * (ux - 62)) * 0.004;
+    if (uy >= bridgeTop && uy <= bridgeTop + 14) {
+      val = 158;
+      if (Math.abs(uy - bridgeTop) < 1.5 || Math.abs(uy - (bridgeTop + 14)) < 1.5) val = 24;
+    } else if (uy > bridgeTop + 14) {
+      val = 74 + Math.sin(ux * 0.3 + uy * 0.4) * 14;
+    }
+
+    // Friendly round Crystal Guardian hovering above bridge
+    const gx = ux - 62;
+    const gy = uy - 82;
+    const r = Math.hypot(gx / 18, gy / 20);
+    if (r < 1) {
+      val = 246 - gx * 1.4;
+      if (r > 0.88) val = 22;
+      // Glowing eyes & cheerful rune diamond on chest
+      if (Math.hypot(gx + 6, gy + 3) < 2.6 || Math.hypot(gx - 6, gy + 3) < 2.6) val = 16;
+      if (Math.abs(gx) + Math.abs(gy - 7) < 4.5) val = 40;
+    }
+
+    return Math.max(0, Math.min(255, val));
+  });
+}
+
+/**
+ * Starlight RPG Card 5: Glowing 1987 Treasure Chest overflowing with pixel stars
+ */
+export function buildTreasureChestArt(): string {
+  return renderAtkinsonScene((x, y) => {
+    const ux = x / 2;
+    const uy = y / 2;
+    if (ux > 124) return 252;
+
+    const cx = 62;
+    const cy = 88;
+    const r = Math.hypot(ux - cx, uy - cy);
+    const angle = Math.atan2(uy - cy, ux - cx);
+    let val = r < 56 ? (Math.sin(angle * 8) > 0 ? 226 : 246) : 250;
+
+    // Open chest lid
+    if (ux >= 30 && ux <= 94 && uy >= 58 && uy <= 78) {
+      val = 148 - (uy - 58) * 1.5;
+      if (ux <= 32 || ux >= 92 || uy <= 60 || uy >= 76) val = 22;
+    }
+    // Glowing coins/light spilling out
+    if (ux >= 34 && ux <= 90 && uy >= 74 && uy <= 86) {
+      val = 244 - ((Math.floor(ux) + Math.floor(uy)) % 3) * 16;
+    }
+    // Chest base box
+    if (ux >= 28 && ux <= 96 && uy >= 84 && uy <= 122) {
+      val = 175 - (ux - 28) * 0.7;
+      if (ux <= 30 || ux >= 94 || uy <= 86 || uy >= 120) val = 20;
+      // Iron straps
+      if (Math.abs(ux - 44) < 2 || Math.abs(ux - 80) < 2) val = 35;
+      // Center keyhole latch
+      if (Math.abs(ux - 62) <= 5 && uy >= 84 && uy <= 98) val = 245;
+      if (Math.abs(ux - 62) <= 2 && uy >= 88 && uy <= 94) val = 20;
+    }
+
+    return Math.max(0, Math.min(255, val));
+  });
+}

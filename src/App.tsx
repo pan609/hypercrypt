@@ -2,8 +2,10 @@ import { CardFilmstrip } from './studio/components/CardFilmstrip';
 import { CardStage } from './studio/components/CardStage';
 import { DitherModal } from './studio/components/DitherModal';
 import { InspectorDrawer } from './studio/components/InspectorDrawer';
+import { MarkdownStudioView } from './studio/components/MarkdownStudioView';
 import { MenuBar } from './studio/components/MenuBar';
 import { MessageBox } from './studio/components/MessageBox';
+import { StackMapView } from './studio/components/StackMapView';
 import { ToolPalette } from './studio/components/ToolPalette';
 import { StudioProvider, useStudio } from './studio/store/useStudioStore';
 import './studio/styles/themes.css';
@@ -15,9 +17,17 @@ function StudioShell() {
     <div className="hc-app" data-hc-theme={theme} data-hc-mode={mode}>
       <MenuBar />
       <div className="hc-workspace">
-        {mode === 'author' && <ToolPalette />}
-        <CardStage />
-        {mode === 'author' && <InspectorDrawer />}
+        {mode === 'map' ? (
+          <StackMapView />
+        ) : mode === 'markdown' ? (
+          <MarkdownStudioView />
+        ) : (
+          <>
+            {mode === 'author' && <ToolPalette />}
+            <CardStage />
+            {mode === 'author' && <InspectorDrawer />}
+          </>
+        )}
       </div>
       {mode === 'author' && <CardFilmstrip />}
       <MessageBox />

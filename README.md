@@ -10,20 +10,22 @@
 
 ## Key Features
 
-1. **Authentic Sandboxed HyperTalk Engine (`src/engine/`)**
-   - Hand-written Lexer, Recursive-Descent AST Parser, and Async Sandboxed Interpreter (zero `eval()`, zero `new Function()`).
-   - Supports `on mouseUp / openCard / closeCard`, `global`, `put ... into/before/after`, `add/subtract/multiply/divide`, `if/else if/else`, `repeat times/with/while`, `visual effect`, `go to card`, `show/hide`, `set the label/text/checked`, `ask`/`answer` modals, `play`, `wait`, and custom handlers.
+1. **Authentic Sandboxed HyperTalk Engine + AST Inspector (`src/engine/`)**
+   - Hand-written Lexer, Recursive-Descent AST Parser, Syntax Highlighter, and Async Sandboxed Interpreter (zero `eval()`, zero `new Function()`).
+   - Supports `on mouseUp / openCard / closeCard`, `global`, `put ... into/before/after`, math, `random(n)`, `if/else if/else`, `repeat times/with/while`, `visual effect`, `go to card`, `show/hide`, `set the label/text/checked`, `ask`/`answer` modals, `play`, `wait`, and custom handlers.
    - Enforces a strict **10,000 AST step budget** and **32-frame call depth limit** for infinite-loop immunity.
-   - Includes a live **Step Mode Debugger**, execution trace, variable watch panel, and classic **`Cmd/Ctrl+M` Message Box**.
+   - Includes a live **Syntax-Highlighted Script Editor**, **AST Tree Inspector**, **Step Mode Debugger**, **Live Engine Telemetry HUD**, and classic **`Cmd/Ctrl+M` Message Box**.
 
-2. **Tactile 512×342 1-Bit Studio & Dual Skins (`src/studio/`)**
-   - **Browse Mode** (instant zero-friction landing) ↔ **Author Mode** (`Cmd/Ctrl+B` — drag/resize objects, 1-bit Pencil/Line/Rect/Bucket/Eraser, classic Mac patterns, Undo/Redo, Card Filmstrip).
-   - **True Bill Atkinson 1-Bit Error-Diffusion Dithering**: upload/drop any PNG/JPG (or test built-in scenes) with live Brightness/Contrast sliders and Atkinson vs. Threshold comparison.
-   - **Warm Vintage × Playful Kiroween Dual Skins**: 1-click toggle between **1987 Cream** and **Kiroween Dusk** (`Cmd/Ctrl+Shift+H`)—all 1-bit artwork dynamically re-colors on the fly.
-   - **Procedural Web Audio Synthesizer**: zero external audio files; authentic retro chimes, clicks, latches, and dusk synth chords.
+2. **Four-View Workstation (`Browse` · `Author` · `Map` · `MD → Stack`) & Bilingual UI (`EN / 中文`)**
+   - **Browse Mode** (instant zero-friction landing + Live Engine HUD with live globals & audio pulse bars).
+   - **Author Mode** (`Cmd/Ctrl+B` — drag/resize objects, 1-bit Pencil/Line/Rect/Bucket/Eraser, classic Mac patterns, Undo/Redo, Card Filmstrip, and **Bill Atkinson 1-Bit Error-Diffusion Dithering** photo importer).
+   - **Interactive Stack Flow Map (`Map`)**: Parses every card's HyperTalk AST into a draggable 1-bit thumbnail node graph showing direct jumps, conditional branches, and real-time broken-link radar.
+   - **Live Split-Screen Markdown → Stack Compiler (`MD → Stack`)**: Edit or paste Markdown on the left, see a playable HyperCard stack, syntax-highlighted generated HyperTalk, and static audit compile live on the right—then open in Studio or export offline `.html` in 1 click.
+   - **Dual Skins**: 1-click toggle between **1987 Cream** and **Kiroween Dusk** (`Cmd/Ctrl+Shift+H`) + **EN / 简体中文** bilingual toggle.
 
-3. **Three Built-In Flagship Stacks (`src/presets/`)**
+3. **Four Built-In Flagship Stacks (EN + 中文, `src/presets/`)**
    - **The Attic Mac of 1987** *(6 cards · Default Landing)* — cozy interactive mystery & self-referential HyperTalk tour.
+   - **Starlight Cavern 1987 (1-Bit RPG)** *(6 cards)* — playable multi-ending 1-bit mini-RPG with HP, Gold, Relics, and real `random(6)` dice duels.
    - **Prod 502 Triage Runbook** *(5 cards)* — practical SRE incident decision deck compiled directly from Markdown via `compileMarkdownToStack`.
    - **Atkinson Darkroom & Script Lab** *(4 cards)* — 1-bit dithering showcase, Web Audio soundboard, live HyperTalk calculator, and Message Box lab.
 

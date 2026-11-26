@@ -133,13 +133,19 @@ export function MenuBar() {
       </div>
 
       <div className="hc-menubar-right">
-        {/* Mode Switcher */}
+        {/* 4-View Studio Mode Switcher */}
         <div className="hc-seg" role="group" aria-label="Studio mode">
           <button type="button" className={mode === 'browse' ? 'active' : ''} onClick={() => setMode('browse')}>
             {t.browse}
           </button>
           <button type="button" className={mode === 'author' ? 'active' : ''} onClick={() => setMode('author')}>
             {t.author}
+          </button>
+          <button type="button" className={mode === 'map' ? 'active' : ''} onClick={() => setMode('map')}>
+            {t.mapView}
+          </button>
+          <button type="button" className={mode === 'markdown' ? 'active' : ''} onClick={() => setMode('markdown')}>
+            {t.mdStudioView}
           </button>
         </div>
 

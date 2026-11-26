@@ -2,9 +2,11 @@ import { describe, expect, it } from 'vitest';
 import { runStackHeadless } from '../../src/engine/headlessHost';
 import { HyperTalkInterpreter, SandboxLimitError } from '../../src/engine/interpreter';
 import { parseScript, parseSingleCommand } from '../../src/engine/parser';
+import { analyzeStackGraph } from '../../src/engine/stackGraph';
 import type { RuntimeHost, Stack } from '../../src/engine/types';
 import { validateStack } from '../../src/engine/validator';
 import { createAtticMacStack } from '../../src/presets/atticMac1987';
+import { createStarlightRpgStack } from '../../src/presets/starlightRpg';
 
 function makeMockHost(): {
   host: RuntimeHost;
@@ -210,5 +212,27 @@ describe('Static Stack Validator', () => {
     };
     const issues = validateStack(broken);
     expect(issues.some((i) => i.message.includes('Broken card link'))).toBe(true);
+  });
+
+  it('supports random(n) and builds accurate Stack Flow Graph for Starlight Cavern RPG', async () => {
+    const rpg = createStarlightRpgStack('en');
+    expect(validateStack(rpg)).toEqual([]);
+
+    const graph = analyzeStackGraph(rpg);
+    expect(graph.nodes).toHaveLength(6);
+    expect(graph.edges.length).toBeGreaterThanOrEqual(8);
+    expect(graph.brokenLinks).toBe(0);
+    expect(graph.conditionalBranches).toBeGreaterThan(0);
+
+    // Execute Stardust Alcove random(6) chest roll headlessly
+    const rollRun = await runStackHeadless({
+      stack: rpg,
+      cardIndex: 1,
+      targetName: 'Roll Chest',
+      initialGlobals: { hp: '10', gold: '5', relic: 'None' },
+    });
+    expect(rollRun.error).toBeUndefined();
+    expect(rollRun.globals.alcoveopened).toBe('yes');
+    expect(Number(rollRun.globals.gold)).toBeGreaterThanOrEqual(7);
   });
 });

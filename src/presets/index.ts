@@ -3,6 +3,7 @@ import type { Locale } from '../studio/i18n/messages';
 import { createAtkinsonLabStack } from './atkinsonLab';
 import { createAtticMacStack } from './atticMac1987';
 import { createProdRunbookStack } from './prodRunbook502';
+import { createStarlightRpgStack } from './starlightRpg';
 
 export interface PresetEntry {
   id: string;
@@ -23,6 +24,18 @@ export const BUILTIN_PRESETS: PresetEntry[] = [
       zh: '6 张卡片的温暖复古解谜与 HyperTalk 导览',
     },
     create: createAtticMacStack,
+  },
+  {
+    id: 'starlight-cavern-rpg',
+    label: {
+      en: 'Starlight Cavern 1987 (1-Bit RPG)',
+      zh: '星光洞窟 1987（1-Bit 迷你 RPG）',
+    },
+    tagline: {
+      en: '6-card branching mini-RPG with HP, Gold & random(6) dice',
+      zh: '6 卡多结局迷你 RPG：体力、金币与 random(6) 掷骰',
+    },
+    create: createStarlightRpgStack,
   },
   {
     id: 'prod-502-runbook',

@@ -3,6 +3,7 @@ import { Code2 } from 'lucide-react';
 import { CARD_HEIGHT, CARD_WIDTH, type CardObject } from '../../engine/types';
 import { useStudio } from '../store/useStudioStore';
 import { BitmapCanvas } from './BitmapCanvas';
+import { EngineHud } from './EngineHud';
 
 const PAINT_TOOLS = new Set(['pencil', 'line', 'rect', 'bucket', 'eraser']);
 
@@ -322,6 +323,9 @@ export function CardStage() {
           <span style={{ color: 'var(--hc-ink-muted)', fontSize: 10.5 }}>{t.stageTagline}</span>
         </div>
       </div>
+
+      {/* Live Engine Telemetry & Quick Power-Up HUD */}
+      <EngineHud />
     </main>
   );
 }

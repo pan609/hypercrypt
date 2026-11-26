@@ -806,6 +806,23 @@ class Parser {
       return { kind: 'fieldValue', nameExpr: this.parsePrimary() };
     }
 
+    // Classic HyperTalk random(n) built-in function
+    if (this.isWord('random') && this.peek(1).kind === 'lparen') {
+      this.advance(); // 'random'
+      this.advance(); // '('
+      const maxExpr = this.parseExpr();
+      if (this.peek().kind === 'rparen') {
+        this.advance();
+      } else {
+        this.diagnostics.push({
+          line: this.peek().line,
+          column: this.peek().col,
+          message: "Expected closing ')' in random(...)",
+        });
+      }
+      return { kind: 'random', maxExpr };
+    }
+
     if (tok.kind === 'word') {
       this.advance();
       switch (tok.lower) {

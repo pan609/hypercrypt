@@ -4,10 +4,45 @@ export interface Messages {
   stackPrefix: string;
   browse: string;
   author: string;
+  mapView: string;
+  mdStudioView: string;
   skinClassic: string;
   skinKiroween: string;
   msgBtn: string;
   exportBtn: string;
+  tabAst: string;
+  hudEngineLabel: string;
+  hudReady: string;
+  hudZeroEval: string;
+  hudOpenMap: string;
+  hudOpenMd: string;
+  hudInspectAst: string;
+  mapCards: string;
+  mapLinks: string;
+  mapBranches: string;
+  mapBroken: string;
+  mapScripts: string;
+  mapLegendDirect: string;
+  mapLegendCond: string;
+  mapLegendBroken: string;
+  mapPlayCard: string;
+  mapEditCard: string;
+  mapDragHint: string;
+  mdTitle: string;
+  mdSubtitle: string;
+  mdTemplates: string;
+  mdTplRunbook: string;
+  mdTplMystery: string;
+  mdTplOnboarding: string;
+  mdTabPreview: string;
+  mdTabCode: string;
+  mdTabAudit: string;
+  mdOpenStudio: string;
+  mdExportHtml: string;
+  mdAuditClean: string;
+  astHandlers: string;
+  astStatements: string;
+  astEmpty: string;
   newBlankStack: string;
   resetDemo: string;
   openJson: string;
@@ -107,10 +142,45 @@ export const MESSAGES: Record<Locale, Messages> = {
     stackPrefix: 'Stack',
     browse: 'Browse',
     author: 'Author',
+    mapView: 'Map',
+    mdStudioView: 'MD → Stack',
     skinClassic: '1987 Cream',
     skinKiroween: 'Kiroween Dusk',
     msgBtn: '⌘M Msg',
     exportBtn: 'Export',
+    tabAst: 'AST',
+    hudEngineLabel: 'HyperTalk VM',
+    hudReady: 'Ready · Click card objects to run AST',
+    hudZeroEval: 'zero eval()',
+    hudOpenMap: 'Flow Map',
+    hudOpenMd: 'MD Compiler',
+    hudInspectAst: 'AST Tree',
+    mapCards: 'Cards',
+    mapLinks: 'Links',
+    mapBranches: 'Branches',
+    mapBroken: 'Broken',
+    mapScripts: 'Scripts',
+    mapLegendDirect: 'Direct go',
+    mapLegendCond: 'If/Else branch',
+    mapLegendBroken: 'Broken target',
+    mapPlayCard: 'Play Card',
+    mapEditCard: 'Edit in Author',
+    mapDragHint: 'Parsed live from HyperTalk AST · Drag nodes to arrange · Click to inspect',
+    mdTitle: 'Live Markdown → HyperCard Compiler',
+    mdSubtitle: 'Same engine powering hypercrypt-mcp (compile_markdown_to_stack)',
+    mdTemplates: 'Templates',
+    mdTplRunbook: 'SRE 502 Runbook',
+    mdTplMystery: 'Train Mystery',
+    mdTplOnboarding: 'Day-1 Onboarding',
+    mdTabPreview: 'Live Preview',
+    mdTabCode: 'Generated HyperTalk',
+    mdTabAudit: 'Static Audit',
+    mdOpenStudio: 'Open in Studio',
+    mdExportHtml: 'Export .html',
+    mdAuditClean: '0 syntax errors · 0 broken card links',
+    astHandlers: 'Handlers',
+    astStatements: 'AST Nodes',
+    astEmpty: 'No handlers parsed yet. Add an `on mouseUp ... end mouseUp` block to inspect its live AST.',
     newBlankStack: 'New Blank Stack',
     resetDemo: 'Reset Current Demo',
     openJson: 'Open .hcstack.json...',
@@ -208,10 +278,45 @@ export const MESSAGES: Record<Locale, Messages> = {
     stackPrefix: '卡片栈',
     browse: '游玩',
     author: '创作',
+    mapView: '拓扑图',
+    mdStudioView: 'MD 编译器',
     skinClassic: '1987 暖白',
     skinKiroween: '星夜万圣',
     msgBtn: '⌘M 命令',
     exportBtn: '导出',
+    tabAst: 'AST 树',
+    hudEngineLabel: 'HyperTalk 引擎',
+    hudReady: '就绪 · 点击卡片控件实时运行 AST',
+    hudZeroEval: '零 eval()',
+    hudOpenMap: '拓扑图',
+    hudOpenMd: 'MD 编译器',
+    hudInspectAst: '看 AST',
+    mapCards: '卡片数',
+    mapLinks: '跳转连线',
+    mapBranches: '条件分支',
+    mapBroken: '断链',
+    mapScripts: '脚本数',
+    mapLegendDirect: '直接跳转',
+    mapLegendCond: '条件分支',
+    mapLegendBroken: '目标缺失',
+    mapPlayCard: '游玩此卡',
+    mapEditCard: '进入编辑',
+    mapDragHint: '实时从 HyperTalk AST 解析生成 · 可拖拽节点排布 · 点击查看跳转详情',
+    mdTitle: '实时 Markdown → HyperCard 编译器',
+    mdSubtitle: '与 Kiro MCP 工具 (compile_markdown_to_stack) 100% 同源引擎',
+    mdTemplates: '内置模板',
+    mdTplRunbook: 'SRE 502 排障',
+    mdTplMystery: '星夜列车推理',
+    mdTplOnboarding: '新人入职清单',
+    mdTabPreview: '实时交互预览',
+    mdTabCode: '生成的 HyperTalk',
+    mdTabAudit: '静态校验',
+    mdOpenStudio: '导入工作台',
+    mdExportHtml: '直接导出 .html',
+    mdAuditClean: '0 处语法错误 · 0 条卡片断链',
+    astHandlers: '处理器数',
+    astStatements: 'AST 语句节点',
+    astEmpty: '暂无解析结果。写入 `on mouseUp ... end mouseUp` 即可实时透视抽象语法树。',
     newBlankStack: '新建空白卡片栈',
     resetDemo: '重置当前示例',
     openJson: '导入 .hcstack.json...',

@@ -4,6 +4,7 @@ import { MAX_SANDBOX_STEPS } from '../../engine/interpreter';
 import { parseScript } from '../../engine/parser';
 import type { ButtonStyle, FieldStyle } from '../../engine/types';
 import { useStudio } from '../store/useStudioStore';
+import { AstTreeView, HyperTalkEditor } from './HyperTalkEditor';
 
 export function InspectorDrawer() {
   const {
@@ -37,12 +38,20 @@ export function InspectorDrawer() {
   const activeScript = selectedObj ? selectedObj.script : activeCard.script;
 
   const parseCheck = useMemo(() => {
-    if (!activeScript.trim()) return { valid: true, diagnostics: [], handlers: [] as string[] };
+    if (!activeScript.trim()) {
+      return {
+        valid: true,
+        diagnostics: [],
+        handlers: [] as string[],
+        program: { handlers: [], topLevelStatements: [] },
+      };
+    }
     const { program, diagnostics } = parseScript(activeScript);
     return {
       valid: diagnostics.length === 0,
       diagnostics,
       handlers: program.handlers.map((h) => h.name),
+      program,
     };
   }, [activeScript]);
 
@@ -70,6 +79,15 @@ export function InspectorDrawer() {
           onClick={() => setInspectorTab('script')}
         >
           {t.tabScript}
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={inspectorTab === 'ast'}
+          className={`hc-tab ${inspectorTab === 'ast' ? 'active' : ''}`}
+          onClick={() => setInspectorTab('ast')}
+        >
+          {t.tabAst}
         </button>
         <button
           type="button"
@@ -110,14 +128,11 @@ export function InspectorDrawer() {
               </span>
             </div>
 
-            <textarea
-              aria-label="HyperTalk script editor"
-              data-testid="script-editor"
-              className="hc-script-textarea"
-              spellCheck={false}
+            <HyperTalkEditor
               value={activeScript}
+              onChange={setScriptText}
+              pausedLine={pausedLine}
               placeholder={'on mouseUp\n  play "chime"\n  go to next card\nend mouseUp'}
-              onChange={(e) => setScriptText(e.target.value)}
             />
 
             {!parseCheck.valid && (
@@ -180,6 +195,15 @@ export function InspectorDrawer() {
               </div>
             </div>
           </>
+        )}
+
+        {inspectorTab === 'ast' && (
+          <AstTreeView
+            program={parseCheck.program}
+            emptyLabel={t.astEmpty}
+            handlersLabel={t.astHandlers}
+            statementsLabel={t.astStatements}
+          />
         )}
 
         {inspectorTab === 'debug' && (

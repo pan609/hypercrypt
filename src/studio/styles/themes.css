@@ -801,3 +801,436 @@ body,
   font-weight: 700;
   z-index: 90;
 }
+
+/* --- v2.0 Power-Up Styles: Syntax Highlighting, AST Tree, Engine HUD, Stack Map, MD Compiler --- */
+
+:root,
+[data-hc-theme='classic'] {
+  --ht-kw: #9a3412;
+  --ht-builtin: #6d28d9;
+  --ht-str: #1d4ed8;
+  --ht-num: #0f766e;
+  --ht-cmt: #7c7467;
+  --ht-op: #b45309;
+}
+
+[data-hc-theme='kiroween'] {
+  --ht-kw: #ff9e44;
+  --ht-builtin: #c4b5fd;
+  --ht-str: #7dd3fc;
+  --ht-num: #f472b6;
+  --ht-cmt: #8b7cb8;
+  --ht-op: #fde047;
+}
+
+.ht-tok-keyword {
+  color: var(--ht-kw);
+  font-weight: 700;
+}
+.ht-tok-builtin {
+  color: var(--ht-builtin);
+  font-weight: 700;
+}
+.ht-tok-string {
+  color: var(--ht-str);
+}
+.ht-tok-number {
+  color: var(--ht-num);
+  font-weight: 700;
+}
+.ht-tok-comment {
+  color: var(--ht-cmt);
+  font-style: italic;
+}
+.ht-tok-operator {
+  color: var(--ht-op);
+  font-weight: 700;
+}
+
+/* Syntax-Highlighted Editor */
+.hc-code-editor-wrap {
+  display: flex;
+  border: 1.5px solid var(--hc-border);
+  border-radius: 5px;
+  background: var(--hc-card-bg);
+  height: 230px;
+  overflow: hidden;
+  font-size: 11.5px;
+  line-height: 1.55;
+}
+
+.hc-code-gutter {
+  width: 30px;
+  background: var(--hc-surface-alt);
+  border-right: 1px solid var(--hc-border);
+  color: var(--hc-ink-muted);
+  padding: 8px 4px;
+  text-align: right;
+  overflow: hidden;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.hc-code-ln {
+  height: 17.8px;
+  font-size: 10px;
+}
+
+.hc-code-ln.paused {
+  background: var(--hc-accent);
+  color: var(--hc-accent-text);
+  font-weight: 800;
+  border-radius: 2px;
+}
+
+.hc-code-surface {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+
+.hc-code-highlight,
+.hc-code-textarea {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 8px;
+  font-family: inherit;
+  font-size: 11.5px;
+  line-height: 17.8px;
+  white-space: pre;
+  overflow: auto;
+  tab-size: 2;
+}
+
+.hc-code-highlight {
+  pointer-events: none;
+}
+
+.hc-code-line {
+  min-height: 17.8px;
+}
+
+.hc-code-line.paused {
+  background: rgba(217, 107, 39, 0.22);
+}
+
+.hc-code-textarea {
+  width: 100%;
+  height: 100%;
+  border: none;
+  outline: none;
+  resize: none;
+  background: transparent;
+  color: transparent;
+  caret-color: var(--hc-ink);
+}
+
+.hc-readonly-code {
+  margin: 0;
+  padding: 8px;
+  background: var(--hc-card-bg);
+  border: 1px solid var(--hc-border);
+  border-radius: 4px;
+  font-size: 11px;
+  line-height: 1.5;
+  overflow-x: auto;
+}
+
+/* AST Tree */
+.hc-ast-handler {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  margin-bottom: 3px;
+}
+
+.hc-ast-node {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10.5px;
+  padding: 2px 0;
+}
+
+.hc-ast-line {
+  font-size: 9px;
+  font-weight: 700;
+  padding: 1px 4px;
+  border-radius: 3px;
+  background: var(--hc-card-bg);
+  border: 1px solid var(--hc-border);
+  color: var(--hc-ink-muted);
+}
+
+/* Live Engine Telemetry HUD */
+.hc-engine-hud {
+  width: 100%;
+  max-width: 740px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 6px 10px;
+  background: var(--hc-surface);
+  border: 1.5px solid var(--hc-border);
+  border-radius: 7px;
+  box-shadow: var(--hc-shadow-sm);
+  font-size: 10.5px;
+  flex-wrap: wrap;
+}
+
+.hc-hud-left,
+.hc-hud-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.hc-hud-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 7px;
+  border: 1.5px solid var(--hc-border);
+  border-radius: 4px;
+  background: var(--hc-surface-alt);
+  font-size: 10.5px;
+  font-weight: 700;
+}
+
+.hc-hud-status {
+  color: var(--hc-ink-muted);
+}
+
+.hc-global-chip {
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--hc-surface-alt);
+  border: 1px dashed var(--hc-border);
+  font-size: 10px;
+}
+
+.hc-hud-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 7px;
+  border: 1px solid var(--hc-border);
+  border-radius: 4px;
+  background: var(--hc-card-bg);
+  color: var(--hc-ink);
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.hc-hud-link:hover {
+  background: var(--hc-accent);
+  color: var(--hc-accent-text);
+}
+
+.hc-audio-bars {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 14px;
+}
+
+.hc-audio-bars span {
+  width: 3px;
+  height: 4px;
+  background: var(--hc-accent);
+  border-radius: 1px;
+}
+
+.hc-audio-bars.pulsing span:nth-child(1) {
+  animation: hcBarPulse 380ms ease-out 0ms 1;
+}
+.hc-audio-bars.pulsing span:nth-child(2) {
+  animation: hcBarPulse 380ms ease-out 60ms 1;
+}
+.hc-audio-bars.pulsing span:nth-child(3) {
+  animation: hcBarPulse 380ms ease-out 110ms 1;
+}
+.hc-audio-bars.pulsing span:nth-child(4) {
+  animation: hcBarPulse 380ms ease-out 160ms 1;
+}
+
+@keyframes hcBarPulse {
+  0% {
+    height: 4px;
+  }
+  40% {
+    height: 14px;
+  }
+  100% {
+    height: 4px;
+  }
+}
+
+/* Stack Map Flow Graph View */
+.hc-map-layout {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+.hc-map-auditbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 14px;
+  background: var(--hc-surface);
+  border-bottom: 2px solid var(--hc-border);
+  flex-wrap: wrap;
+}
+
+.hc-map-body {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+
+.hc-map-canvas-scroll {
+  flex: 1;
+  overflow: auto;
+  min-width: 0;
+}
+
+.hc-map-node {
+  position: absolute;
+  background: var(--hc-surface);
+  border: 2px solid var(--hc-border);
+  border-radius: 6px;
+  box-shadow: var(--hc-shadow-sm);
+  cursor: grab;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  user-select: none;
+}
+
+.hc-map-node.selected {
+  outline: 2.5px solid var(--hc-accent);
+  outline-offset: 2px;
+  box-shadow: var(--hc-shadow);
+}
+
+.hc-map-node.current .hc-map-node-head {
+  background: var(--hc-accent);
+  color: var(--hc-accent-text);
+}
+
+.hc-map-node-head {
+  padding: 4px 7px;
+  background: var(--hc-surface-alt);
+  border-bottom: 1.5px solid var(--hc-border);
+  font-size: 10.5px;
+  font-weight: 700;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.hc-map-node-foot {
+  padding: 4px 7px;
+  font-size: 9.5px;
+  color: var(--hc-ink-muted);
+  display: flex;
+  justify-content: space-between;
+  background: var(--hc-surface);
+}
+
+.hc-map-sidebar {
+  width: 290px;
+  background: var(--hc-surface);
+  border-left: 2px solid var(--hc-border);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+
+/* Live Markdown -> Stack Compiler Split View */
+.hc-md-layout {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+.hc-md-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 9px 14px;
+  background: var(--hc-surface);
+  border-bottom: 2px solid var(--hc-border);
+  flex-wrap: wrap;
+}
+
+.hc-md-split {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 0;
+}
+
+.hc-md-pane {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: var(--hc-surface);
+}
+
+.hc-md-pane + .hc-md-pane {
+  border-left: 2px solid var(--hc-border);
+}
+
+.hc-md-pane-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 12px;
+  background: var(--hc-surface-alt);
+  border-bottom: 2px solid var(--hc-border);
+  font-size: 11.5px;
+  font-weight: 700;
+}
+
+.hc-md-textarea {
+  flex: 1;
+  width: 100%;
+  min-height: 460px;
+  border: none;
+  outline: none;
+  resize: none;
+  padding: 12px 14px;
+  background: var(--hc-card-bg);
+  color: var(--hc-ink);
+  font-family: inherit;
+  font-size: 12px;
+  line-height: 1.58;
+}
+
+.hc-md-right-body {
+  flex: 1;
+  padding: 14px;
+  overflow-y: auto;
+  background-color: var(--hc-desk-bg);
+  background-image: radial-gradient(var(--hc-desk-dot) 1.2px, transparent 0);
+  background-size: 8px 8px;
+}

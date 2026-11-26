@@ -34,8 +34,9 @@ test.describe('HyperCrypt E2E & Standalone Offline Export Verification', () => {
     await page.getByRole('button', { name: 'Kiroween Dusk' }).click();
     await expect(page.locator('.hc-app')).toHaveAttribute('data-hc-theme', 'kiroween');
 
-    // 4. Switch to Author Mode & test Atkinson Dither Modal + Message Box
+    // 4. Switch to Author Mode, inspect AST Tree & test Atkinson Dither Modal + Message Box
     await page.getByRole('button', { name: 'Author' }).click();
+    await page.getByRole('tab', { name: 'AST' }).click();
     await page.getByRole('button', { name: /Dither Img/i }).click();
     await expect(page.getByRole('dialog', { name: 'Atkinson 1-Bit Dither Importer' })).toBeVisible();
     await page.getByRole('button', { name: 'Stamp onto Active Card' }).click();
@@ -45,7 +46,21 @@ test.describe('HyperCrypt E2E & Standalone Offline Export Verification', () => {
     await page.getByTestId('msgbox-input').press('Enter');
     await expect(page.getByTestId('window-title')).toContainText('Attic (1/6)');
 
-    // 5. Switch to Prod 502 Triage Runbook preset
+    // 4b. Open Stack Flow Map & Live Markdown Compiler views
+    await page.getByRole('button', { name: 'Map', exact: true }).click();
+    await expect(page.getByTestId('stack-map-view')).toBeVisible();
+    await page.getByRole('button', { name: 'MD → Stack', exact: true }).click();
+    await expect(page.getByTestId('md-studio-view')).toBeVisible();
+    await page.getByTestId('md-open-studio').click();
+    await expect(page.getByTestId('window-title')).toContainText('502 Alert Received (1/5)');
+
+    // 5. Switch to Starlight Cavern RPG and verify Engine HUD + dice roll
+    await page.getByRole('button', { name: /Stack:/i }).click();
+    await page.getByRole('menuitem', { name: /Starlight Cavern 1987/i }).click();
+    await expect(page.getByTestId('window-title')).toContainText('Cavern Gate (1/6)');
+    await expect(page.getByTestId('engine-hud')).toBeVisible();
+
+    // Switch back to Prod 502 Triage Runbook for offline single-file HTML export verification
     await page.getByRole('button', { name: /Stack:/i }).click();
     await page.getByRole('menuitem', { name: /Prod 502 Triage Runbook/i }).click();
     await expect(page.getByTestId('window-title')).toContainText('502 Alert Received (1/5)');
