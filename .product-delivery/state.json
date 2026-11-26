@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "project": "hypercrypt",
-  "updatedAt": "2026-11-26T16:57:00+08:00",
-  "stage": "all-links-published-devpost-draft-complete-awaiting-user-final-submit",
+  "updatedAt": "2026-11-26T17:00:00+08:00",
+  "stage": "submitted-to-kiroween-2026",
   "judgeGate": "PASS: independent final-check section 8 accepted e7c21f7",
   "verification": {
     "build": "passed",
@@ -14,11 +14,7 @@
     "isolatedBudgetProbes": "12 passed",
     "independentReview": "round 2 no findings"
   },
-  "pending": [
-    "User previews full local video v2; Andrew voice approved after short audition; publication explicitly on hold",
-    "Devpost CAPTCHA/draft creation has not been confirmed",
-    "YouTube Public URL and final submission remain future work after user resumes"
-  ],
+  "pending": [],
   "fixCommit": "e7c21f7",
   "issue": "https://github.com/pan609/hypercrypt/issues/1",
   "production": {
@@ -72,7 +68,7 @@
     "draftCreated": true,
     "draftId": "1321207-hypercrypt",
     "draftUrl": "https://devpost.com/submit-to/31667-kiroween-2026/manage/submissions/1321207-hypercrypt/finalization",
-    "submitted": false,
-    "receiptUrl": null
+    "submitted": true,
+    "receiptUrl": "https://devpost.com/software/hypercrypt"
   }
 }
