@@ -1,6 +1,6 @@
 # Final-check fixes — 2026-11-26
 
-This records the developer's response to the independent final check on `d28f28b`. Final freeze remains subject to the judge's lightweight acceptance; this file does not change the judge's decision.
+This records the developer's response to the independent final check on `d28f28b`. The judge signed lightweight acceptance PASS in section 8 of the workspace final-check report. This file records the developer evidence and does not replace that independent decision.
 
 - **P1 loop budget**: a shared `consumeStep()` charges statements and every iteration of `repeat times`, `repeat with` and `repeat while`. Empty bodies and non-advancing floating-point counters exhaust the same 10,000-step budget.
 - **P2 first-card initialization**: every new Markdown compilation initializes its first card once, including under StrictMode. Theme rerenders do not reinitialize it. The six-layer guard remains in place.
@@ -22,7 +22,7 @@ Every potentially unbounded numeric case runs in a disposable OS process. Unit-t
 
 The ordinary finite-script regression preserves descending counters, while loops, and `exit repeat`; a three-iteration empty loop now consumes iterations as intended.
 
-Machine evidence and independent review outputs are under [evidence/final-fixes](evidence/final-fixes/). Public deployment receipt will be added after the tested build is published.
+Machine evidence and independent review outputs are under [evidence/final-fixes](evidence/final-fixes/). The [production receipt](evidence/final-fixes/production-receipt.json) confirms the public asset matches the tested build.
 
 ## Submission boundary
 

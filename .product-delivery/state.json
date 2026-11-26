@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "project": "hypercrypt",
-  "updatedAt": "2026-11-26T14:58:47+08:00",
-  "stage": "final-check-fixes-verified-awaiting-release-and-judge-acceptance",
-  "judgeGate": "CONDITIONAL per final check; lightweight acceptance pending",
+  "updatedAt": "2026-11-26T15:13:22+08:00",
+  "stage": "local-demo-v1-delivered-publication-on-hold-by-user",
+  "judgeGate": "PASS: independent final-check section 8 accepted e7c21f7",
   "verification": {
     "build": "passed",
     "typecheck": "passed within npm run build",
@@ -15,21 +15,20 @@
     "independentReview": "round 2 no findings"
   },
   "pending": [
-    "Record and edit the final <=3 minute demo, including actual Kiro footage",
-    "Upload the final YouTube demo and insert the URL",
-    "Publish bonus article and submit Devpost"
+    "User reviews local video v1; publication explicitly on hold",
+    "Devpost CAPTCHA/draft creation has not been confirmed",
+    "YouTube Public URL and final submission remain future work after user resumes"
   ],
-  "fixCommit": "7d969cf",
+  "fixCommit": "e7c21f7",
   "issue": "https://github.com/pan609/hypercrypt/issues/1",
   "production": {
-    "verifiedAt": "2026-11-26T14:31:23+08:00",
-    "url": "https://hypercrypt.vercel.app",
+    "asset": "/assets/index-Cv8RiCER.js",
     "httpStatus": 200,
-    "asset": "/assets/index-CB4OWVpb.js",
-    "publicSha256": "2dd93ea3e4dd29309bc96267c53d3ebd6b64adf26e02414b1058f9b6252f07b8",
-    "localSha256": "2dd93ea3e4dd29309bc96267c53d3ebd6b64adf26e02414b1058f9b6252f07b8",
-    "matchesTestedBuild": true,
-    "fixCommit": "7d969cf"
+    "sha256": "c1daffd5ea760c84bc573aee295d05cb1ac4b09a4d03d005ab05ad1b88071f96",
+    "url": "https://hypercrypt.vercel.app",
+    "verifiedAt": "2026-11-26T07:00:05.300Z",
+    "fixCommit": "e7c21f7",
+    "matchesTestedBuild": true
   },
   "kiro": {
     "version": "1.5.44",
@@ -37,5 +36,23 @@
     "mcp": "all 4 tools executed in actual IDE",
     "hook": "PostFileSave event completed; stdout and numeric exit code not exposed",
     "evidence": "docs/KIRO_LIVE_CHECK.md"
+  },
+  "video": {
+    "version": "v1-20261126",
+    "sha256": "e3ef766110ebc75754de1c834f9d8af458516306c6c398db59e72d2401a1f7db",
+    "format": {
+      "duration": "149.124349",
+      "size": "5583780"
+    },
+    "lessThan3Minutes": true,
+    "fullVideoAndAudioDecodeExitCode": 0,
+    "localPath": "artifacts/demo-2026-11-26/hypercrypt-demo-v1-20261126.mp4",
+    "youtubePublicUrl": null
+  },
+  "blogBonus": "Skipped at explicit user request",
+  "devpost": {
+    "draftCreated": false,
+    "submitted": false,
+    "receiptUrl": null
   }
 }

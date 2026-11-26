@@ -9,3 +9,6 @@ playwright-report/
 .env.*
 .vercel/
 .vercel
+
+# Local video sources, renders, and editable delivery artifacts
+artifacts/
