@@ -22,7 +22,7 @@ https://hypercrypt.vercel.app
 
 ### Post 1 (attach `00-devpost-cover-1200x800.png` or the demo MP4)
 ```text
-#KiroweenHackathon26 My favorite thing about @kirodotdev is combining file-scoped Steering, PostFileSave Hooks & custom MCP so the IDE enforces architecture live.
+#KiroweenHackathon26 My favorite thing about @kirodotdev is file-scoped Steering, Save Hooks & custom MCP enforcing architecture live in the IDE.
 
 Meet HyperCrypt: 1987 Apple HyperCard resurrected with a zero-eval HyperTalk VM & offline .html export!
 https://hypercrypt.vercel.app
