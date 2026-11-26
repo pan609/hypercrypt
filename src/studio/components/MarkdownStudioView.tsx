@@ -1,10 +1,13 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AlertTriangle, CheckCircle2, Download, ExternalLink, Sparkles } from 'lucide-react';
+import { HyperTalkInterpreter } from '../../engine/interpreter';
 import { compileMarkdownToStack } from '../../engine/markdownCompiler';
 import { analyzeStackGraph } from '../../engine/stackGraph';
 import { highlightHyperTalkLine } from '../../engine/syntaxHighlight';
+import type { RuntimeHost, Stack, VisualEffect } from '../../engine/types';
 import { validateStack } from '../../engine/validator';
 import { PROD_502_RUNBOOK_MD, PROD_502_RUNBOOK_MD_ZH } from '../../presets/prodRunbook502';
+import { playRetroSound } from '../audio/retroAudio';
 import type { Locale } from '../i18n/messages';
 import { useStudio } from '../store/useStudioStore';
 
@@ -130,38 +133,210 @@ Welcome to the team! This interactive offline deck walks you through your first 
 `,
 };
 
+function getTemplateMarkdown(key: 'runbook' | 'mystery' | 'onboarding', loc: Locale): string {
+  if (key === 'runbook') return loc === 'zh' ? PROD_502_RUNBOOK_MD_ZH : PROD_502_RUNBOOK_MD;
+  if (key === 'mystery') return MYSTERY_MD[loc];
+  return ONBOARDING_MD[loc];
+}
+
+type PreviewModal =
+  | { kind: 'answer'; prompt: string; buttons: string[]; resolve: (v: string) => void }
+  | { kind: 'ask'; prompt: string; defaultValue: string; resolve: (v: string | null) => void };
+
 export function MarkdownStudioView() {
-  const { locale, t, loadCustomStack, exportHtmlFile } = useStudio();
+  const { locale, theme, muted, t, loadCustomStack, exportHtmlFile } = useStudio();
   const [templateKey, setTemplateKey] = useState<'runbook' | 'mystery' | 'onboarding'>('runbook');
-  const [markdown, setMarkdown] = useState(() => (locale === 'zh' ? PROD_502_RUNBOOK_MD_ZH : PROD_502_RUNBOOK_MD));
+  const [userEdited, setUserEdited] = useState(false);
+  const [markdown, setMarkdown] = useState(() => getTemplateMarkdown('runbook', locale));
   const [rightTab, setRightTab] = useState<'preview' | 'code' | 'audit'>('preview');
-  const [previewCardIdx, setPreviewCardIdx] = useState(0);
-
-  const applyTemplate = (key: 'runbook' | 'mystery' | 'onboarding') => {
-    setTemplateKey(key);
-    setPreviewCardIdx(0);
-    if (key === 'runbook') setMarkdown(locale === 'zh' ? PROD_502_RUNBOOK_MD_ZH : PROD_502_RUNBOOK_MD);
-    else if (key === 'mystery') setMarkdown(MYSTERY_MD[locale]);
-    else setMarkdown(ONBOARDING_MD[locale]);
-  };
-
-  useEffect(() => {
-    setPreviewCardIdx(0);
-  }, [markdown]);
 
   const compiled = useMemo(() => compileMarkdownToStack(markdown), [markdown]);
   const issues = useMemo(() => validateStack(compiled), [compiled]);
   const graph = useMemo(() => analyzeStackGraph(compiled), [compiled]);
 
-  const safeCardIdx = Math.min(previewCardIdx, Math.max(0, compiled.cards.length - 1));
-  const previewCard = compiled.cards[safeCardIdx];
+  // Live sandboxed runtime state for the right-hand preview pane (real HyperTalkInterpreter!)
+  const [previewStack, setPreviewStack] = useState<Stack>(() => JSON.parse(JSON.stringify(compiled)));
+  const [previewCardIdx, setPreviewCardIdx] = useState(0);
+  const [previewFx, setPreviewFx] = useState<VisualEffect>('none');
+  const [previewFxNonce, setPreviewFxNonce] = useState(0);
+  const [previewModal, setPreviewModal] = useState<PreviewModal | null>(null);
+  const [previewAskDraft, setPreviewAskDraft] = useState('');
+  const [previewLastRun, setPreviewLastRun] = useState<string | null>(null);
 
-  const handlePreviewButtonClick = (script: string) => {
-    const m = script.match(/go to card "([^"]+)"/i);
-    if (!m) return;
-    const idx = compiled.cards.findIndex((c) => c.name.trim().toLowerCase() === m[1].trim().toLowerCase());
-    if (idx >= 0) setPreviewCardIdx(idx);
+  const stackRef = useRef(previewStack);
+  stackRef.current = previewStack;
+  const idxRef = useRef(previewCardIdx);
+  idxRef.current = previewCardIdx;
+  const globalsRef = useRef<Record<string, string>>({});
+
+  // Sync template when locale changes (only if user hasn't manually edited source)
+  useEffect(() => {
+    if (!userEdited) {
+      setMarkdown(getTemplateMarkdown(templateKey, locale));
+    }
+  }, [locale, templateKey, userEdited]);
+
+  // Reset live preview runtime whenever compiled stack changes
+  useEffect(() => {
+    const fresh: Stack = JSON.parse(JSON.stringify(compiled));
+    stackRef.current = fresh;
+    idxRef.current = 0;
+    globalsRef.current = {};
+    setPreviewStack(fresh);
+    setPreviewCardIdx(0);
+    setPreviewModal(null);
+    setPreviewLastRun(null);
+  }, [compiled]);
+
+  useEffect(() => {
+    if (previewModal?.kind === 'ask') setPreviewAskDraft(previewModal.defaultValue);
+  }, [previewModal]);
+
+  const mutatePreview = useCallback((fn: (s: Stack) => void) => {
+    const next: Stack = JSON.parse(JSON.stringify(stackRef.current));
+    fn(next);
+    stackRef.current = next;
+    setPreviewStack(next);
+  }, []);
+
+  const runPreviewLifecycleRef = useRef<(h: 'openCard' | 'closeCard') => Promise<void>>(async () => {});
+
+  const createPreviewHost = useCallback((): RuntimeHost => {
+    return {
+      getCurrentCardIndex: () => idxRef.current,
+      getCardCount: () => stackRef.current.cards.length,
+      getCurrentCardName: () => stackRef.current.cards[idxRef.current]?.name ?? '',
+      findCardIndexByName: (name) =>
+        stackRef.current.cards.findIndex((c) => c.name.trim().toLowerCase() === name.trim().toLowerCase()),
+      goToCard: async (nextIdx, effect) => {
+        const clamped = Math.max(0, Math.min(stackRef.current.cards.length - 1, nextIdx));
+        if (clamped !== idxRef.current) {
+          await runPreviewLifecycleRef.current('closeCard');
+        }
+        idxRef.current = clamped;
+        setPreviewCardIdx(clamped);
+        setPreviewFx(effect);
+        setPreviewFxNonce((n) => n + 1);
+        await runPreviewLifecycleRef.current('openCard');
+      },
+      getFieldText: (name) => {
+        const f = stackRef.current.cards[idxRef.current]?.objects.find(
+          (o) => o.type === 'field' && o.name.trim().toLowerCase() === name.trim().toLowerCase(),
+        );
+        return f && f.type === 'field' ? f.text : '';
+      },
+      setFieldText: (name, text) => {
+        mutatePreview((s) => {
+          const f = s.cards[idxRef.current]?.objects.find(
+            (o) => o.type === 'field' && o.name.trim().toLowerCase() === name.trim().toLowerCase(),
+          );
+          if (f && f.type === 'field') f.text = text;
+        });
+      },
+      getButtonLabel: (name) => {
+        const b = stackRef.current.cards[idxRef.current]?.objects.find(
+          (o) => o.type === 'button' && o.name.trim().toLowerCase() === name.trim().toLowerCase(),
+        );
+        return b && b.type === 'button' ? b.label : '';
+      },
+      setButtonLabel: (name, label) => {
+        mutatePreview((s) => {
+          const b = s.cards[idxRef.current]?.objects.find(
+            (o) => o.type === 'button' && o.name.trim().toLowerCase() === name.trim().toLowerCase(),
+          );
+          if (b && b.type === 'button') b.label = label;
+        });
+      },
+      getButtonChecked: (name) => {
+        const b = stackRef.current.cards[idxRef.current]?.objects.find(
+          (o) => o.type === 'button' && o.name.trim().toLowerCase() === name.trim().toLowerCase(),
+        );
+        return b && b.type === 'button' ? Boolean(b.checked) : false;
+      },
+      setButtonChecked: (name, checked) => {
+        mutatePreview((s) => {
+          const b = s.cards[idxRef.current]?.objects.find(
+            (o) => o.type === 'button' && o.name.trim().toLowerCase() === name.trim().toLowerCase(),
+          );
+          if (b && b.type === 'button') b.checked = checked;
+        });
+      },
+      setObjectVisible: (kind, name, visible) => {
+        mutatePreview((s) => {
+          const o = s.cards[idxRef.current]?.objects.find(
+            (obj) => obj.type === kind && obj.name.trim().toLowerCase() === name.trim().toLowerCase(),
+          );
+          if (o) o.visible = visible;
+        });
+      },
+      answer: (prompt, buttons) =>
+        new Promise((resolve) => {
+          setPreviewModal({
+            kind: 'answer',
+            prompt,
+            buttons,
+            resolve: (choice) => {
+              setPreviewModal(null);
+              resolve(choice);
+            },
+          });
+        }),
+      ask: (prompt, defaultValue) =>
+        new Promise((resolve) => {
+          setPreviewModal({
+            kind: 'ask',
+            prompt,
+            defaultValue,
+            resolve: (val) => {
+              setPreviewModal(null);
+              resolve(val);
+            },
+          });
+        }),
+      play: (sound) => playRetroSound(sound, theme, muted),
+      wait: (ms) => new Promise((r) => window.setTimeout(r, ms)),
+    };
+  }, [mutatePreview, muted, theme]);
+
+  const runPreviewLifecycle = useCallback(
+    async (handler: 'openCard' | 'closeCard') => {
+      const card = stackRef.current.cards[idxRef.current];
+      if (!card || (!card.script.trim() && !stackRef.current.script.trim())) return;
+      try {
+        const interp = new HyperTalkInterpreter(createPreviewHost(), globalsRef.current);
+        const res = await interp.runHandler([card.script, stackRef.current.script], handler);
+        globalsRef.current = { ...globalsRef.current, ...res.globals };
+      } catch (err) {
+        setPreviewLastRun(`Error: ${err instanceof Error ? err.message : String(err)}`);
+      }
+    },
+    [createPreviewHost],
+  );
+  runPreviewLifecycleRef.current = runPreviewLifecycle;
+
+  const handlePreviewButtonClick = async (objId: string) => {
+    const card = stackRef.current.cards[idxRef.current];
+    const obj = card?.objects.find((o) => o.id === objId);
+    if (!card || !obj) return;
+    try {
+      const interp = new HyperTalkInterpreter(createPreviewHost(), globalsRef.current);
+      const res = await interp.runHandler([obj.script, card.script, stackRef.current.script], 'mouseUp');
+      globalsRef.current = { ...globalsRef.current, ...res.globals };
+      setPreviewLastRun(`${obj.name} · ${res.stepsExecuted} AST ops`);
+    } catch (err) {
+      setPreviewLastRun(`Error: ${err instanceof Error ? err.message : String(err)}`);
+    }
   };
+
+  const applyTemplate = (key: 'runbook' | 'mystery' | 'onboarding') => {
+    setTemplateKey(key);
+    setUserEdited(false);
+    setMarkdown(getTemplateMarkdown(key, locale));
+  };
+
+  const safeCardIdx = Math.min(previewCardIdx, Math.max(0, previewStack.cards.length - 1));
+  const previewCard = previewStack.cards[safeCardIdx];
+  const fxClass = previewFx !== 'none' ? `fx-${previewFx.replace(/\s+/g, '-')}` : '';
 
   return (
     <main className="hc-md-layout" data-testid="md-studio-view">
@@ -229,7 +404,10 @@ export function MarkdownStudioView() {
             className="hc-md-textarea"
             spellCheck={false}
             value={markdown}
-            onChange={(e) => setMarkdown(e.target.value)}
+            onChange={(e) => {
+              setUserEdited(true);
+              setMarkdown(e.target.value);
+            }}
           />
         </div>
 
@@ -240,7 +418,7 @@ export function MarkdownStudioView() {
               className={`hc-tab ${rightTab === 'preview' ? 'active' : ''}`}
               onClick={() => setRightTab('preview')}
             >
-              {t.mdTabPreview} ({compiled.cards.length})
+              {t.mdTabPreview} ({previewStack.cards.length})
             </button>
             <button
               type="button"
@@ -261,63 +439,148 @@ export function MarkdownStudioView() {
           <div className="hc-md-right-body">
             {rightTab === 'preview' && previewCard && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10, alignItems: 'center' }}>
-                <div className="hc-window" style={{ maxWidth: 520 }}>
+                <div className="hc-window" style={{ maxWidth: 540, position: 'relative' }}>
                   <div className="hc-titlebar">
                     <div className="hc-close-box" />
                     <div className="hc-stripes" />
-                    <span>
-                      {compiled.title} — {previewCard.name} ({safeCardIdx + 1}/{compiled.cards.length})
+                    <span data-testid="md-preview-title">
+                      {previewStack.title} — {previewCard.name} ({safeCardIdx + 1}/{previewStack.cards.length})
                     </span>
                     <div className="hc-stripes" />
                   </div>
-                  <div style={{ padding: 14, background: 'var(--hc-card-bg)', display: 'flex', flexDirection: 'column', gap: 10 }}>
+                  <div
+                    key={`${previewCard.id}-${previewFxNonce}`}
+                    className={fxClass}
+                    style={{
+                      padding: 14,
+                      background: 'var(--hc-card-bg)',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: 10,
+                      position: 'relative',
+                    }}
+                  >
                     {previewCard.objects
-                      .filter((o) => o.type === 'field')
+                      .filter((o) => o.type === 'field' && o.visible)
                       .map((f) =>
                         f.type === 'field' ? (
-                          <div
-                            key={f.id}
-                            className={`hc-card-field style-${f.style}`}
-                            style={{
-                              position: 'static',
-                              height: 'auto',
-                              minHeight: f.locked ? undefined : 46,
-                              fontSize: f.fontSize ?? 12,
-                            }}
-                          >
-                            {f.text}
-                          </div>
+                          f.locked ? (
+                            <div
+                              key={f.id}
+                              className={`hc-card-field style-${f.style}`}
+                              style={{
+                                position: 'static',
+                                height: 'auto',
+                                fontSize: f.fontSize ?? 12,
+                              }}
+                            >
+                              {f.text}
+                            </div>
+                          ) : (
+                            <textarea
+                              key={f.id}
+                              className={`hc-card-field editable style-${f.style}`}
+                              style={{
+                                position: 'static',
+                                minHeight: 54,
+                                fontSize: f.fontSize ?? 11.5,
+                              }}
+                              value={f.text}
+                              onChange={(e) =>
+                                mutatePreview((s) => {
+                                  const target = s.cards[safeCardIdx]?.objects.find((o) => o.id === f.id);
+                                  if (target && target.type === 'field') target.text = e.target.value;
+                                })
+                              }
+                            />
+                          )
                         ) : null,
                       )}
 
                     <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 4 }}>
                       {previewCard.objects
-                        .filter((o) => o.type === 'button')
+                        .filter((o) => o.type === 'button' && o.visible)
                         .map((b) =>
                           b.type === 'button' ? (
                             <button
                               key={b.id}
                               type="button"
                               className={`hc-btn ${b.accent ? 'primary' : ''}`}
-                              style={{ flex: 1, justifyContent: 'center' }}
-                              onClick={() => handlePreviewButtonClick(b.script)}
+                              style={{ flex: '1 1 30%', justifyContent: 'center' }}
+                              onClick={() => void handlePreviewButtonClick(b.id)}
                             >
                               {b.label}
                             </button>
                           ) : null,
                         )}
                     </div>
+
+                    {previewModal && (
+                      <div className="hc-modal-backdrop" role="dialog" aria-modal="true">
+                        <div className="hc-modal">
+                          <p style={{ margin: '0 0 12px', fontSize: 12, whiteSpace: 'pre-wrap' }}>
+                            {previewModal.prompt}
+                          </p>
+                          {previewModal.kind === 'ask' && (
+                            <input
+                              autoFocus
+                              className="hc-input"
+                              style={{ width: '100%', marginBottom: 10 }}
+                              value={previewAskDraft}
+                              onChange={(e) => setPreviewAskDraft(e.target.value)}
+                            />
+                          )}
+                          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
+                            {previewModal.kind === 'answer' ? (
+                              previewModal.buttons.map((lbl, idx) => (
+                                <button
+                                  key={lbl}
+                                  type="button"
+                                  className={`hc-btn ${idx === 0 ? 'primary' : ''}`}
+                                  onClick={() => previewModal.resolve(lbl)}
+                                >
+                                  {lbl}
+                                </button>
+                              ))
+                            ) : (
+                              <>
+                                <button type="button" className="hc-btn" onClick={() => previewModal.resolve(null)}>
+                                  {t.cancel}
+                                </button>
+                                <button
+                                  type="button"
+                                  className="hc-btn primary"
+                                  onClick={() => previewModal.resolve(previewAskDraft)}
+                                >
+                                  {t.ok}
+                                </button>
+                              </>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
 
+                {previewLastRun && (
+                  <div style={{ fontSize: 10.5, color: 'var(--hc-ink-muted)' }}>
+                    HyperTalk VM: <strong>{previewLastRun}</strong>
+                  </div>
+                )}
+
                 <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', justifyContent: 'center' }}>
-                  {compiled.cards.map((c, idx) => (
+                  {previewStack.cards.map((c, idx) => (
                     <button
                       key={c.id}
                       type="button"
                       className={`hc-btn ${idx === safeCardIdx ? 'primary' : ''}`}
                       style={{ fontSize: 10.5 }}
-                      onClick={() => setPreviewCardIdx(idx)}
+                      onClick={() => {
+                        idxRef.current = idx;
+                        setPreviewCardIdx(idx);
+                        void runPreviewLifecycle('openCard');
+                      }}
                     >
                       {idx + 1}. {c.name}
                     </button>
@@ -333,6 +596,24 @@ export function MarkdownStudioView() {
                     <div className="hc-section-label">
                       Card {cIdx + 1}: {card.name}
                     </div>
+                    {card.script.trim() && (
+                      <div style={{ marginTop: 4 }}>
+                        <div style={{ fontSize: 10.5, fontWeight: 700, marginBottom: 3 }}>
+                          card &quot;{card.name}&quot;
+                        </div>
+                        <pre className="hc-readonly-code">
+                          {card.script.split('\n').map((line, lIdx) => (
+                            <div key={lIdx}>
+                              {highlightHyperTalkLine(line).map((sp, sIdx) => (
+                                <span key={sIdx} className={`ht-tok-${sp.type}`}>
+                                  {sp.text}
+                                </span>
+                              ))}
+                            </div>
+                          ))}
+                        </pre>
+                      </div>
+                    )}
                     {card.objects
                       .filter((o) => o.script.trim().length > 0)
                       .map((obj) => (

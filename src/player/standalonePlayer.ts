@@ -1,12 +1,30 @@
-import { decodeBitmapRle } from './bitmap';
-import { HyperTalkInterpreter } from './interpreter';
-import { CARD_HEIGHT, CARD_WIDTH, type RuntimeHost, type Stack, type ThemeId, type VisualEffect } from './types';
+import { decodeBitmapRle } from '../engine/bitmap';
+import { HyperTalkInterpreter } from '../engine/interpreter';
+import { CARD_HEIGHT, CARD_WIDTH, type RuntimeHost, type Stack, type ThemeId, type VisualEffect } from '../engine/types';
+
+let sharedAudioCtx: AudioContext | null = null;
+
+function getAudioContext(): AudioContext | null {
+  try {
+    const AudioCtx =
+      window.AudioContext || (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+    if (!AudioCtx) return null;
+    if (!sharedAudioCtx) {
+      sharedAudioCtx = new AudioCtx();
+    }
+    if (sharedAudioCtx.state === 'suspended') {
+      void sharedAudioCtx.resume();
+    }
+    return sharedAudioCtx;
+  } catch {
+    return null;
+  }
+}
 
 function playSynthSound(sound: string, theme: ThemeId): void {
   try {
-    const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-    if (!AudioCtx) return;
-    const ctx = new AudioCtx();
+    const ctx = getAudioContext();
+    if (!ctx) return;
     const now = ctx.currentTime;
     const gain = ctx.createGain();
     gain.connect(ctx.destination);
@@ -55,10 +73,12 @@ function bootStandalonePlayer(): void {
   if (!dataEl || !dataEl.textContent) return;
 
   const stack: Stack = JSON.parse(dataEl.textContent);
-  let theme: ThemeId = (document.documentElement.getAttribute('data-hc-theme') as ThemeId) || stack.defaultTheme || 'classic';
+  let theme: ThemeId =
+    (document.documentElement.getAttribute('data-hc-theme') as ThemeId) || stack.defaultTheme || 'classic';
   let currentCardIndex = 0;
   let globals: Record<string, string> = {};
   let busy = false;
+  let lifecycleDepth = 0;
 
   const root = document.getElementById('hc-standalone-root')!;
   const titleEl = document.getElementById('hc-title')!;
@@ -73,6 +93,14 @@ function bootStandalonePlayer(): void {
   const themeBtn = document.getElementById('hc-theme-toggle')!;
   const prevBtn = document.getElementById('hc-prev')!;
   const nextBtn = document.getElementById('hc-next')!;
+
+  const applyTheme = (nextTheme: ThemeId) => {
+    theme = nextTheme;
+    document.documentElement.setAttribute('data-hc-theme', theme);
+    root.setAttribute('data-hc-theme', theme);
+    themeBtn.textContent = theme === 'classic' ? '1987 Cream' : 'Kiroween Dusk';
+    drawBitmap();
+  };
 
   const drawBitmap = () => {
     const card = stack.cards[currentCardIndex];
@@ -145,6 +173,36 @@ function bootStandalonePlayer(): void {
       modalInput.focus();
     });
 
+  const runCardLifecycle = async (handlerName: 'openCard' | 'closeCard') => {
+    const card = stack.cards[currentCardIndex];
+    if (!card || (!card.script.trim() && !stack.script.trim())) return;
+    if (lifecycleDepth >= 6) return;
+    lifecycleDepth++;
+    try {
+      const interp = new HyperTalkInterpreter(createHost(), globals);
+      const res = await interp.runHandler([card.script, stack.script], handlerName);
+      globals = res.globals;
+    } finally {
+      lifecycleDepth--;
+    }
+  };
+
+  const navigateToCard = async (idx: number, effect: VisualEffect) => {
+    if (idx < 0 || idx >= stack.cards.length) return;
+    if (idx !== currentCardIndex) {
+      await runCardLifecycle('closeCard');
+    }
+    currentCardIndex = idx;
+    if (effect && effect !== 'none') {
+      const cls = `fx-${effect.replace(/\s+/g, '-')}`;
+      viewport.classList.remove('fx-dissolve', 'fx-wipe-left', 'fx-wipe-right', 'fx-iris-open', 'fx-barn-door-open');
+      void viewport.offsetWidth;
+      viewport.classList.add(cls);
+    }
+    renderCard();
+    await runCardLifecycle('openCard');
+  };
+
   const createHost = (): RuntimeHost => ({
     getCurrentCardIndex: () => currentCardIndex,
     getCardCount: () => stack.cards.length,
@@ -152,16 +210,7 @@ function bootStandalonePlayer(): void {
     findCardIndexByName: (name) =>
       stack.cards.findIndex((c) => c.name.trim().toLowerCase() === name.trim().toLowerCase()),
     goToCard: async (idx: number, effect: VisualEffect) => {
-      if (idx < 0 || idx >= stack.cards.length) return;
-      currentCardIndex = idx;
-      if (effect && effect !== 'none') {
-        const cls = `fx-${effect.replace(/\s+/g, '-')}`;
-        viewport.classList.remove('fx-dissolve', 'fx-wipe-left', 'fx-wipe-right', 'fx-iris-open', 'fx-barn-door-open');
-        void viewport.offsetWidth;
-        viewport.classList.add(cls);
-      }
-      renderCard();
-      await runCardLifecycle('openCard');
+      await navigateToCard(idx, effect);
     },
     getFieldText: (name) => {
       const f = stack.cards[currentCardIndex]?.objects.find(
@@ -222,14 +271,6 @@ function bootStandalonePlayer(): void {
     play: (sound) => playSynthSound(sound, theme),
     wait: (ms) => new Promise((r) => setTimeout(r, ms)),
   });
-
-  const runCardLifecycle = async (handlerName: string) => {
-    const card = stack.cards[currentCardIndex];
-    if (!card) return;
-    const interp = new HyperTalkInterpreter(createHost(), globals);
-    const res = await interp.runHandler([card.script, stack.script], handlerName);
-    globals = res.globals;
-  };
 
   const renderCard = () => {
     const card = stack.cards[currentCardIndex];
@@ -302,26 +343,18 @@ function bootStandalonePlayer(): void {
   };
 
   themeBtn.onclick = () => {
-    theme = theme === 'classic' ? 'kiroween' : 'classic';
-    root.setAttribute('data-hc-theme', theme);
-    themeBtn.textContent = theme === 'classic' ? '1987 Cream' : 'Kiroween Dusk';
-    drawBitmap();
+    applyTheme(theme === 'classic' ? 'kiroween' : 'classic');
   };
 
   prevBtn.onclick = () => {
-    currentCardIndex = (currentCardIndex - 1 + stack.cards.length) % stack.cards.length;
-    renderCard();
-    void runCardLifecycle('openCard');
+    void navigateToCard((currentCardIndex - 1 + stack.cards.length) % stack.cards.length, 'wipe right');
   };
 
   nextBtn.onclick = () => {
-    currentCardIndex = (currentCardIndex + 1) % stack.cards.length;
-    renderCard();
-    void runCardLifecycle('openCard');
+    void navigateToCard((currentCardIndex + 1) % stack.cards.length, 'wipe left');
   };
 
-  root.setAttribute('data-hc-theme', theme);
-  themeBtn.textContent = theme === 'classic' ? '1987 Cream' : 'Kiroween Dusk';
+  applyTheme(theme);
   renderCard();
   void runCardLifecycle('openCard');
 }

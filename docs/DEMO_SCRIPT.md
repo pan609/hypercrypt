@@ -1,51 +1,48 @@
-# HyperCrypt — ≤ 3-Minute YouTube Demo Script & Shotlist (Kiroween 2026)
+# HyperCrypt — ≤ 3-Minute YouTube Demo Script & Shotlist (Kiroween 2026 · v2.0)
 
-> **Hard Limit**: Strictly **≤ 3:00** (Target runtime: **2:40 – 2:48** for safe margin!)  
-> **Resolution**: 1920×1080 (16:9), browser zoom 110% so 512×342 card & HyperTalk code look razor-sharp.  
-> **Audio**: Clear English voiceover (or natural AI TTS) + gentle live Web Audio SFX from the app.
+> **Hard Limit**: Strictly **≤ 3:00** (Target runtime: **2:42 – 2:48**!)  
+> **Resolution**: 1920×1080 (16:9), browser zoom 110% on `https://hypercrypt.vercel.app`.  
+> **Audio**: Clear English voiceover + live procedural Web Audio SFX from HyperCrypt.
 
 ---
 
 ## Shot-by-Shot Storyboard
 
-### 0:00 – 0:22 | Hook & The Problem (Instant Visual Impact)
-- **Visual**: Open the live Vercel URL (`https://hypercrypt.vercel.app`) full-screen. Land directly on Card 1 of **The Attic Mac of 1987** in warm **1987 Cream** skin. Hover & tap the smiling 1-bit pixel spirit inside the vintage Macintosh → retro chime + classic Mac modal pops up → click **Wake HyperCard →** → iris-open transition to Card 2.
+### 0:00 – 0:24 | Hook & 1987 Resurrection (Instant Impact)
+- **Visual**: Open `https://hypercrypt.vercel.app`. Land directly on Card 1 of **The Attic Mac of 1987** in warm **1987 Cream** skin—Showcase Dock clearly visible above the card (`1987 Tour · 1-Bit RPG · SRE Runbook · Dither & Synth`), Live Engine HUD pulsing below. Tap the smiling 1-bit pixel spirit inside the vintage Mac → retro chime + classic modal → click **Wake HyperCard →** → iris-open transition to Card 2.
 - **Narration**:
-  > "In 1987, Apple's HyperCard let anyone build interactive personal software in plain English—with zero servers and zero setup. Today, we're stuck between static Markdown and bloated SaaS apps. Meet **HyperCrypt**: 1987 HyperCard and HyperTalk resurrected for 2026—running in your browser, exporting to a single immortal offline HTML file, and supercharged by **Kiro**."
+  > "In 1987, Apple's HyperCard let anyone build interactive personal software in plain English—with zero servers. Today, we're stuck between lifeless Markdown and bloated SaaS apps. Meet **HyperCrypt**: 1987 HyperCard and HyperTalk resurrected for 2026—a 4-view creative IDE, zero-eval AST engine, single-file offline `.html` exporter, and Kiro MCP server."
 
-### 0:22 – 0:55 | Live HyperTalk Engine, Dual Skins & Step Debugger
+### 0:24 – 0:54 | 1-Bit Mini-RPG, Dual Skins & Live Engine HUD
 - **Visual**:
-  1. Click **Kiroween Dusk** in the top menu bar — watch the warm 1987 Cream studio and the 1-bit pixel art instantaneously transform into cozy midnight violet & pumpkin orange!
-  2. Jump to Card 3 (**Time Dial**), click **Enter Launch Year...**, type `1987` into the classic `ask` modal → unlocks **Continue to Circuit →**.
-  3. Click **Peek Script** (enters **Author Mode**), show the clean plain-English HyperTalk in the right Script tab (`✓ Valid AST`), then switch to Card 5 (**HyperTalk Mirror**), open the **Debug** tab, check **Step Mode**, click **▶ Run Boot Sequence**, and step 2 AST lines watching `bootRuns` and the execution trace update live!
+  1. Click **Kiroween Dusk** in the top bar—every 1-bit pixel instantly re-colors into cozy twilight violet & pumpkin orange!
+  2. Click **⚔️ 1-Bit RPG** in the Showcase Dock (*Starlight Cavern 1987*). Explore **Stardust Alcove**, roll the live `random(6)` dice box, watch `hp` and `gold` globals update in the **Live Engine HUD** below the card, then jump to **Crystal Bridge**.
 - **Narration**:
-  > "There's zero `eval()` here. Under the hood is a real, hand-written HyperTalk lexer, recursive-descent AST parser, and sandboxed async interpreter with a 10,000-step infinite-loop guard. Flip to **Kiroween Dusk** and every 1-bit pixel re-colors live. Switch to **Author Mode** to inspect or edit any script with real-time AST diagnostics—or enable **Step Mode** to walk through HyperTalk line by line."
+  > "Flip to **Kiroween Dusk** and lossless 1-bit RLE bitmaps re-color live. Jump into **Starlight Cavern 1987**—a playable multi-ending mini-RPG powered 100% by our hand-written HyperTalk interpreter, complete with `random(6)` dice duels, persistent globals, and zero `eval()`."
 
-### 0:55 – 1:25 | True Bill Atkinson 1-Bit Dithering & Authoring Studio
+### 0:54 – 1:25 | Stack Flow Map, Syntax-Highlighted AST Tree & Atkinson Dither
 - **Visual**:
-  1. In Author Mode, open the left 1-Bit Paint palette and click **Dither Img**.
-  2. Toggle between **Atkinson 1987** vs **Threshold**, drag the contrast slider (or drop a photo!), and click **Stamp onto Active Card**.
-  3. Press `Cmd+M` to open the classic **Message Box**, type `play "chime"` and hit Enter.
+  1. Click **Map** in the top menu bar → show the live AST-parsed card node graph with 1-bit thumbnails, solid/dashed conditional branches, and broken-link radar. Drag a node cleanly.
+  2. Click **Edit in Author** on a card → show the **syntax-highlighted HyperTalk editor**, click the **AST** tab to reveal the live `HandlerNode -> IfStmt -> GoCard` tree, then open **Dither Img** to toggle **Atkinson 1987 vs. Threshold** and stamp 1-bit art onto the card.
 - **Narration**:
-  > "Bill Atkinson invented both HyperCard and 1-bit Atkinson dithering. HyperCrypt brings back his exact 6/8 error-diffusion formula—drop any photo to convert it into crisp 512×342 1-bit Macintosh art, or run live HyperTalk directly from the classic Command-M Message Box."
+  > "Switch to **Map** and HyperCrypt parses every card's AST into a draggable flow graph with conditional branches and broken-link detection. In **Author Mode**, inspect live syntax highlighting, the parsed AST tree, step-by-step debugging, or drop any photo into Bill Atkinson's true 1987 6/8 error-diffusion dither engine."
 
-### 1:25 – 1:55 | Real-World Utility & Immortal Single-File `.html` Export
+### 1:25 – 1:52 | Live `MD → Stack` Compiler & Immortal Offline `.html` Export
 - **Visual**:
-  1. Open the **Stack** menu and switch to **Prod 502 Triage Runbook** (5 cards, compiled from Markdown). Click `Recent Deploy (<15m)` → branches to `Check Rollback`, type an incident note into the live field.
-  2. Click **Export ▾ → Export Single-File .html**.
-  3. Open the downloaded `.html` file directly from local disk (`file:///.../prod-502-triage-runbook.html`) in a fresh browser tab and click through a card transition to prove it runs 100% standalone offline!
+  1. Click **MD → Stack** in the top bar → edit a card heading/button in Markdown on the left and click the live **HyperTalk-powered preview** on the right (plus flash the **Generated HyperTalk** tab).
+  2. Click **Export .html**, open the downloaded file directly from local disk (`file:///...`) in a fresh tab, toggle **Kiroween Dusk**, and click through a card transition to prove 100% offline parity!
 - **Narration**:
-  > "HyperCrypt isn't just nostalgia—it solves a real workflow gap. Here's a production 502 incident runbook compiled straight from Markdown into an interactive decision deck. Click **Export .html** and HyperCrypt bundles our exact TypeScript engine into one self-contained file—double-click it offline today or twenty years from now, with zero cloud lock-in."
+  > "For real engineering utility, **MD → Stack** compiles Markdown runbooks or onboarding docs straight into playable HyperCard decks in real time. Click **Export .html** and HyperCrypt bundles our exact 34-kilobyte TypeScript engine into one self-contained file—works offline today or twenty years from now."
 
-### 1:55 – 2:32 | Deep Kiro Integration (`.kiro/` Specs, Steering, Hooks & `hypercrypt-mcp`)
-- **Visual**: Switch screen to **Kiro IDE** with the `hypercrypt` repository open:
-  1. Quickly expand `.kiro/` in the sidebar showing `steering/` (4 files), `specs/` (`hypertalk-engine`, `stack-studio`, `export-and-mcp` with EARS `requirements.md` / `design.md` / `tasks.md`), `hooks/` (`engine-guard.json`, `stack-validator.json`), and `settings/mcp.json`.
-  2. Trigger a quick save or show the Kiro Hook running `npm run test:unit` / `npm run validate:presets` green.
-  3. In Kiro Chat, invoke our custom **`hypercrypt` MCP server** (`compile_markdown_to_stack` + `validate_stack` + `run_hypertalk_script`) to compile a Markdown snippet into a validated stack and test a button click headlessly!
+### 1:52 – 2:32 | Real Kiro IDE Workflow (`.kiro/` Specs, Hooks & Live `hypercrypt-mcp`)
+- **Visual**: Switch to **Kiro IDE** with `hypercrypt` open:
+  1. Expand `.kiro/` showing 4 `steering/` files, 3 EARS `specs/`, 2 v1 `hooks/` (`engine-guard.json`, `stack-validator.json`), and `settings/mcp.json`.
+  2. Save a file to show the Kiro Hook running automated tests/validation green.
+  3. In Kiro Chat, invoke **`hypercrypt-mcp`** (`compile_markdown_to_stack` → `validate_stack` → `run_hypertalk_script`) and show the structured JSON result verifying the compiled stack headlessly!
 - **Narration**:
-  > "We built HyperCrypt from day one using **Kiro Spec-Driven Development**. Our `.kiro` directory holds persistent steering rules, three full EARS specs, v1 Agent Hooks that automatically test engine edits and validate stacks on save, and our custom **`hypercrypt-mcp`** server. Right inside Kiro, we can compile any Markdown doc into a HyperCrypt stack, validate every card link, and execute HyperTalk scripts headlessly."
+  > "HyperCrypt was engineered with **Kiro Spec-Driven Development**. Our `.kiro` directory enforces zero-DOM engine purity in steering, defines three full EARS specs, runs v1 save hooks, and connects Kiro directly to our zero-install **`hypercrypt-mcp`** server—compiling Markdown decks, auditing card links, and running HyperTalk scripts headlessly."
 
-### 2:32 – 2:48 | Closing & Call to Action
-- **Visual**: Split/final shot back on HyperCrypt's live Vercel app (Card 6: **Resurrected!**) with a subtle overlay showing: `hypercrypt.vercel.app` · `github.com/pan609/hypercrypt` · `19/19 Vitest + Live MCP + Playwright Offline E2E`.
+### 2:32 – 2:46 | Closing
+- **Visual**: Return to `https://hypercrypt.vercel.app` (clean split banner: `hypercrypt.vercel.app` · `github.com/pan609/hypercrypt` · `Zero Backend · Offline Forever`).
 - **Narration**:
-  > "From 1987's HyperCard to 2026's spec-driven AI workflows—**HyperCrypt** brings personal, offline-forever hypermedia back to life. Try the live app on Vercel, export your own stack, and explore the open-source repo on GitHub. Thanks for watching!"
+  > "From 1987's HyperCard to 2026's spec-driven AI workflows—**HyperCrypt** brings personal, offline-forever hypermedia back to life. Try it live on Vercel or explore the open-source repo on GitHub. Thanks for watching!"

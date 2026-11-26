@@ -82,6 +82,12 @@ test.describe('HyperCrypt E2E & Standalone Offline Export Verification', () => {
     await offlinePage.setContent(exportedHtml, { waitUntil: 'domcontentloaded' });
 
     await expect(offlinePage.locator('#hc-title')).toContainText('502 Alert Received (1/5)');
+    // Verify offline dark/light theme sync updates root <html> data-hc-theme cleanly (P0-3!)
+    const initialHtmlTheme = await offlinePage.locator('html').getAttribute('data-hc-theme');
+    await offlinePage.locator('#hc-theme-toggle').click();
+    const toggledHtmlTheme = await offlinePage.locator('html').getAttribute('data-hc-theme');
+    expect(toggledHtmlTheme).not.toBe(initialHtmlTheme);
+
     await offlinePage.getByRole('button', { name: 'Recent Deploy (<15m)' }).click();
     await expect(offlinePage.locator('#hc-title')).toContainText('Check Rollback (2/5)');
     await offlinePage.close();

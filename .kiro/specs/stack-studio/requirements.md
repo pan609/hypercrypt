@@ -27,5 +27,7 @@ Build **HyperCrypt Studio**, a tactile 1987 Macintosh × Kiroween Dusk web works
 - **REQ-5.1**: WHEN a script calls `play "<sound>"`, THE SYSTEM SHALL synthesize the retro sound via Web Audio API with zero external audio files (respecting an optional Mute toggle).
 - **REQ-5.2**: WHEN a script sets a `visual effect` before `go to card`, THE SYSTEM SHALL animate the card transition (`dissolve`, `wipe left`, `wipe right`, `iris open`, `barn door open`).
 
-### REQ-6: Three Flagship Built-In Stacks
-- **REQ-6.1**: THE SYSTEM SHALL provide a Stack Switcher menu containing: (1) *The Attic Mac of 1987* (6 cards), (2) *Prod 502 Triage Runbook* (5 cards, compiled via `markdownCompiler`), (3) *Atkinson Darkroom & Script Lab* (4 cards), plus **New Blank Stack** and **Reset Demo Stack**.
+### REQ-6: Four Flagship Built-In Stacks, Bilingual UI, Stack Map & Live MD Compiler (v2.0)
+- **REQ-6.1**: THE SYSTEM SHALL provide a Stack Switcher menu and top **Showcase Dock** containing 4 EN+ZH flagship stacks: (1) *The Attic Mac of 1987* (6 cards), (2) *Starlight Cavern 1987 (1-Bit RPG)* (6 cards with `random(6)` dice duels), (3) *Prod 502 Triage Runbook* (5 cards, compiled via `markdownCompiler`), (4) *Atkinson Darkroom & Script Lab* (4 cards), plus **New Blank Stack** and **Reset Demo Stack**.
+- **REQ-6.2**: THE SYSTEM SHALL provide a **Map** view rendering AST-derived card nodes, direct/conditional jump edges, and visible red dashed broken-link indicators, plus an **MD → Stack** split-screen compiler with a live `HyperTalkInterpreter` preview.
+- **REQ-6.3**: THE SYSTEM SHALL support 1-click **EN / 简体中文** language switching across the Studio UI and all built-in stacks.

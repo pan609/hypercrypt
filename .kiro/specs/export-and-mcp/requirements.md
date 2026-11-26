@@ -16,8 +16,8 @@ Enable true offline immortality via Single-File `.html` Export and URL Hash shar
 - **REQ-2.3**: WHEN the user exports or imports `.hcstack.json`, THE SYSTEM SHALL validate the file via `validateStack` and display clear feedback on invalid files.
 
 ### REQ-3: Custom Kiro MCP Server (`hypercrypt-mcp`)
-- **REQ-3.1**: WHEN Kiro connects to `hypercrypt-mcp` via stdio (`.kiro/settings/mcp.json`), THE SERVER SHALL expose 4 typed tools:
+- **REQ-3.1**: WHEN Kiro connects to `hypercrypt-mcp` via stdio (`.kiro/settings/mcp.json` → zero-install `dist-mcp/server.js`), THE SERVER SHALL expose 4 typed tools:
   1. `validate_hypertalk({ script })` → returns `{ valid, handlers, diagnostics }`
-  2. `run_hypertalk_script({ stackJson, cardIndex?, handler?, targetName?, inputs? })` → executes headlessly in the shared sandbox and returns `{ finalCardIndex, globals, fieldTexts, audioPlayed, dialogs, trace, error? }`
-  3. `validate_stack({ stackJson })` → returns `{ valid, issueCount, issues }`
-  4. `compile_markdown_to_stack({ markdown, title?, author?, defaultTheme? })` → compiles structured Markdown (`## Card: Name`, body, `- [Button -> Target Card]`, optional ```hypertalk blocks) into a validated `.hcstack.json` string.
+  2. `run_hypertalk_script({ stackJson, cardIndex?, targetName?, handler?, initialGlobals?, askResponses?, answerResponses? })` → executes headlessly in the shared sandbox (including `closeCard`/`openCard` card lifecycle) and returns `{ finalCardIndex, finalCardName, globals, it, fieldTexts, buttonLabels, audioPlayed, dialogs, trace, stepsExecuted, error? }`
+  3. `validate_stack({ stackJson })` → returns `{ valid, errorCount, issueCount, issues }`
+  4. `compile_markdown_to_stack({ markdown, title?, author?, defaultTheme? })` → compiles structured Markdown (`## Card: Name`, body, `- [Button -> Target Card]`, `> Note: ...`, optional ```hypertalk blocks) into a validated `.hcstack.json` Stack object.

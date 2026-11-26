@@ -168,9 +168,17 @@ export function compileMarkdownToStack(markdown: string, options: CompileMarkdow
       script: '',
     });
 
-    // Main content body field
+    // Main content body field (adjust height cleanly if 2 button rows are needed)
+    const links =
+      sec.links.length > 0
+        ? sec.links
+        : idx < sections.length - 1
+          ? [{ label: 'Next Step →', target: sections[idx + 1].name }]
+          : [{ label: '↺ Back to Start', target: sections[0].name }];
+
+    const twoRows = links.length > 3;
     const hasNotes = Boolean(sec.editableNoteLabel);
-    const bodyHeight = hasNotes ? 148 : 210;
+    const bodyHeight = hasNotes ? (twoRows ? 116 : 148) : twoRows ? 176 : 210;
     objects.push({
       id: `${cardId}-body`,
       type: 'field',
@@ -194,9 +202,9 @@ export function compileMarkdownToStack(markdown: string, options: CompileMarkdow
         type: 'field',
         name: 'Notes',
         x: 24,
-        y: 208,
+        y: twoRows ? 174 : 208,
         width: CARD_WIDTH - 48,
-        height: 62,
+        height: twoRows ? 56 : 62,
         visible: true,
         style: 'rectangle',
         text: sec.editableNoteLabel,
@@ -206,30 +214,29 @@ export function compileMarkdownToStack(markdown: string, options: CompileMarkdow
       });
     }
 
-    // Navigation buttons row along bottom
-    const links =
-      sec.links.length > 0
-        ? sec.links
-        : idx < sections.length - 1
-          ? [{ label: 'Next Step →', target: sections[idx + 1].name }]
-          : [{ label: '↺ Back to Start', target: sections[0].name }];
-
+    // Navigation buttons wrapped neatly into rows of up to 3 buttons (no silent dropping!)
     const gap = 10;
     const totalW = CARD_WIDTH - 48;
-    const btnCount = Math.min(links.length, 3);
-    const btnWidth = Math.floor((totalW - gap * (btnCount - 1)) / btnCount);
+    const perRow = 3;
+    const rows = Math.ceil(links.length / perRow);
+    const btnHeight = rows > 1 ? 30 : 34;
+    const startY = rows > 1 ? 256 : 286;
 
-    links.slice(0, 3).forEach((link, bIdx) => {
+    links.forEach((link, bIdx) => {
+      const rowIdx = Math.floor(bIdx / perRow);
+      const colIdx = bIdx % perRow;
+      const itemsInRow = Math.min(perRow, links.length - rowIdx * perRow);
+      const btnWidth = Math.floor((totalW - gap * (itemsInRow - 1)) / itemsInRow);
       const targetName = escapeHtString(link.target);
       objects.push({
         id: `${cardId}-btn-${bIdx + 1}`,
         type: 'button',
         name: link.label,
         label: link.label,
-        x: 24 + bIdx * (btnWidth + gap),
-        y: 286,
+        x: 24 + colIdx * (btnWidth + gap),
+        y: startY + rowIdx * (btnHeight + 8),
         width: btnWidth,
-        height: 34,
+        height: btnHeight,
         visible: true,
         style: 'roundrect',
         accent: bIdx === 0,

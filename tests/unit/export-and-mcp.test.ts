@@ -16,6 +16,31 @@ describe('Markdown Compiler, URL Share & Single-File HTML Export', () => {
     expect(validateStack(stack)).toEqual([]);
   });
 
+  it('preserves >3 navigation buttons cleanly across 2 rows without dropping links', () => {
+    const md = `# Multi-Branch
+## Card: Hub
+Choose one of 5 destinations:
+- [Go A -> A]
+- [Go B -> B]
+- [Go C -> C]
+- [Go D -> D]
+- [Go E -> E]
+## Card: A
+A
+## Card: B
+B
+## Card: C
+C
+## Card: D
+D
+## Card: E
+E`;
+    const stack = compileMarkdownToStack(md);
+    const hubButtons = stack.cards[0].objects.filter((o) => o.type === 'button');
+    expect(hubButtons).toHaveLength(5);
+    expect(validateStack(stack)).toEqual([]);
+  });
+
   it('round-trips a stack through URL hash encoding', () => {
     const stack = compileMarkdownToStack('# Mini\n## Card: One\nHello!\n- [Go -> Two]\n## Card: Two\nDone!');
     const hash = encodeStackToHash(stack);

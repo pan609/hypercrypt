@@ -172,14 +172,59 @@ export function StackMapView() {
                 <marker id="hc-arrow-cond" markerWidth="9" markerHeight="9" refX="8" refY="3.5" orient="auto">
                   <polygon points="0 0, 9 3.5, 0 7" fill="var(--hc-accent)" />
                 </marker>
+                <marker id="hc-arrow-broken" markerWidth="9" markerHeight="9" refX="8" refY="3.5" orient="auto">
+                  <polygon points="0 0, 9 3.5, 0 7" fill="var(--hc-danger)" />
+                </marker>
               </defs>
 
               {graph.edges.map((edge, idx) => {
-                if (edge.toIndex === null || edge.fromIndex === edge.toIndex) return null;
                 const fromNode = graph.nodes[edge.fromIndex];
-                const toNode = graph.nodes[edge.toIndex];
-                if (!fromNode || !toNode) return null;
+                if (!fromNode) return null;
                 const p1 = getPos(fromNode);
+
+                // Render visible red dashed stub + target badge for broken links!
+                if (edge.broken || edge.toIndex === null) {
+                  const x1 = p1.x + NODE_W;
+                  const y1 = p1.y + 34 + (idx % 3) * 24;
+                  const x2 = x1 + 64;
+                  const y2 = y1 - 8;
+                  return (
+                    <g key={edge.id} data-testid={`broken-edge-${edge.id}`}>
+                      <path
+                        d={`M ${x1} ${y1} L ${x2} ${y2}`}
+                        fill="none"
+                        stroke="var(--hc-danger)"
+                        strokeWidth={2.2}
+                        strokeDasharray="5 4"
+                        markerEnd="url(#hc-arrow-broken)"
+                      />
+                      <rect
+                        x={x2 + 4}
+                        y={y2 - 11}
+                        width={Math.max(88, Math.min(165, edge.targetLabel.length * 7 + 34))}
+                        height={22}
+                        rx={4}
+                        fill="var(--hc-surface)"
+                        stroke="var(--hc-danger)"
+                        strokeWidth={1.5}
+                      />
+                      <text
+                        x={x2 + 10}
+                        y={y2 + 4}
+                        fill="var(--hc-danger)"
+                        fontSize="10"
+                        fontWeight="700"
+                        fontFamily="ui-monospace, monospace"
+                      >
+                        ✕ {edge.targetLabel.slice(0, 18)}
+                      </text>
+                    </g>
+                  );
+                }
+
+                if (edge.fromIndex === edge.toIndex) return null;
+                const toNode = graph.nodes[edge.toIndex];
+                if (!toNode) return null;
                 const p2 = getPos(toNode);
 
                 const x1 = p1.x + NODE_W / 2;

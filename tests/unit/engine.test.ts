@@ -224,15 +224,61 @@ describe('Static Stack Validator', () => {
     expect(graph.brokenLinks).toBe(0);
     expect(graph.conditionalBranches).toBeGreaterThan(0);
 
-    // Execute Stardust Alcove random(6) chest roll headlessly
+    // Execute Stardust Alcove random(6) chest roll headlessly WITH NO initialGlobals (verifies P0-2 safe defaults!)
     const rollRun = await runStackHeadless({
       stack: rpg,
       cardIndex: 1,
       targetName: 'Roll Chest',
-      initialGlobals: { hp: '10', gold: '5', relic: 'None' },
     });
     expect(rollRun.error).toBeUndefined();
     expect(rollRun.globals.alcoveopened).toBe('yes');
+    expect(Number(rollRun.globals.hp)).toBeGreaterThanOrEqual(8);
     expect(Number(rollRun.globals.gold)).toBeGreaterThanOrEqual(7);
+  });
+
+  it('triggers closeCard before leaving and openCard after entering in headless host', async () => {
+    const lifecycleStack: Stack = {
+      schemaVersion: 1,
+      id: 'lifecycle-test',
+      title: 'Lifecycle',
+      author: 'Test',
+      description: '',
+      script: '',
+      cards: [
+        {
+          id: 'c1',
+          name: 'One',
+          bitmapRle: '',
+          script: 'on closeCard\n  global log\n  put "closed1;" after log\nend closeCard',
+          objects: [
+            {
+              id: 'b1',
+              type: 'button',
+              name: 'Next',
+              label: 'Next',
+              style: 'roundrect',
+              x: 10,
+              y: 10,
+              width: 80,
+              height: 30,
+              visible: true,
+              script: 'on mouseUp\n  go to card "Two"\nend mouseUp',
+            },
+          ],
+        },
+        {
+          id: 'c2',
+          name: 'Two',
+          bitmapRle: '',
+          script: 'on openCard\n  global log\n  put "opened2" after log\nend openCard',
+          objects: [],
+        },
+      ],
+    };
+
+    const res = await runStackHeadless({ stack: lifecycleStack, cardIndex: 0, targetName: 'Next' });
+    expect(res.error).toBeUndefined();
+    expect(res.finalCardName).toBe('Two');
+    expect(res.globals.log).toBe('closed1;opened2');
   });
 });

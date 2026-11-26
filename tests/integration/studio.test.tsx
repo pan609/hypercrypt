@@ -87,20 +87,34 @@ describe('HyperCrypt Studio Integration Flows', () => {
     expect(screen.getByTestId('stack-map-view')).toBeInTheDocument();
     expect(screen.getByTestId('map-node-0')).toHaveTextContent('1. Attic');
 
-    // Open Live Markdown Compiler and load compiled stack into Studio
+    // Open Live Markdown Compiler, test live HyperTalk preview navigation, and load compiled stack into Studio
     await user.click(screen.getByRole('button', { name: 'MD → Stack' }));
     expect(screen.getByTestId('md-studio-view')).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Recent Deploy (<15m)' }));
+    await waitFor(() => {
+      expect(screen.getByTestId('md-preview-title')).toHaveTextContent('Check Rollback (2/5)');
+    });
     await user.click(screen.getByTestId('md-open-studio'));
     expect(screen.getByTestId('window-title')).toHaveTextContent('Prod 502 Triage Runbook');
 
-    // Open AST Tree tab from Engine HUD
-    await user.click(screen.getByRole('button', { name: /AST Tree/i }));
+    // Open Author -> AST tab via Peek Script & tab click
+    await user.click(screen.getByRole('button', { name: /Peek Script/i }));
+    await user.click(screen.getByRole('tab', { name: 'AST' }));
     expect(screen.getByText(/HandlerNode\(mouseup\)/i)).toBeInTheDocument();
 
-    // Return to Browse and switch scenarios via the top Showcase Dock
+    // Return to Browse, switch to 1-Bit RPG via Showcase Dock, enter Card 2 and roll chest without negative HP!
     await user.click(screen.getByRole('button', { name: 'Browse' }));
     expect(screen.getByTestId('showcase-dock')).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: /1-Bit RPG/i }));
     expect(screen.getByTestId('window-title')).toHaveTextContent('Starlight Cavern 1987');
+    await user.click(screen.getByRole('button', { name: 'Search Alcove' }));
+    await waitFor(() => {
+      expect(screen.getByTestId('window-title')).toHaveTextContent('Stardust Alcove (2/6)');
+    });
+    await user.click(screen.getByRole('button', { name: 'Roll Chest' }));
+    await waitFor(() => {
+      expect(screen.getByTestId('card-window')).not.toHaveTextContent('HP: -2');
+      expect(screen.getByTestId('card-window')).toHaveTextContent(/HP: (8|10)/);
+    });
   });
 });

@@ -52,26 +52,40 @@ HyperCrypt was designed and built strictly using **Kiro Spec-Driven Development*
 
 ---
 
+## Screenshots
+
+| 1987 Cream · Browse Mode & Showcase Dock | Kiroween Dusk · 1-Bit RPG & Live Engine HUD |
+| :---: | :---: |
+| ![HyperCrypt 1987 Cream](docs/screenshots/01-browse-classic.png) | ![HyperCrypt Kiroween Dusk RPG](docs/screenshots/02-rpg-kiroween.png) |
+
+| AST-Derived Stack Flow Map | Live Split-Screen `MD → Stack` Compiler |
+| :---: | :---: |
+| ![HyperCrypt Stack Flow Map](docs/screenshots/03-stack-map.png) | ![HyperCrypt Live Markdown Compiler](docs/screenshots/04-markdown-compiler.png) |
+
+---
+
 ## Architecture
 
 ```mermaid
 flowchart LR
   subgraph Kiro["Kiro IDE / CLI (.kiro/)"]
-    Steering["steering/ + specs/ + hooks/"]
+    Steering["4 Steering Docs + 3 EARS Specs + 2 v1 Hooks"]
     MCPClient["MCP Client"]
   end
 
-  subgraph Shared["src/engine/ (Pure Zero-DOM TypeScript)"]
+  subgraph Shared["src/engine/ (100% Pure Zero-DOM TypeScript)"]
     HT["HyperTalk Lexer -> Parser -> Sandboxed Interpreter"]
     Bit["512x342 1-Bit Bitmap RLE + Atkinson Dither"]
-    Comp["Markdown-to-Stack Compiler + Static Validator"]
+    Comp["Markdown-to-Stack Compiler + Stack Graph + Validator"]
     Exp["Single-File HTML Exporter"]
   end
 
-  MCPClient <-->|stdio JSON-RPC| MCPServer["mcp/server.ts (hypercrypt-mcp)"]
+  MCPClient <-->|stdio JSON-RPC| MCPServer["mcp/server.ts -> zero-install dist-mcp/server.js"]
   MCPServer --> Shared
-  Studio["src/studio/ (React 19 Workstation)"] --> Shared
+  Studio["src/studio/ (React 19 4-View IDE)"] --> Shared
+  Player["src/player/standalonePlayer.ts (~34 KB IIFE)"] --> Shared
   Exp --> Offline["Standalone .html (Offline Forever)"]
+  Player --> Offline
 ```
 
 ---
