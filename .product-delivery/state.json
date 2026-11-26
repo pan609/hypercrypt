@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "project": "hypercrypt",
-  "updatedAt": "2026-11-26T15:13:22+08:00",
-  "stage": "local-demo-v1-delivered-publication-on-hold-by-user",
+  "updatedAt": "2026-11-26T16:17:00+08:00",
+  "stage": "video-v2-user-approved-cover-ready-awaiting-devpost-recaptcha-and-youtube-url",
   "judgeGate": "PASS: independent final-check section 8 accepted e7c21f7",
   "verification": {
     "build": "passed",
@@ -15,7 +15,7 @@
     "independentReview": "round 2 no findings"
   },
   "pending": [
-    "User reviews local video v1; publication explicitly on hold",
+    "User previews full local video v2; Andrew voice approved after short audition; publication explicitly on hold",
     "Devpost CAPTCHA/draft creation has not been confirmed",
     "YouTube Public URL and final submission remain future work after user resumes"
   ],
@@ -38,16 +38,33 @@
     "evidence": "docs/KIRO_LIVE_CHECK.md"
   },
   "video": {
-    "version": "v1-20261126",
-    "sha256": "e3ef766110ebc75754de1c834f9d8af458516306c6c398db59e72d2401a1f7db",
+    "version": "v2-andrew-us-20261126",
+    "sha256": "b82fc5354333f00044e698da3e5e1a399ce28ea5678136eadb682d348577f2fb",
     "format": {
-      "duration": "149.124349",
-      "size": "5583780"
+      "duration": "124.707683",
+      "size": "6043396"
     },
     "lessThan3Minutes": true,
     "fullVideoAndAudioDecodeExitCode": 0,
-    "localPath": "artifacts/demo-2026-11-26/hypercrypt-demo-v1-20261126.mp4",
-    "youtubePublicUrl": null
+    "localPath": "artifacts/demo-2026-11-26/v2-andrew-us/hypercrypt-demo-v2-andrew-us-20261126.mp4",
+    "youtubePublicUrl": null,
+    "voice": "en-US-AndrewMultilingualNeural",
+    "voiceRate": "-4%",
+    "voicePreferenceUserApproved": true,
+    "fullCutUserReviewed": true,
+    "receipt": "artifacts/demo-2026-11-26/v2-andrew-us/final-video-receipt.json",
+    "previousVersion": {
+      "version": "v1-20261126",
+      "sha256": "e3ef766110ebc75754de1c834f9d8af458516306c6c398db59e72d2401a1f7db",
+      "format": {
+        "duration": "149.124349",
+        "size": "5583780"
+      },
+      "lessThan3Minutes": true,
+      "fullVideoAndAudioDecodeExitCode": 0,
+      "localPath": "artifacts/demo-2026-11-26/hypercrypt-demo-v1-20261126.mp4",
+      "youtubePublicUrl": null
+    }
   },
   "blogBonus": "Skipped at explicit user request",
   "devpost": {
