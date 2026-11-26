@@ -1,6 +1,5 @@
 node_modules/
 dist/
-dist-mcp/
 src/engine/generated/
 test-results/
 playwright-report/
@@ -9,3 +8,4 @@ playwright-report/
 .env
 .env.*
 .vercel/
+.vercel

@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "vite",
     "build:player": "esbuild src/engine/standalonePlayer.ts --bundle --format=iife --minify --platform=browser --target=es2020 --outfile=src/engine/generated/standalonePlayer.bundle.txt",
-    "build:mcp": "esbuild mcp/server.ts --bundle --format=esm --platform=node --target=node20 --packages=external --outfile=dist-mcp/server.js",
+    "build:mcp": "esbuild mcp/server.ts --bundle --format=esm --platform=node --target=node20 --minify --banner:js=\"import { createRequire } from 'module'; const require = createRequire(import.meta.url);\" --outfile=dist-mcp/server.js",
     "build": "npm run build:player && tsc --noEmit && vite build && npm run build:mcp",
     "preview": "vite preview --port 4187",
     "typecheck": "tsc --noEmit",
