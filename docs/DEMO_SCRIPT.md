@@ -37,10 +37,10 @@
 ### 1:52 – 2:32 | Real Kiro IDE Workflow (`.kiro/` Specs, Hooks & Live `hypercrypt-mcp`)
 - **Visual**: Switch to **Kiro IDE** with `hypercrypt` open:
   1. Expand `.kiro/` showing 4 `steering/` files, 3 EARS `specs/`, 2 v1 `hooks/` (`engine-guard.json`, `stack-validator.json`), and `settings/mcp.json`.
-  2. Save a file to show the Kiro Hook running automated tests/validation green.
+  2. Save an engine file through Kiro and show the actual **1 hook triggered** / **HyperTalk Engine Auto-Test** event. Do not substitute a terminal test for an IDE Hook event.
   3. In Kiro Chat, invoke **`hypercrypt-mcp`** (`compile_markdown_to_stack` → `validate_stack` → `run_hypertalk_script`) and show the structured JSON result verifying the compiled stack headlessly!
 - **Narration**:
-  > "HyperCrypt was engineered with **Kiro Spec-Driven Development**. Our `.kiro` directory enforces zero-DOM engine purity in steering, defines three full EARS specs, runs v1 save hooks, and connects Kiro directly to our zero-install **`hypercrypt-mcp`** server—compiling Markdown decks, auditing card links, and running HyperTalk scripts headlessly."
+  > "Here is HyperCrypt's **Kiro workflow** in action. The repository holds three EARS specs and four steering documents. Saving an engine edit triggers our test Hook. Through **`hypercrypt-mcp`**, Kiro compiles this Markdown into two cards, validates the links, and executes Continue—the result is Done. These are real tool results from this IDE session."
 
 ### 2:32 – 2:46 | Closing
 - **Visual**: Return to `https://hypercrypt.vercel.app` (clean split banner: `hypercrypt.vercel.app` · `github.com/pan609/hypercrypt` · `Zero Backend · Offline Forever`).

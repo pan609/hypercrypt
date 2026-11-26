@@ -1,0 +1,249 @@
+{
+  "source": "Actual Kiro IDE 1.5.44 session tool calls, sanitized from the local session log",
+  "note": "Only HyperCrypt inputs and outputs; no authentication data or reasoning. The initial truncated end mouseU input was rejected; the corrected script was then validated successfully.",
+  "calls": [
+    {
+      "calledAt": "2026-11-26T06:34:42.799Z",
+      "tool": "hypercrypt::validate_hypertalk",
+      "arguments": {
+        "script": "on mouseUp\n\n  play \"chime\"\n\nend mouseU"
+      },
+      "result": {
+        "valid": false,
+        "handlers": [
+          {
+            "name": "mouseup",
+            "params": [],
+            "line": 1,
+            "statementCount": 1
+          }
+        ],
+        "diagnostics": [
+          {
+            "line": 5,
+            "column": 5,
+            "message": "Expected 'end mouseUp', found 'end mouseU'"
+          }
+        ]
+      },
+      "completedAt": "2026-11-26T06:34:42.908Z",
+      "transportSuccess": true
+    },
+    {
+      "calledAt": "2026-11-26T06:34:43.375Z",
+      "tool": "hypercrypt::compile_markdown_to_stack",
+      "arguments": {
+        "markdown": "# Kiro Live Check\n\n## Card: Start\n\nChoose next.\n\n- [Continue -> Done]\n\n## Card: Done\n\nMCP worked."
+      },
+      "result": {
+        "cardCount": 2,
+        "validationIssues": [],
+        "stack": {
+          "schemaVersion": 1,
+          "id": "kiro-live-check",
+          "title": "Kiro Live Check",
+          "author": "HyperCrypt Markdown Compiler",
+          "description": "Compiled from Markdown (2 interactive cards)",
+          "defaultTheme": "classic",
+          "script": "",
+          "cards": [
+            {
+              "id": "card-1-start",
+              "name": "Start",
+              "script": "",
+              "bitmapRle": "",
+              "objects": [
+                {
+                  "id": "card-1-start-header",
+                  "type": "field",
+                  "name": "Title",
+                  "x": 24,
+                  "y": 16,
+                  "width": 464,
+                  "height": 30,
+                  "visible": true,
+                  "style": "transparent",
+                  "text": "1/2 · Start",
+                  "locked": true,
+                  "fontSize": 15,
+                  "script": ""
+                },
+                {
+                  "id": "card-1-start-body",
+                  "type": "field",
+                  "name": "Body",
+                  "x": 24,
+                  "y": 52,
+                  "width": 464,
+                  "height": 210,
+                  "visible": true,
+                  "style": "scrolling",
+                  "text": "Choose next.",
+                  "locked": true,
+                  "fontSize": 12,
+                  "script": ""
+                },
+                {
+                  "id": "card-1-start-btn-1",
+                  "type": "button",
+                  "name": "Continue",
+                  "label": "Continue",
+                  "x": 24,
+                  "y": 286,
+                  "width": 464,
+                  "height": 34,
+                  "visible": true,
+                  "style": "roundrect",
+                  "accent": true,
+                  "script": "on mouseUp\n  play \"click\"\n  visual effect dissolve\n  go to card \"Done\"\nend mouseUp"
+                }
+              ]
+            },
+            {
+              "id": "card-2-done",
+              "name": "Done",
+              "script": "",
+              "bitmapRle": "",
+              "objects": [
+                {
+                  "id": "card-2-done-header",
+                  "type": "field",
+                  "name": "Title",
+                  "x": 24,
+                  "y": 16,
+                  "width": 464,
+                  "height": 30,
+                  "visible": true,
+                  "style": "transparent",
+                  "text": "2/2 · Done",
+                  "locked": true,
+                  "fontSize": 15,
+                  "script": ""
+                },
+                {
+                  "id": "card-2-done-body",
+                  "type": "field",
+                  "name": "Body",
+                  "x": 24,
+                  "y": 52,
+                  "width": 464,
+                  "height": 210,
+                  "visible": true,
+                  "style": "scrolling",
+                  "text": "MCP worked.",
+                  "locked": true,
+                  "fontSize": 12,
+                  "script": ""
+                },
+                {
+                  "id": "card-2-done-btn-1",
+                  "type": "button",
+                  "name": "↺ Back to Start",
+                  "label": "↺ Back to Start",
+                  "x": 24,
+                  "y": 286,
+                  "width": 464,
+                  "height": 34,
+                  "visible": true,
+                  "style": "roundrect",
+                  "accent": true,
+                  "script": "on mouseUp\n  play \"click\"\n  visual effect dissolve\n  go to card \"Start\"\nend mouseUp"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "completedAt": "2026-11-26T06:34:56.548Z",
+      "transportSuccess": true
+    },
+    {
+      "calledAt": "2026-11-26T06:35:04.881Z",
+      "tool": "hypercrypt::validate_stack",
+      "arguments": {
+        "stackJson": "{\"schemaVersion\":1,\"id\":\"kiro-live-check\",\"title\":\"Kiro Live Check\",\"author\":\"HyperCrypt Markdown Compiler\",\"description\":\"Compiled from Markdown (2 interactive cards)\",\"defaultTheme\":\"classic\",\"script\":\"\",\"cards\":[{\"id\":\"card-1-start\",\"name\":\"Start\",\"script\":\"\",\"bitmapRle\":\"\",\"objects\":[{\"id\":\"card-1-start-header\",\"type\":\"field\",\"name\":\"Title\",\"x\":24,\"y\":16,\"width\":464,\"height\":30,\"visible\":true,\"style\":\"transparent\",\"text\":\"1/2 · Start\",\"locked\":true,\"fontSize\":15,\"script\":\"\"},{\"id\":\"card-1-start-body\",\"type\":\"field\",\"name\":\"Body\",\"x\":24,\"y\":52,\"width\":464,\"height\":210,\"visible\":true,\"style\":\"scrolling\",\"text\":\"Choose next.\",\"locked\":true,\"fontSize\":12,\"script\":\"\"},{\"id\":\"card-1-start-btn-1\",\"type\":\"button\",\"name\":\"Continue\",\"label\":\"Continue\",\"x\":24,\"y\":286,\"width\":464,\"height\":34,\"visible\":true,\"style\":\"roundrect\",\"accent\":true,\"script\":\"on mouseUp\\n  play \\\"click\\\"\\n  visual effect dissolve\\n  go to card \\\"Done\\\"\\nend mouseUp\"}]},{\"id\":\"card-2-done\",\"name\":\"Done\",\"script\":\"\",\"bitmapRle\":\"\",\"objects\":[{\"id\":\"card-2-done-header\",\"type\":\"field\",\"name\":\"Title\",\"x\":24,\"y\":16,\"width\":464,\"height\":30,\"visible\":true,\"style\":\"transparent\",\"text\":\"2/2 · Done\",\"locked\":true,\"fontSize\":15,\"script\":\"\"},{\"id\":\"card-2-done-body\",\"type\":\"field\",\"name\":\"Body\",\"x\":24,\"y\":52,\"width\":464,\"height\":210,\"visible\":true,\"style\":\"scrolling\",\"text\":\"MCP worked.\",\"locked\":true,\"fontSize\":12,\"script\":\"\"},{\"id\":\"card-2-done-btn-1\",\"type\":\"button\",\"name\":\"↺ Back to Start\",\"label\":\"↺ Back to Start\",\"x\":24,\"y\":286,\"width\":464,\"height\":34,\"visible\":true,\"style\":\"roundrect\",\"accent\":true,\"script\":\"on mouseUp\\n  play \\\"click\\\"\\n  visual effect dissolve\\n  go to card \\\"Start\\\"\\nend mouseUp\"}]}]}"
+      },
+      "result": {
+        "valid": true,
+        "errorCount": 0,
+        "issueCount": 0,
+        "issues": []
+      },
+      "completedAt": "2026-11-26T06:35:04.892Z",
+      "transportSuccess": true
+    },
+    {
+      "calledAt": "2026-11-26T06:35:07.514Z",
+      "tool": "hypercrypt::run_hypertalk_script",
+      "arguments": {
+        "stackJson": "{\"schemaVersion\":1,\"id\":\"kiro-live-check\",\"title\":\"Kiro Live Check\",\"author\":\"HyperCrypt Markdown Compiler\",\"description\":\"Compiled from Markdown (2 interactive cards)\",\"defaultTheme\":\"classic\",\"script\":\"\",\"cards\":[{\"id\":\"card-1-start\",\"name\":\"Start\",\"script\":\"\",\"bitmapRle\":\"\",\"objects\":[{\"id\":\"card-1-start-header\",\"type\":\"field\",\"name\":\"Title\",\"x\":24,\"y\":16,\"width\":464,\"height\":30,\"visible\":true,\"style\":\"transparent\",\"text\":\"1/2 · Start\",\"locked\":true,\"fontSize\":15,\"script\":\"\"},{\"id\":\"card-1-start-body\",\"type\":\"field\",\"name\":\"Body\",\"x\":24,\"y\":52,\"width\":464,\"height\":210,\"visible\":true,\"style\":\"scrolling\",\"text\":\"Choose next.\",\"locked\":true,\"fontSize\":12,\"script\":\"\"},{\"id\":\"card-1-start-btn-1\",\"type\":\"button\",\"name\":\"Continue\",\"label\":\"Continue\",\"x\":24,\"y\":286,\"width\":464,\"height\":34,\"visible\":true,\"style\":\"roundrect\",\"accent\":true,\"script\":\"on mouseUp\\n  play \\\"click\\\"\\n  visual effect dissolve\\n  go to card \\\"Done\\\"\\nend mouseUp\"}]},{\"id\":\"card-2-done\",\"name\":\"Done\",\"script\":\"\",\"bitmapRle\":\"\",\"objects\":[{\"id\":\"card-2-done-header\",\"type\":\"field\",\"name\":\"Title\",\"x\":24,\"y\":16,\"width\":464,\"height\":30,\"visible\":true,\"style\":\"transparent\",\"text\":\"2/2 · Done\",\"locked\":true,\"fontSize\":15,\"script\":\"\"},{\"id\":\"card-2-done-body\",\"type\":\"field\",\"name\":\"Body\",\"x\":24,\"y\":52,\"width\":464,\"height\":210,\"visible\":true,\"style\":\"scrolling\",\"text\":\"MCP worked.\",\"locked\":true,\"fontSize\":12,\"script\":\"\"},{\"id\":\"card-2-done-btn-1\",\"type\":\"button\",\"name\":\"↺ Back to Start\",\"label\":\"↺ Back to Start\",\"x\":24,\"y\":286,\"width\":464,\"height\":34,\"visible\":true,\"style\":\"roundrect\",\"accent\":true,\"script\":\"on mouseUp\\n  play \\\"click\\\"\\n  visual effect dissolve\\n  go to card \\\"Start\\\"\\nend mouseUp\"}]}]}",
+        "cardIndex": 0,
+        "targetName": "Continue"
+      },
+      "result": {
+        "finalCardIndex": 1,
+        "finalCardName": "Done",
+        "globals": {},
+        "it": "",
+        "fieldTexts": {
+          "Title": "2/2 · Done",
+          "Body": "MCP worked."
+        },
+        "buttonLabels": {
+          "↺ Back to Start": "↺ Back to Start"
+        },
+        "audioPlayed": [
+          "click"
+        ],
+        "dialogs": [],
+        "trace": [
+          {
+            "step": 1,
+            "line": 2,
+            "handler": "mouseup",
+            "summary": "play ...",
+            "globalsSnapshot": {}
+          },
+          {
+            "step": 2,
+            "line": 3,
+            "handler": "mouseup",
+            "summary": "visual effect dissolve",
+            "globalsSnapshot": {}
+          },
+          {
+            "step": 3,
+            "line": 4,
+            "handler": "mouseup",
+            "summary": "go to card ...",
+            "globalsSnapshot": {}
+          }
+        ],
+        "stepsExecuted": 3
+      },
+      "completedAt": "2026-11-26T06:35:13.792Z",
+      "transportSuccess": true
+    },
+    {
+      "calledAt": "2026-11-26T06:35:34.129Z",
+      "tool": "hypercrypt::validate_hypertalk",
+      "arguments": {
+        "script": "on mouseUp\n\n  play \"chime\"\n\nend mouseUp"
+      },
+      "result": {
+        "valid": true,
+        "handlers": [
+          {
+            "name": "mouseup",
+            "params": [],
+            "line": 1,
+            "statementCount": 1
+          }
+        ],
+        "diagnostics": []
+      },
+      "completedAt": "2026-11-26T06:35:34.141Z",
+      "transportSuccess": true
+    }
+  ]
+}

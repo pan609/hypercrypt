@@ -94,6 +94,7 @@ export interface RuntimeHost {
   play(sound: string): void;
   wait(ms: number): Promise<void>;
   onTrace?: (entry: TraceEntry) => void;
+  /** Observer snapshots are copies; keep host session globals shared. */
   onBeforeStep?: (line: number, summary: string, globals: Record<string, string>) => Promise<void>;
 }
 

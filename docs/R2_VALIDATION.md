@@ -11,10 +11,14 @@ The independent R2 decision permits release without R3 once nested lifecycle glo
 - `npm run test:e2e`: exit 0 (2 Chromium tests). The new regression plays Ending Open Source, deterministically loses four dice duels, and respawns with HP:10/Gold:5 in both Studio and the actual downloaded HTML with external requests blocked.
 - Environment: macOS, Node v22.23.4. No new production dependencies.
 
+## Release receipt
+
+Fix commit `7d969cf` was pushed to public `pan609/hypercrypt` and Vercel production was redeployed successfully (CLI exit 0). The public page returns HTTP 200; its `/assets/index-CB4OWVpb.js` has the same SHA-256 as the tested local build. See [machine-readable receipt](R2_PRODUCTION_RECEIPT.json). The R2 automatic upgrade conditions are satisfied: **PASS**, with the original 8.6/10 score unchanged.
+
 ## Evidence boundary
 
-Kiro IDE 1.5.44 is installed. Its native UI was checked on 2026-11-26 and is still at **Sign in**. The screen states that signing in agrees to the AWS Customer Agreement, Service Terms, and Privacy Notice. The user must complete that step before IDE hook/MCP execution can be recorded. Passing a stdio MCP test is not proof of Kiro IDE execution.
+Kiro IDE 1.5.44 is installed. The user completed sign-in on 2026-11-26. We then verified all four MCP tools in that IDE, and a Kiro edit to `src/engine/types.ts` triggered the engine save Hook, recorded as completed. See [the live check](KIRO_LIVE_CHECK.md), [MCP inputs/results](evidence/kiro-mcp-live.json), and [Hook event](evidence/kiro-hook-live.json). The Hook event does not expose stdout or a numeric exit code; the full release tests above were verified separately.
 
-The hook JSON shape matches the current [official Kiro Hooks schema](https://kiro.dev/docs/hooks/) (page updated 2026-11-15); the actual IDE trigger remains pending verification.
+The hook JSON shape matches the current [official Kiro Hooks schema](https://kiro.dev/docs/hooks/) (page updated 2026-11-15), and the IDE save trigger has now been observed.
 
-Final Kiro footage, the final YouTube URL, bonus article publication, and Devpost submission remain outstanding. Submission prose describing past Kiro use is a draft and must be reconciled against real captured use before publication.
+Final edited footage, the YouTube URL, bonus article publication, and Devpost submission remain outstanding. Submission prose now describes the verified current Kiro workflow instead of asserting that all past implementation happened in Kiro.

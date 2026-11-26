@@ -42,9 +42,9 @@
 
 ---
 
-## How Kiro Was Used (`.kiro/` Spec-Driven Architecture)
+## Kiro Workflow (`.kiro/` Specs, Hooks & MCP)
 
-The repository contains these **Kiro spec-driven workflow artifacts**. Real Kiro IDE hook/MCP execution is still awaiting sign-in and capture; see [verification status](docs/R2_VALIDATION.md).
+The repository contains these **Kiro spec-driven workflow artifacts**. All four MCP tools and the engine save Hook were exercised in Kiro IDE on 2026-11-26; see [live verification and evidence](docs/KIRO_LIVE_CHECK.md). This validates the current workflow, without asserting that all earlier development took place in Kiro.
 - **`.kiro/steering/`**: 4 steering docs (`product.md`, `tech.md`, `structure.md` with `inclusion: always`, plus `hypertalk-grammar.md` with `fileMatch: "src/engine/**"`).
 - **`.kiro/specs/`**: 3 complete EARS specification suites (`hypertalk-engine`, `stack-studio`, `export-and-mcp`), each with `requirements.md`, `design.md`, and `tasks.md`.
 - **`.kiro/hooks/`**: Kiro v1 event hooks (`engine-guard.json`, `stack-validator.json`) running unit tests and preset static validation on save.

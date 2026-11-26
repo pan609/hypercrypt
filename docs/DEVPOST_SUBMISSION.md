@@ -1,6 +1,6 @@
 # HyperCrypt — Devpost Submission Copy (Kiroween 2026 · v2.0)
 
-> Draft for `https://kiroween.devpost.com`. Before publication, capture actual Kiro IDE usage and reconcile the Kiro-use claims below with that evidence; insert the final YouTube URL. See [verification status](R2_VALIDATION.md).
+> Draft for `https://kiroween.devpost.com`. Kiro IDE live validation is complete ([evidence](KIRO_LIVE_CHECK.md)); record the final demo and insert the YouTube URL before publication.
 
 ---
 
@@ -50,7 +50,7 @@ For **Kiroween 2026 (Best Resurrection)**, we brought HyperCard and HyperTalk ba
 - **Immortal Single-File `.html` Export**: Bundles our exact TypeScript HyperTalk engine (`src/player/standalonePlayer.ts` → ~34 KB minified IIFE) + singleton Web Audio synth + 1-bit RLE bitmaps into one standalone `.html` file that runs offline forever with zero external requests.
 
 ### How We Built It & How We Used Kiro
-HyperCrypt was architected and verified using **Kiro Spec-Driven Development** (all artifacts tracked under `/.kiro/`):
+HyperCrypt includes a **Kiro spec-driven workflow** (artifacts tracked under `/.kiro/`). We exercised the four MCP tools inside Kiro IDE and triggered the engine save Hook during live verification on November 26, 2026. This demonstrates the current workflow; we do not claim all earlier implementation happened in Kiro:
 1. **Steering (`.kiro/steering/`)**: Four rules—`product.md`, `tech.md`, `structure.md` (`inclusion: always`), plus `hypertalk-grammar.md` (`inclusion: fileMatch` scoped to `src/engine/**`) enforcing zero-DOM engine purity, EBNF parity (including `random(n)`), and lifecycle invariants.
 2. **EARS Specs (`.kiro/specs/`)**: Three complete specification suites (`hypertalk-engine`, `stack-studio`, `export-and-mcp`) with EARS `requirements.md`, technical `design.md`, and completed `tasks.md`.
 3. **Agent Hooks (`.kiro/hooks/`)**: Kiro v1 `PostFileSave` hooks (`engine-guard.json` and `stack-validator.json`) running unit tests on `src/engine/*.ts` edits, checking grammar steering sync, and running whole-stack static link validation across all 10 EN+ZH built-in stacks/templates.

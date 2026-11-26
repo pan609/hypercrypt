@@ -1,0 +1,15 @@
+{
+  "source": "Actual Kiro IDE ContextualHookInvoked event",
+  "events": [
+    {
+      "at": "2026-11-26T06:35:43.963Z",
+      "name": "HyperTalk Engine Auto-Test",
+      "hookFile": ".kiro/hooks/engine-guard.json#hook-0",
+      "actionType": "runCommand",
+      "status": "completed",
+      "triggeringEdit": "src/engine/types.ts: RuntimeHost.onBeforeStep doc comment",
+      "command": "npm run test:unit",
+      "note": "The stored event reports completed but does not include command stdout or a numeric exit code."
+    }
+  ]
+}

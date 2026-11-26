@@ -1,0 +1,10 @@
+{
+  "verifiedAt": "2026-11-26T14:31:23+08:00",
+  "url": "https://hypercrypt.vercel.app",
+  "httpStatus": 200,
+  "asset": "/assets/index-CB4OWVpb.js",
+  "publicSha256": "2dd93ea3e4dd29309bc96267c53d3ebd6b64adf26e02414b1058f9b6252f07b8",
+  "localSha256": "2dd93ea3e4dd29309bc96267c53d3ebd6b64adf26e02414b1058f9b6252f07b8",
+  "matchesTestedBuild": true,
+  "fixCommit": "7d969cf"
+}

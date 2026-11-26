@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "project": "hypercrypt",
-  "updatedAt": "2026-11-26T14:32:00+08:00",
-  "stage": "r2-hotfix-verified-awaiting-deployment",
-  "judgeGate": "CONDITIONAL_PASS",
+  "updatedAt": "2026-11-26T14:38:04+08:00",
+  "stage": "kiro-live-verified-awaiting-final-video-and-submission",
+  "judgeGate": "PASS (R2 automatic upgrade conditions satisfied; no R3)",
   "verification": {
     "build": "passed",
     "typecheck": "passed within npm run build",
@@ -13,10 +13,27 @@
     "evidence": "docs/R2_VALIDATION.md"
   },
   "pending": [
-    "Push the R2 fix and redeploy Vercel, then verify the public asset matches the build",
-    "User completes Kiro sign-in and the agreement shown on that screen",
-    "Capture real Kiro hooks and MCP execution; reconcile submission claims with evidence",
-    "Record and upload the final <=3 minute YouTube demo",
+    "Record and edit the final <=3 minute demo, including actual Kiro footage",
+    "Upload the final YouTube demo and insert the URL",
     "Publish bonus article and submit Devpost"
-  ]
+  ],
+  "fixCommit": "7d969cf",
+  "issue": "https://github.com/pan609/hypercrypt/issues/1",
+  "production": {
+    "verifiedAt": "2026-11-26T14:31:23+08:00",
+    "url": "https://hypercrypt.vercel.app",
+    "httpStatus": 200,
+    "asset": "/assets/index-CB4OWVpb.js",
+    "publicSha256": "2dd93ea3e4dd29309bc96267c53d3ebd6b64adf26e02414b1058f9b6252f07b8",
+    "localSha256": "2dd93ea3e4dd29309bc96267c53d3ebd6b64adf26e02414b1058f9b6252f07b8",
+    "matchesTestedBuild": true,
+    "fixCommit": "7d969cf"
+  },
+  "kiro": {
+    "version": "1.5.44",
+    "signIn": "verified in native UI",
+    "mcp": "all 4 tools executed in actual IDE",
+    "hook": "PostFileSave event completed; stdout and numeric exit code not exposed",
+    "evidence": "docs/KIRO_LIVE_CHECK.md"
+  }
 }

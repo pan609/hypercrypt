@@ -103,21 +103,21 @@ When you click **Export → Export Single-File .html**, `htmlExporter.ts` embeds
 
 ---
 
-## 4. How Kiro Spec-Driven Development Kept Us Honest
+## 4. The Kiro Workflow and What We Verified
 
-Building a language interpreter, 1-bit pixel studio, AST flow graph, Markdown compiler, and MCP server in a tight hackathon sprint can easily spiral into fragile spaghetti. **Kiro** kept the entire lifecycle disciplined:
+The repository supplies specs, steering, hooks, and a custom MCP server for a repeatable Kiro workflow. On November 26, we verified all four tools and the save Hook inside Kiro IDE. This demonstrates the current integration; it is not a claim that all earlier implementation happened in Kiro. The [live evidence](KIRO_LIVE_CHECK.md) records the precise boundary.
 
 1. **Steering as Living Guardrails (`.kiro/steering/`)**:
    - `product.md`, `tech.md`, and `structure.md` (`inclusion: always`) locked down architectural invariants: zero `eval()`, zero DOM in `src/engine/`, lifecycle parity, and clean-clone `pre*` build hooks.
-   - `hypertalk-grammar.md` (`inclusion: fileMatch` scoped to `src/engine/**`) ensured every syntax addition—like `random(n)` for our 6-card *Starlight Cavern 1987* mini-RPG—stayed documented and backward-compatible.
+   - `hypertalk-grammar.md` (`inclusion: fileMatch` scoped to `src/engine/**`) documents syntax such as `random(n)` for the 6-card *Starlight Cavern 1987* mini-RPG.
 2. **Three EARS Specs (`.kiro/specs/`)**:
-   - `hypertalk-engine`, `stack-studio`, and `export-and-mcp` each captured testable EARS requirements (`WHEN ... THE SYSTEM SHALL ...`), explicit designs, and wave-ordered task checklists before coding began.
+   - `hypertalk-engine`, `stack-studio`, and `export-and-mcp` each contain testable EARS requirements (`WHEN ... THE SYSTEM SHALL ...`), explicit designs, and task checklists.
 3. **Kiro v1 Agent Hooks (`.kiro/hooks/`)**:
    - `engine-guard.json` triggers `npm run test:unit` automatically on `PostFileSave` for `src/engine/*.ts` and prompts grammar-doc synchronization on parser/interpreter edits.
    - `stack-validator.json` automatically runs `npm run validate:presets` across all **10 built-in EN + ZH stacks & templates** whenever a preset changes, catching broken `go to card` links immediately.
 4. **Zero-Install Custom MCP Server (`.kiro/settings/mcp.json` + `mcp/server.ts`)**:
    - Instead of requiring `tsx` or slow cold starts, `npm run build:mcp` bundles `mcp/server.ts` and its SDK dependencies into a single **376 KB zero-install `dist-mcp/server.js`** committed to git.
-   - Opening the repo in Kiro IDE immediately connects 4 domain-specific tools: `validate_hypertalk`, `validate_stack`, `run_hypertalk_script`, and `compile_markdown_to_stack`.
+   - In a trusted workspace, Kiro connects 4 domain-specific tools: `validate_hypertalk`, `validate_stack`, `run_hypertalk_script`, and `compile_markdown_to_stack`. On first use we had to trust only the project folder and reload the window; the initial restricted session had not loaded the project server.
    - Even better: we dogfooded our own compiler to generate the built-in **Prod 502 Triage Runbook** directly from Markdown!
 
 ---
