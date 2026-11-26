@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "project": "hypercrypt",
-  "updatedAt": "2026-11-26T16:17:00+08:00",
-  "stage": "video-v2-user-approved-cover-ready-awaiting-devpost-recaptcha-and-youtube-url",
+  "updatedAt": "2026-11-26T16:57:00+08:00",
+  "stage": "all-links-published-devpost-draft-complete-awaiting-user-final-submit",
   "judgeGate": "PASS: independent final-check section 8 accepted e7c21f7",
   "verification": {
     "build": "passed",
@@ -47,7 +47,7 @@
     "lessThan3Minutes": true,
     "fullVideoAndAudioDecodeExitCode": 0,
     "localPath": "artifacts/demo-2026-11-26/v2-andrew-us/hypercrypt-demo-v2-andrew-us-20261126.mp4",
-    "youtubePublicUrl": null,
+    "youtubePublicUrl": "https://youtu.be/p7heMvSv4_0",
     "voice": "en-US-AndrewMultilingualNeural",
     "voiceRate": "-4%",
     "voicePreferenceUserApproved": true,
@@ -66,9 +66,12 @@
       "youtubePublicUrl": null
     }
   },
-  "blogBonus": "Skipped at explicit user request",
+  "blogBonus": "https://dev.to/yue_pan_9e10917b198b60962/resurrecting-1987-apple-hypercard-hypertalk-with-kiro-spec-driven-development-7eg",
+  "socialBlitzBonus": "https://x.com/PanyPan05/status/2125873715770757606",
   "devpost": {
-    "draftCreated": false,
+    "draftCreated": true,
+    "draftId": "1321207-hypercrypt",
+    "draftUrl": "https://devpost.com/submit-to/31667-kiroween-2026/manage/submissions/1321207-hypercrypt/finalization",
     "submitted": false,
     "receiptUrl": null
   }

@@ -2,6 +2,8 @@
 
 > Built from scratch for **Kiroween 2026** (AWS Kiro Hackathon · **Best Resurrection** + **Overall**)  
 > **Live Demo**: https://hypercrypt.vercel.app *(Zero backend, zero login, instant launch)*  
+> **Demo Video (2:05)**: https://youtu.be/p7heMvSv4_0  
+> **Technical Blog**: https://dev.to/yue_pan_9e10917b198b60962/resurrecting-1987-apple-hypercard-hypertalk-with-kiro-spec-driven-development-7eg  
 > **License**: MIT
 
 **HyperCrypt** resurrects **1987 Apple HyperCard & HyperTalk** for the modern web—bridging the gap between static Markdown and bloated cloud-dependent web apps. Build tactile **512×342 1-bit interactive card stacks** in your browser, write real plain-English **HyperTalk** scripts with a live step debugger, convert any photo with **Bill Atkinson 1-bit dithering**, export any stack into **one immortal offline `.html` file**, and compile Markdown runbooks into playable stacks directly from **Kiro IDE** via `hypercrypt-mcp`.

@@ -11,7 +11,7 @@
 1987 Apple HyperCard & HyperTalk resurrected for 2026: 4-view 1-bit creative IDE, zero-eval AST interpreter, Atkinson dithering, offline single-file `.html` export, and a Kiro MCP compiler.
 
 ## Category / Track
-- **Primary Category**: **Best Resurrection** (and Overall Prize contender + Blog Post Bonus)
+- **Primary Category**: **Best Resurrection** (plus Overall Prize + **Bonus Blog Prize** + **Social Blitz Prize**)
 
 ## Built With (Tags)
 `kiro`, `typescript`, `react`, `vite`, `mcp`, `web-audio-api`, `html5-canvas`, `vitest`, `playwright`, `vercel`
@@ -19,7 +19,9 @@
 ## Links
 - **Live Demo URL**: `https://hypercrypt.vercel.app` *(Zero login required — opens directly into playable Browse Mode with 1-click 4-scenario Showcase Dock!)*
 - **Public GitHub Repository**: `https://github.com/pan609/hypercrypt` *(MIT License, complete `/.kiro` directory & zero-install `dist-mcp/server.js`)*
-- **Demo Video (YouTube, ≤ 3 min)**: `<INSERT_PUBLIC_YOUTUBE_URL_AFTER_RECORDING>`
+- **Demo Video (YouTube, 2:05 Public)**: `https://youtu.be/p7heMvSv4_0`
+- **Bonus Blog Post (DEV.to)**: `https://dev.to/yue_pan_9e10917b198b60962/resurrecting-1987-apple-hypercard-hypertalk-with-kiro-spec-driven-development-7eg`
+- **Social Blitz Post (X)**: `https://x.com/PanyPan05/status/2125873715770757606`
 
 ---
 
