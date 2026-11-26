@@ -17,7 +17,7 @@
 `kiro`, `typescript`, `react`, `vite`, `mcp`, `web-audio-api`, `html5-canvas`, `vitest`, `playwright`, `vercel`
 
 ## Links
-- **Live Demo URL**: `<VERCEL_URL>` *(Zero login required — opens directly into playable Browse Mode!)*
+- **Live Demo URL**: `https://hypercrypt.vercel.app` *(Zero login required — opens directly into playable Browse Mode!)*
 - **Public GitHub Repository**: `https://github.com/pan609/hypercrypt` *(MIT License, includes complete `/.kiro` directory)*
 - **Demo Video (YouTube, ≤ 3 min)**: `<YOUTUBE_URL>`
 

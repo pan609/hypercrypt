@@ -1,7 +1,7 @@
 # Resurrecting 1987 Apple HyperCard & HyperTalk with Kiro Spec-Driven Development
 
 > *Built for **Kiroween 2026** (AWS Kiro Hackathon · Best Resurrection)*  
-> **Live App**: `<VERCEL_URL>` · **GitHub**: `https://github.com/pan609/hypercrypt`
+> **Live App**: https://hypercrypt.vercel.app · **GitHub**: https://github.com/pan609/hypercrypt
 
 ---
 
@@ -63,7 +63,7 @@ Alongside that E2E check, Vitest runs **22 unit, live stdio MCP JSON-RPC, and Re
 ---
 
 ## Try It Yourself
-- **Live Demo (Zero Login)**: `<VERCEL_URL>`
-- **Open-Source Repo (MIT + full `/.kiro`)**: `https://github.com/pan609/hypercrypt`
+- **Live Demo (Zero Login)**: https://hypercrypt.vercel.app
+- **Open-Source Repo (MIT + full `/.kiro`)**: https://github.com/pan609/hypercrypt
 
 Switch between **1987 Tour**, **1-Bit RPG**, **SRE Runbook**, and **Dither & Synth** right from the top dock, inspect the live **Flow Map** or **AST Tree**, edit Markdown live in **MD → Stack**, and export your own offline forever `.html` stack!
