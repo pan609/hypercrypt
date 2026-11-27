@@ -2,7 +2,7 @@
 
 > Built from scratch for **Kiroween 2026** (AWS Kiro Hackathon · **Best Resurrection** + **Overall**)  
 > **Live Demo**: https://hypercrypt.vercel.app *(Zero backend, zero login, instant launch)*  
-> **Demo Video (2:05)**: https://youtu.be/p7heMvSv4_0  
+> **Demo Video (2:05)**: https://youtu.be/3CHsMRVMmHw  
 > **Technical Blog**: https://dev.to/yue_pan_9e10917b198b60962/resurrecting-1987-apple-hypercard-hypertalk-with-kiro-spec-driven-development-7eg  
 > **License**: MIT
 

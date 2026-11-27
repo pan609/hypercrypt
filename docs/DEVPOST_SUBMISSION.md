@@ -19,7 +19,7 @@
 ## Links
 - **Live Demo URL**: `https://hypercrypt.vercel.app` *(Zero login required — opens directly into playable Browse Mode with 1-click 4-scenario Showcase Dock!)*
 - **Public GitHub Repository**: `https://github.com/pan609/hypercrypt` *(MIT License, complete `/.kiro` directory & zero-install `dist-mcp/server.js`)*
-- **Demo Video (YouTube, 2:05 Public)**: `https://youtu.be/p7heMvSv4_0`
+- **Demo Video (YouTube, 2:05 Public)**: `https://youtu.be/3CHsMRVMmHw`
 - **Bonus Blog Post (DEV.to)**: `https://dev.to/yue_pan_9e10917b198b60962/resurrecting-1987-apple-hypercard-hypertalk-with-kiro-spec-driven-development-7eg`
 - **Social Blitz Post (X)**: `https://x.com/PanyPan05/status/2125873715770757606`
 

@@ -34,16 +34,16 @@
     "evidence": "docs/KIRO_LIVE_CHECK.md"
   },
   "video": {
-    "version": "v2-andrew-us-20261126",
-    "sha256": "b82fc5354333f00044e698da3e5e1a399ce28ea5678136eadb682d348577f2fb",
+    "version": "v3-kiro-20261127",
+    "sha256": "f1c75eafddfb1182da4711a93ca71afa8cbc96c6a7db634fb967da6baa9e5fdc",
     "format": {
       "duration": "124.707683",
-      "size": "6043396"
+      "size": "6453474"
     },
     "lessThan3Minutes": true,
     "fullVideoAndAudioDecodeExitCode": 0,
-    "localPath": "artifacts/demo-2026-11-26/v2-andrew-us/hypercrypt-demo-v2-andrew-us-20261126.mp4",
-    "youtubePublicUrl": "https://youtu.be/p7heMvSv4_0",
+    "localPath": "artifacts/demo-2026-11-26/v3-kiro-screen/hypercrypt-demo-v3-kiro-20261127.mp4",
+    "youtubePublicUrl": "https://youtu.be/3CHsMRVMmHw",
     "voice": "en-US-AndrewMultilingualNeural",
     "voiceRate": "-4%",
     "voicePreferenceUserApproved": true,
