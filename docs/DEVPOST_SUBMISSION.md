@@ -1,6 +1,6 @@
 # HyperCrypt — Devpost Submission Copy (Kiroween 2026 · v2.0)
 
-> Draft for `https://kiroween.devpost.com`. Kiro IDE live validation is complete ([evidence](KIRO_LIVE_CHECK.md)); record the final demo and insert the YouTube URL before publication.
+> Published submission: `https://devpost.com/software/hypercrypt` (Kiroween 2026 · editable until 2026-12-05 06:00 GMT+8). Kiro IDE live validation evidence: [KIRO_LIVE_CHECK.md](KIRO_LIVE_CHECK.md).
 
 ---
 
@@ -26,6 +26,11 @@
 ---
 
 ## Full Project Story (Markdown for Devpost Description)
+
+> **30-Second TL;DR**
+> - **What & Who**: **HyperCrypt** turns plain Markdown docs, runbooks, and stories into tactile 1987-style **512×342 1-bit interactive card stacks**—built for engineers, writers, and educators who want interactive tools without logins, servers, or link rot. Try 4 playable stacks live in 1 click (including a playful Attic Mac spirit tour, a Kiroween Dusk 1-bit RPG, and an SRE 502 triage runbook) at **https://hypercrypt.vercel.app**.
+> - **Why Kiro**: Workspace Steering (`/.kiro/steering/`), 3 EARS Specs (`/.kiro/specs/`), `PostFileSave` test/link Hooks (`/.kiro/hooks/`), and our zero-install **`hypercrypt-mcp`** server (`dist-mcp/server.js`) let Kiro IDE compile Markdown into validated card stacks, audit broken links, and execute HyperTalk scripts headlessly (live-verified in Kiro IDE 1.5.44; see `docs/KIRO_LIVE_CHECK.md`).
+> - **Built to Outlive the Hackathon**: Export any stack into **one ~34 KB offline `.html` file** bundling our exact zero-`eval()` TypeScript HyperTalk engine—zero backend, zero accounts, MIT-licensed, and runnable forever even with the network unplugged.
 
 ### Inspiration
 In 1987, Bill Atkinson created **HyperCard** and **HyperTalk** for the Apple Macintosh—four years before the World Wide Web. It gave engineers, writers, teachers, and creators a tactile superpower: building self-contained interactive software ("Stacks") out of illustrated 512×342 1-bit cards and plain-English scripts, with zero servers and zero setup.
